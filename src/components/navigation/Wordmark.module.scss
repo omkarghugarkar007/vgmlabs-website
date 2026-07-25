@@ -1,0 +1,121 @@
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.link {
+  @include focusable(6px);
+
+  @include hover {
+    .glyph {
+      color: var(--cobalt);
+    }
+    .light {
+      color: var(--ink);
+    }
+  }
+}
+
+.glyph {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: 0 0 auto;
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+.edges {
+  stroke-opacity: 0.5;
+}
+
+.nodes {
+  fill: currentColor;
+}
+
+/* The travelling signal.
+
+   `offset-path` follows the same triangle as the drawn edges, so the dot is
+   always exactly on a connection rather than approximating one. Where
+   `offset-path` is unsupported the circle stays parked at 0,0 outside the
+   viewBox's visible content, so nothing is drawn incorrectly. */
+.signal {
+  opacity: 0;
+
+  @supports (offset-path: path('M 0 0')) {
+    offset-path: path('M 14 5 L 23.5 21 L 4.5 21 Z');
+    offset-distance: 0%;
+    offset-rotate: 0deg;
+    opacity: 1;
+
+    @include motion-safe {
+      animation: traverse 6.5s $ease-linear infinite;
+    }
+  }
+}
+
+@keyframes traverse {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  // Compensates for mono's generous side bearings so the mark optically aligns
+  // with the shell gutter.
+  margin-left: -0.05em;
+}
+
+.name {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  @include mono(0.8125rem, 0.2em);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.light {
+  font-weight: 400;
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+.descriptor {
+  @include mono(0.5625rem, 0.24em);
+  color: var(--ink-faint);
+  line-height: 1;
+}
+
+@include down('sm') {
+  .glyph {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .name {
+    font-size: 0.75rem;
+    letter-spacing: 0.17em;
+  }
+}

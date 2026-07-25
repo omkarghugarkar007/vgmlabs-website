@@ -1,0 +1,90 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: z('field');
+  // Never intercepts input. The field responds to the pointer, but it must never
+  // capture a click meant for content.
+  pointer-events: none;
+  overflow: hidden;
+  // Promote to its own layer so the fixed canvas does not force the whole page to
+  // repaint while scrolling.
+  will-change: transform;
+  contain: strict;
+}
+
+.still,
+.canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.still {
+  opacity: 1;
+  transition: opacity 1.6s $ease-in-out;
+
+  @include motion-reduce {
+    // No cross-fade under reduced motion — whichever layer applies is simply on.
+    transition: none;
+  }
+}
+
+.stillHidden {
+  opacity: 0;
+}
+
+.canvas {
+  opacity: 0;
+  transition: opacity 1.8s $ease-out;
+
+  @include motion-reduce {
+    transition: none;
+  }
+}
+
+.canvasReady {
+  opacity: 1;
+}
+
+/* The veil keeps text legible over the field without blurring anything.
+   Strongest at the vertical extremes, where the navigation and footer sit. */
+.veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      #{rgba($void, 0.86)} 0%,
+      #{rgba($void, 0.22)} 22%,
+      #{rgba($void, 0.1)} 50%,
+      #{rgba($void, 0.34)} 78%,
+      #{rgba($void, 0.9)} 100%
+    ),
+    // A gentle horizontal falloff, so the structure is brightest behind the
+    // centre of the composition and quietest behind the text columns.
+    radial-gradient(
+        120% 80% at 50% 55%,
+        transparent 0%,
+        #{rgba($void, 0.28)} 62%,
+        #{rgba($void, 0.6)} 100%
+      );
+
+  @include down('lg') {
+    // Tablet and phone: content occupies far more of the frame, so the field
+    // needs to sit further back to keep body copy readable.
+    background:
+      linear-gradient(
+        to bottom,
+        #{rgba($void, 0.9)} 0%,
+        #{rgba($void, 0.42)} 24%,
+        #{rgba($void, 0.34)} 50%,
+        #{rgba($void, 0.52)} 76%,
+        #{rgba($void, 0.94)} 100%
+      ),
+      radial-gradient(
+        130% 70% at 50% 46%,
+        transparent 0%,
+        #{rgba($void, 0.4)} 60%,
+        #{rgba($void, 0.7)} 100%
+      );
+  }
+}

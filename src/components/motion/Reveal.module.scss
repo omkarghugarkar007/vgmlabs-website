@@ -1,0 +1,13 @@
+.reveal {
+  // No opacity: 0 here.
+  //
+  // The from-state is set by GSAP in a layout effect, which runs before paint. If
+  // CSS also hid the element, anyone with JavaScript disabled — or with a failed
+  // bundle — would get permanently invisible content. Starting visible means the
+  // worst case is no animation, not no content.
+  will-change: opacity, transform;
+
+  @include motion-reduce {
+    will-change: auto;
+  }
+}

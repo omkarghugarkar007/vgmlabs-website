@@ -1,0 +1,180 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 8fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+/* Contents ---------------------------------------------------------------- */
+
+.contents {
+  position: sticky;
+  top: calc(var(--nav-h) + 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  // Long documents: the contents list scrolls independently rather than being cut
+  // off by the viewport.
+  max-height: calc(100svh - var(--nav-h) - 6rem);
+  overflow-y: auto;
+
+  ol {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.contentsTitle {
+  color: var(--ink-faint);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.contentsLink {
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+  @include transition(color);
+  @include focusable(2px);
+
+  @include hover {
+    color: var(--ink);
+  }
+}
+
+.contentsIndex {
+  @include mono(0.5rem, 0.14em);
+  color: var(--ink-faint);
+}
+
+/* Document ---------------------------------------------------------------- */
+
+.document {
+  min-width: 0;
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  border-bottom: 1px solid var(--rule);
+}
+
+.date {
+  @include mono-data(0.75rem);
+  color: var(--ink-muted);
+}
+
+.section {
+  // Generous gap between clauses: dense legal text needs the whitespace to stay
+  // navigable.
+  padding-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+  border-bottom: 1px solid var(--rule-faint);
+  // Anchored links from the contents must clear the fixed navigation.
+  scroll-margin-top: calc(var(--nav-h) + 2rem);
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+.headingIndex {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--amber);
+  flex: 0 0 auto;
+}
+
+.paragraph {
+  @include type('body');
+  color: var(--ink-muted);
+  // Tighter than the site default: legal text is read line by line.
+  max-width: 68ch;
+
+  & + & {
+    margin-top: 0.9rem;
+  }
+}
+
+.bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 1rem;
+
+  li {
+    position: relative;
+    padding-left: 1.1rem;
+    @include type('body');
+    font-size: 0.9375rem;
+    color: var(--ink-muted);
+    max-width: 68ch;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.7em;
+      width: 4px;
+      height: 4px;
+      background: var(--metal);
+    }
+  }
+}
+
+/* iPad and below ---------------------------------------------------------- */
+
+@include down('lg') {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .contents {
+    position: static;
+    max-height: none;
+    overflow: visible;
+
+    ol {
+      // A two-column contents list once it is full width, so it does not take a
+      // whole screen before the document starts.
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0 clamp(1rem, 3vw, 2rem);
+    }
+  }
+}
+
+@include down('sm') {
+  .contents ol {
+    grid-template-columns: 1fr;
+  }
+
+  .heading {
+    gap: 0.75rem;
+  }
+
+  .paragraph,
+  .bullets li {
+    max-width: none;
+  }
+}

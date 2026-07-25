@@ -1,0 +1,311 @@
+/* Contents ---------------------------------------------------------------- */
+
+.contents {
+  margin-top: clamp(1.5rem, 4vw, 2.5rem);
+
+  ol {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--rule-faint);
+  }
+}
+
+.contentsLink {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0.85rem 1.5rem 0.85rem 0;
+  border-bottom: 1px solid var(--rule-faint);
+  @include focusable(2px);
+
+  @include hover {
+    .contentsLabel {
+      color: var(--ink);
+    }
+    .contentsIndex {
+      color: var(--cobalt);
+    }
+  }
+}
+
+.contentsIndex {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--ink-faint);
+  @include transition(color);
+}
+
+.contentsLabel {
+  @include mono(0.6875rem, 0.1em);
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+/* Layer ------------------------------------------------------------------- */
+
+.layer {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 4vw, 3rem);
+}
+
+.layerHead {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.layerTitleRow {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.layerIndex {
+  @include mono(0.75rem, 0.18em);
+  color: var(--amber);
+}
+
+.layerTitle {
+  @include type('d3');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.layerSummary {
+  @include type('lead');
+  color: var(--ink-muted);
+  max-width: 54ch;
+  // Aligns with the title rather than the index.
+  padding-left: calc(0.75rem * 3.2);
+}
+
+.layerBody {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.primary {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.purpose {
+  @include type('body');
+  color: var(--ink);
+  max-width: 66ch;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.blockLabel {
+  color: var(--ink-faint);
+  font-size: 0.5625rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.blockLabelWarn {
+  @extend .blockLabel;
+  color: var(--amber);
+  border-bottom-color: #{rgba($amber, 0.24)};
+}
+
+.blockLabelOk {
+  @extend .blockLabel;
+  color: var(--cyan);
+  border-bottom-color: #{rgba($cyan, 0.24)};
+}
+
+/* Numbered architecture list */
+.numbered {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+
+  li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.85rem;
+    @include type('small');
+    color: var(--ink-muted);
+    max-width: 74ch;
+  }
+}
+
+.numberedIndex {
+  @include mono(0.5625rem, 0.14em);
+  color: var(--cobalt);
+  padding-top: 0.25em;
+}
+
+/* Failure modes */
+.failures {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+
+  li {
+    position: relative;
+    padding-left: 1.1rem;
+    @include type('small');
+    color: var(--ink-muted);
+    max-width: 74ch;
+
+    // A short dash rather than a bullet: these are observations, not features.
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.72em;
+      width: 7px;
+      height: 1px;
+      background: #{rgba($amber, 0.7)};
+    }
+  }
+}
+
+/* Reliability */
+.reliability {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  border: 1px solid #{rgba($cyan, 0.18)};
+  background: #{rgba($cyan, 0.03)};
+
+  p {
+    @include type('small');
+    color: var(--ink-muted);
+    max-width: 72ch;
+  }
+}
+
+/* Aside ------------------------------------------------------------------- */
+
+.secondary {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  position: sticky;
+  top: calc(var(--nav-h) + 3rem);
+}
+
+.tags {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+
+  li {
+    @include mono-data(0.6875rem);
+    color: var(--ink-muted);
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--rule-faint);
+  }
+}
+
+.problems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+
+  li {
+    position: relative;
+    padding-left: 0.95rem;
+    @include type('small');
+    font-size: 0.8125rem;
+    color: var(--ink-muted);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 3px;
+      height: 3px;
+      background: var(--metal);
+    }
+  }
+}
+
+/* Outro ------------------------------------------------------------------- */
+
+.outro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+}
+
+.outroText {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 400;
+  color: var(--ink);
+  max-width: 46ch;
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('xl') {
+  .layerBody {
+    grid-template-columns: 1fr;
+  }
+
+  .secondary {
+    position: static;
+    // Two columns for the aside once it is full width, so it does not become a
+    // long thin list under the main column.
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+}
+
+@include down('lg') {
+  .contents ol {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include down('sm') {
+  .contents ol {
+    grid-template-columns: 1fr;
+  }
+
+  .layerTitleRow {
+    gap: 0.85rem;
+  }
+
+  .layerSummary {
+    padding-left: 0;
+    max-width: none;
+  }
+
+  .secondary {
+    grid-template-columns: 1fr;
+  }
+
+  .purpose,
+  .numbered li,
+  .failures li,
+  .reliability p,
+  .outroText {
+    max-width: none;
+  }
+
+  .numbered li {
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+}

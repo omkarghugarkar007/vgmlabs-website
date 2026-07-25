@@ -1,0 +1,350 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: z('nav');
+  // The bar itself must not block clicks on the field or on content beside it;
+  // the inner row re-enables pointer events for its own children.
+  pointer-events: none;
+}
+
+.inner {
+  @include shell;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 3rem);
+  height: var(--nav-h);
+  position: relative;
+  @include transition(background-color, border-color, backdrop-filter);
+
+  // The hairline is drawn as a pseudo-element so it can fade independently of
+  // the backdrop without animating `border-color` on a compositor-hostile
+  // property.
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--rule-faint);
+    opacity: 0;
+    @include transition(opacity);
+  }
+}
+
+.scrolled .inner {
+  background: #{rgba($void, 0.72)};
+  // A single small-radius blur on one fixed element. Deliberately restrained:
+  // backdrop-filter is the most expensive property on this page, and stacking it
+  // on every panel is what makes glassmorphic sites stutter.
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+
+  &::after {
+    opacity: 1;
+  }
+}
+
+// Where backdrop-filter is unavailable, fall back to a more opaque fill so the
+// bar stays legible over the field.
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .scrolled .inner {
+    background: #{rgba($void, 0.93)};
+  }
+}
+
+/* Desktop links ----------------------------------------------------------- */
+
+.links {
+  margin-left: auto;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.25rem, 2.4vw, 2.4rem);
+}
+
+.link {
+  position: relative;
+  display: inline-block;
+  padding: 0.4rem 0;
+  @include mono(0.6875rem, 0.13em);
+  color: var(--ink-muted);
+  @include transition(color);
+  @include focusable;
+
+  // The underline draws from the left rather than fading in, which reads as a
+  // measurement being taken.
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    @include transition(transform);
+  }
+
+  @include hover {
+    color: var(--ink);
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+}
+
+.linkActive {
+  color: var(--ink);
+
+  &::after {
+    background: var(--cobalt);
+    transform: scaleX(1);
+  }
+}
+
+/* Actions ----------------------------------------------------------------- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  // 44px minimum interactive height, met by padding rather than a fixed height so
+  // the label can wrap on very narrow screens without clipping.
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid var(--rule);
+  border-radius: $radius-control;
+  @include mono(0.6875rem, 0.13em);
+  color: var(--ink);
+  background: #{rgba($surface, 0.5)};
+  @include transition(border-color, background-color, color);
+  @include focusable;
+
+  @include hover {
+    border-color: var(--cobalt);
+    background: #{rgba($cobalt, 0.1)};
+
+    .ctaArrow {
+      transform: translateX(2px);
+    }
+  }
+}
+
+.ctaActive {
+  border-color: #{rgba($cobalt, 0.6)};
+}
+
+.ctaArrow {
+  width: 12px;
+  height: 12px;
+  stroke-width: 1.25;
+  @include transition(transform);
+}
+
+/* Menu toggle ------------------------------------------------------------- */
+
+.toggle {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 0.5rem;
+  @include mono(0.6875rem, 0.13em);
+  color: var(--ink);
+  @include focusable;
+}
+
+.toggleLabel {
+  // Below 400px the visible word is dropped and the glyph carries the meaning.
+  // The label is hidden visually rather than removed, so the button keeps its
+  // accessible name from its own text content.
+  //
+  // Declared inline rather than via `@extend`: Sass cannot extend a selector
+  // across a media query boundary.
+  @include down('xs') {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.toggleGlyph {
+  position: relative;
+  width: 18px;
+  height: 10px;
+  flex: 0 0 auto;
+
+  span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    @include transition(transform, opacity);
+
+    &:first-child {
+      top: 0;
+    }
+    &:last-child {
+      bottom: 0;
+    }
+  }
+}
+
+.toggleGlyphOpen span {
+  &:first-child {
+    transform: translateY(4.5px) rotate(45deg);
+  }
+  &:last-child {
+    transform: translateY(-4.5px) rotate(-45deg);
+  }
+}
+
+/* Panel ------------------------------------------------------------------- */
+
+.panel {
+  position: fixed;
+  top: var(--nav-h);
+  left: 0;
+  right: 0;
+  z-index: z('menu');
+  display: none;
+  flex-direction: column;
+  padding: clamp(1.5rem, 5vw, 2.5rem) $shell-gutter clamp(2rem, 6vw, 3rem);
+  background: #{rgba($void, 0.97)};
+  border-top: 1px solid var(--rule-faint);
+  border-bottom: 1px solid var(--rule);
+  pointer-events: auto;
+
+  // Collapsed by clip-path rather than height so no layout is computed while
+  // closed, and the reveal is a single compositor-friendly property.
+  clip-path: inset(0 0 100% 0);
+  @include transition(clip-path);
+
+  &[inert] {
+    // Belt and braces: `inert` handles focus and AT, this handles stray taps
+    // during the closing transition.
+    pointer-events: none;
+  }
+}
+
+.panelOpen {
+  clip-path: inset(0 0 0 0);
+}
+
+.panelList {
+  display: flex;
+  flex-direction: column;
+}
+
+.panelLink {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule-faint);
+  @include focusable;
+
+  @include hover {
+    .panelLabel {
+      color: var(--cobalt);
+    }
+  }
+}
+
+.panelIndex {
+  @include mono(0.625rem, 0.16em);
+  color: var(--ink-faint);
+}
+
+.panelLabel {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+  @include transition(color);
+}
+
+.panelHint {
+  grid-column: 2;
+  @include mono(0.625rem, 0.1em);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+.panelCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  margin-top: 1.75rem;
+  padding: 0 1.25rem;
+  border: 1px solid var(--cobalt);
+  border-radius: $radius-control;
+  background: #{rgba($cobalt, 0.12)};
+  @include mono(0.75rem, 0.13em);
+  color: var(--ink);
+  @include focusable;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: calc(#{z('menu')} - 1);
+  display: none;
+  background: #{rgba($void, 0.6)};
+  opacity: 0;
+  pointer-events: none;
+  @include transition(opacity);
+}
+
+.scrimOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Breakpoint switch -------------------------------------------------------
+   The inline link row is dropped below 1024px. On an iPad in portrait the row
+   would either collide with the CTA or force the wordmark to shrink; a panel is
+   the better composition at that width, not a compromise. */
+
+@include down('lg') {
+  .links {
+    display: none;
+  }
+
+  .toggle {
+    display: inline-flex;
+  }
+
+  .panel,
+  .scrim {
+    display: flex;
+  }
+}
+
+@include down('sm') {
+  .cta {
+    // The label is long for a phone; the panel carries the same action, so the
+    // bar keeps only the wordmark and the menu control.
+    display: none;
+  }
+}

@@ -1,0 +1,282 @@
+// ---------------------------------------------------------------------------
+// Global stylesheet — reset, runtime tokens, base elements, primitives.
+// Imported once from src/app/layout.tsx.
+//
+// `@use "tokens" as *` is injected by the Sass loader (see next.config.ts).
+// ---------------------------------------------------------------------------
+
+/* ===========================================================================
+   1. Reset
+   =========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  // Anchored sections must clear the fixed navigation bar.
+  scroll-padding-top: calc(var(--nav-h) + 2rem);
+  // `clip` (not `hidden`) so `position: sticky` keeps working in descendants.
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  min-height: 100svh;
+  overflow-x: clip;
+  background-color: var(--void);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 400;
+  @include type('body');
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis-weight: none;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  letter-spacing: inherit;
+}
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-weight: 500;
+  font-size: inherit;
+  line-height: inherit;
+  text-wrap: pretty;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--metal-dim);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--cobalt) 34%, transparent);
+  color: var(--ink);
+}
+
+/* ===========================================================================
+   2. Runtime tokens
+   =========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* Environment */
+  --void: #{$void};
+  --surface: #{$surface};
+  --surface-2: #{$surface-2};
+  --metal: #{$metal};
+  --metal-dim: #{$metal-dim};
+
+  /* Type */
+  --ink: #{$ink};
+  --ink-muted: #{$ink-muted};
+  --ink-faint: #{$ink-faint};
+
+  /* Signals */
+  --cobalt: #{$cobalt};
+  --cobalt-deep: #{$cobalt-deep};
+  --amber: #{$amber};
+  --cyan: #{$cyan};
+  --danger: #{$danger};
+
+  /* Hairlines — the site's primary structural device */
+  --rule: #{rgba($metal, 0.62)};
+  --rule-faint: #{rgba($metal, 0.34)};
+  --rule-bright: #{rgba($ink, 0.16)};
+
+  /* Panels. Deliberately low-alpha so the WebGL field reads through them
+     without needing heavy backdrop blur. */
+  --panel: #{rgba($surface, 0.58)};
+  --panel-solid: #{$surface};
+  --panel-hover: #{rgba($surface-2, 0.82)};
+
+  /* Layout */
+  --shell-gutter: #{$shell-gutter};
+  --shell-max: #{$shell-max};
+  --nav-h: 4.25rem;
+
+  /* Depth of field for the WebGL layer behind content-heavy sections. */
+  --field-veil: #{rgba($void, 0.55)};
+
+  @include down('md') {
+    --nav-h: 3.5rem;
+  }
+}
+
+/* ===========================================================================
+   3. Layout primitives
+   =========================================================================== */
+
+.shell {
+  @include shell;
+}
+
+.shell--narrow {
+  @include shell(1180px);
+}
+
+/* The persistent WebGL layer. Fixed, non-interactive, behind all content. */
+.field-layer {
+  position: fixed;
+  inset: 0;
+  z-index: z('field');
+  pointer-events: none;
+  // The canvas itself sits at 0 opacity until the renderer has produced its
+  // first frame, then FieldCanvas adds `is-ready`. Prevents a black flash.
+  opacity: 0;
+  transition: opacity 1.4s $ease-out;
+
+  &.is-ready {
+    opacity: 1;
+  }
+}
+
+/* Everything that is not the WebGL layer. */
+.content-layer {
+  position: relative;
+  z-index: z('content');
+  isolation: isolate;
+}
+
+/* ===========================================================================
+   4. Accessibility primitives
+   =========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: z('skip-link');
+  transform: translateY(-160%);
+  padding: 0.65rem 1.1rem;
+  background: var(--panel-solid);
+  border: 1px solid var(--cobalt);
+  color: var(--ink);
+  @include mono(0.6875rem);
+  @include transition(transform);
+
+  &:focus-visible {
+    transform: translateY(0);
+    @include focus-ring;
+  }
+}
+
+:focus-visible {
+  @include focus-ring;
+}
+
+/* Author-supplied focus rings only; never remove them wholesale. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ===========================================================================
+   5. Scrollbar — quiet, matched to the environment
+   =========================================================================== */
+
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--void);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #{rgba($metal, 0.9)};
+    border: 3px solid var(--void);
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #{rgba($ink-faint, 0.9)};
+  }
+}
+
+html {
+  scrollbar-color: #{rgba($metal, 0.9)} var(--void);
+  scrollbar-width: thin;
+}
+
+/* ===========================================================================
+   6. Print — the informational content must survive without WebGL or colour
+   =========================================================================== */
+
+@media print {
+  .field-layer,
+  [data-print-hide] {
+    display: none !important;
+  }
+  body {
+    background: #fff;
+    color: #000;
+  }
+}

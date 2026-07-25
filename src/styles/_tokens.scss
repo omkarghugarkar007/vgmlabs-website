@@ -1,0 +1,20 @@
+// ---------------------------------------------------------------------------
+// Design token entry point.
+//
+// `next.config.ts` prepends `@use "tokens" as *;` to every SCSS file the loader
+// processes, so palette values, the type scale, layout helpers and motion
+// tokens are available in all *.module.scss files with no per-file import.
+//
+// Do NOT add another `@use "tokens" as *` inside a stylesheet — Sass rejects a
+// duplicate load of the same module in one file.
+//
+// Nothing forwarded from here may emit CSS. These are variables, maps,
+// functions and mixins only; duplicated output would be multiplied across every
+// module in the project. Runtime values live as custom properties in
+// `global.scss`.
+// ---------------------------------------------------------------------------
+
+@forward 'palette';
+@forward 'type';
+@forward 'layout';
+@forward 'motion';

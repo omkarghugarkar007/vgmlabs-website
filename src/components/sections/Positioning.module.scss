@@ -1,0 +1,102 @@
+.split {
+  display: grid;
+  // Asymmetric on purpose: the heading column is narrower than the argument it
+  // introduces, which puts the emphasis on the reasoning rather than the slogan.
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 6vw, 7rem);
+  align-items: start;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  // Sticks while the right column scrolls past — the heading is the frame for the
+  // argument, so it should stay visible for the length of it.
+  position: sticky;
+  top: calc(var(--nav-h) + 3rem);
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding-top: 0.5rem;
+}
+
+.lead {
+  @include type('lead');
+  color: var(--ink);
+  max-width: 54ch;
+}
+
+.aside {
+  @include type('body');
+  color: var(--ink-muted);
+  max-width: 54ch;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--rule-faint);
+}
+
+/* Rail header ------------------------------------------------------------- */
+
+.railHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: clamp(4rem, 10vw, 8rem);
+}
+
+.railRule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule-faint);
+}
+
+.railHint {
+  color: var(--ink-faint);
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('lg') {
+  .split {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+  }
+
+  .left {
+    // Sticky positioning in a single-column stack would pin the heading over its
+    // own body copy.
+    position: static;
+  }
+
+  .right {
+    padding-top: 0;
+  }
+}
+
+@include down('md') {
+  .railHeader {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: clamp(3rem, 8vw, 5rem);
+  }
+
+  .railRule {
+    // A hairline between two labels needs room; below `md` it becomes a full-width
+    // rule under them instead.
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .railHint {
+    order: 2;
+  }
+}

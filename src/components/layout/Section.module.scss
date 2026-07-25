@@ -1,0 +1,43 @@
+.section {
+  position: relative;
+}
+
+.shell {
+  @include shell;
+}
+
+.bleed {
+  width: 100%;
+}
+
+/* Density -----------------------------------------------------------------
+   Four steps, used unevenly on purpose. `flush` exists for sections that
+   manage their own vertical space entirely (the hero). */
+
+.tight {
+  @include section-pad('tight');
+}
+
+.default {
+  @include section-pad('default');
+}
+
+.loose {
+  @include section-pad('loose');
+}
+
+.flush {
+  padding-block: 0;
+}
+
+/* A hairline that stops at the shell gutter rather than spanning the viewport,
+   so the rule reads as part of the measuring grid rather than a page divider. */
+.ruled::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: $shell-gutter;
+  right: $shell-gutter;
+  height: 1px;
+  background: var(--rule-faint);
+}

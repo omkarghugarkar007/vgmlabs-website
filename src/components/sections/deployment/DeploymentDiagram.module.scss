@@ -1,0 +1,49 @@
+.diagram {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  overflow: visible;
+}
+
+.link {
+  stroke: var(--metal);
+  stroke-width: 1;
+  @include transition(stroke, stroke-width);
+}
+
+.linkActive {
+  stroke: var(--cobalt);
+  stroke-width: 1.4;
+}
+
+.node {
+  fill: var(--ink-faint);
+  @include transition(fill);
+}
+
+.nodeActive {
+  fill: var(--cyan);
+}
+
+.halo {
+  fill: #{rgba($cyan, 0.08)};
+  stroke: #{rgba($cyan, 0.3)};
+  stroke-width: 1;
+}
+
+.nodeLabel {
+  @include mono(0.5rem, 0.14em);
+  fill: var(--ink-muted);
+  // The label must not inherit the node's fill.
+  stroke: none;
+}
+
+.nodeActive .nodeLabel {
+  fill: var(--ink);
+}
+
+@include down('sm') {
+  .nodeLabel {
+    font-size: 0.5625rem;
+  }
+}

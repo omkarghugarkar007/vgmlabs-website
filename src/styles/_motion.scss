@@ -1,0 +1,59 @@
+// ---------------------------------------------------------------------------
+// Motion tokens.
+//
+// House rule: motion communicates state or spatial relationship. Nothing moves
+// because it entered the viewport. Durations are long-ish and easings are
+// mostly decelerating — the site should feel weighted, not springy.
+// ---------------------------------------------------------------------------
+
+// Easings -------------------------------------------------------------------
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1); // primary — reveals, panel opens
+$ease-out-soft: cubic-bezier(0.25, 0.8, 0.25, 1); // hover, small state changes
+$ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); // cross-fades, swaps
+$ease-linear: linear; // scrubbed / scroll-linked only
+
+// Durations -----------------------------------------------------------------
+$dur-instant: 90ms;
+$dur-fast: 180ms;
+$dur-base: 320ms;
+$dur-slow: 620ms;
+$dur-reveal: 900ms;
+
+/// Wrap any non-essential motion. Under `prefers-reduced-motion: reduce` the
+/// declarations are simply not emitted, so the element keeps its final state.
+@mixin motion-safe {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+/// The reduced-motion counterpart — used to substitute a plain opacity fade for
+/// a transform-based reveal.
+@mixin motion-reduce {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+/// Standard transition for interactive chrome.
+@mixin transition($props...) {
+  @media (prefers-reduced-motion: no-preference) {
+    transition-property: $props;
+    transition-duration: $dur-base;
+    transition-timing-function: $ease-out-soft;
+  }
+}
+
+/// Focus ring. One implementation, used everywhere, always visible against the
+/// graphite background. Uses `outline` so it never affects layout.
+@mixin focus-ring($offset: 3px) {
+  outline: 2px solid var(--cobalt);
+  outline-offset: $offset;
+}
+
+@mixin focusable($offset: 3px) {
+  &:focus-visible {
+    @include focus-ring($offset);
+    border-radius: 1px;
+  }
+}

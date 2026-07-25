@@ -1,0 +1,163 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+.headerAside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.lead {
+  @include type('lead');
+  color: var(--ink);
+  max-width: 46ch;
+}
+
+.note {
+  @include mono-data(0.6875rem);
+  color: var(--ink-faint);
+  max-width: 52ch;
+}
+
+/* Themes ------------------------------------------------------------------ */
+
+.themes {
+  border-top: 1px solid var(--rule);
+}
+
+.theme {
+  display: grid;
+  // A fixed metadata column on the left, like a catalogue: the reference code and
+  // category always align down the page regardless of title length.
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 3rem);
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.themeMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.themeRef {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--amber);
+  font-variant-numeric: tabular-nums;
+}
+
+.themeCategory {
+  color: var(--ink-faint);
+  font-size: 0.5625rem;
+}
+
+.themeBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.themeTitle {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.themeQuestion {
+  @include type('body');
+  color: var(--cyan);
+  max-width: 62ch;
+}
+
+.themeDetail {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 68ch;
+}
+
+/* Footer ------------------------------------------------------------------ */
+
+.footer {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.footerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  @include mono(0.625rem, 0.14em);
+  color: var(--ink-muted);
+  @include transition(color);
+  @include focusable;
+
+  svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 1.2;
+    @include transition(transform);
+  }
+
+  @include hover {
+    color: var(--cobalt);
+
+    svg {
+      transform: translateX(3px);
+    }
+  }
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('xl') {
+  .header {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  .lead,
+  .note {
+    max-width: none;
+  }
+
+  .theme {
+    grid-template-columns: 9rem minmax(0, 1fr);
+  }
+}
+
+@include down('sm') {
+  .theme {
+    // Stacked: a metadata column plus a title at 360px leaves nothing for either.
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .themeMeta {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.85rem;
+  }
+
+  .themeQuestion,
+  .themeDetail {
+    max-width: none;
+  }
+}

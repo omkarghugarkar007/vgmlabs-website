@@ -1,0 +1,106 @@
+// ---------------------------------------------------------------------------
+// Typography scale.
+//
+// Two families, each with a clear job:
+//   display/body  Instrument Sans — editorial, wide-set, quietly geometric
+//   technical     IBM Plex Mono   — labels, indices, metadata, telemetry
+//
+// The display scale is fluid but *capped at both ends* so headlines stay
+// composed on a 1024px laptop and never turn into billboards at 2560px.
+// ---------------------------------------------------------------------------
+
+@use 'sass:map';
+
+$font-display: var(--font-display);
+$font-mono: var(--font-mono);
+
+// Display -------------------------------------------------------------------
+// `-d1` is reserved for the hero and the final CTA only.
+$type: (
+  'd1': (
+    size: clamp(2.75rem, 7.4vw, 7rem),
+    leading: 0.94,
+    tracking: -0.035em,
+  ),
+  'd2': (
+    size: clamp(2.25rem, 5.4vw, 4.75rem),
+    leading: 0.97,
+    tracking: -0.03em,
+  ),
+  'd3': (
+    size: clamp(1.75rem, 3.4vw, 3rem),
+    leading: 1.03,
+    tracking: -0.024em,
+  ),
+  'd4': (
+    size: clamp(1.375rem, 2.1vw, 1.9rem),
+    leading: 1.12,
+    tracking: -0.018em,
+  ),
+  'lead': (
+    size: clamp(1.0625rem, 1.35vw, 1.3125rem),
+    leading: 1.55,
+    tracking: -0.008em,
+  ),
+  'body': (
+    size: clamp(0.9375rem, 1vw, 1.0625rem),
+    leading: 1.65,
+    tracking: -0.004em,
+  ),
+  'small': (
+    size: 0.875rem,
+    leading: 1.6,
+    tracking: 0,
+  ),
+);
+
+@mixin type($name) {
+  $t: map.get($type, $name);
+  @if not $t {
+    @error 'Unknown type step `#{$name}`.';
+  }
+  font-size: map.get($t, size);
+  line-height: map.get($t, leading);
+  letter-spacing: map.get($t, tracking);
+}
+
+/// Display treatment. Optical sizing plus tight leading; `text-wrap: balance`
+/// is avoided on large display type because it fights the manual line breaks
+/// used throughout the site.
+@mixin display($step: 'd2', $weight: 500) {
+  @include type($step);
+  font-family: $font-display;
+  font-weight: $weight;
+  text-wrap: pretty;
+}
+
+// Technical -----------------------------------------------------------------
+/// Mono label. Uppercase, letterspaced, small — the site's annotation voice.
+/// `$size` stays in rem (never fluid): annotations should not scale with the
+/// viewport, they should stay quiet.
+@mixin mono($size: 0.6875rem, $tracking: 0.14em) {
+  font-family: $font-mono;
+  font-size: $size;
+  font-weight: 400;
+  letter-spacing: $tracking;
+  line-height: 1.4;
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+}
+
+/// Mono used as running text (spec tables, metrics) — sentence case, normal
+/// tracking, tabular figures so columns of numbers align.
+@mixin mono-data($size: 0.75rem) {
+  font-family: $font-mono;
+  font-size: $size;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+
+// Measure -------------------------------------------------------------------
+$measure-tight: 34ch;
+$measure: 58ch;
+$measure-wide: 72ch;

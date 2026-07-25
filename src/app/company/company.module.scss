@@ -1,0 +1,244 @@
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+/* Statement --------------------------------------------------------------- */
+
+.statementGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.statementHead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: sticky;
+  top: calc(var(--nav-h) + 3rem);
+}
+
+.statementBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lead {
+  @include type('lead');
+  color: var(--ink);
+  max-width: 58ch;
+}
+
+.body {
+  @include type('body');
+  color: var(--ink-muted);
+  max-width: 62ch;
+}
+
+/* Principles -------------------------------------------------------------- */
+
+.principlesHead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+  max-width: 52ch;
+}
+
+.principlesNote {
+  @include type('small');
+  color: var(--ink-muted);
+}
+
+.principles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.principle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1.75rem 3rem 1.75rem 0;
+  border-top: 1px solid var(--rule-faint);
+
+  &:nth-child(even) {
+    padding-left: 2.5rem;
+    padding-right: 0;
+    border-left: 1px solid var(--rule-faint);
+  }
+
+  dt {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    @include type('body');
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  dd {
+    @include type('small');
+    color: var(--ink-muted);
+    max-width: 48ch;
+    padding-left: 1.9rem;
+  }
+}
+
+.principleIndex {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--amber);
+  flex: 0 0 auto;
+  min-width: 1.15rem;
+}
+
+/* Team -------------------------------------------------------------------- */
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 0;
+}
+
+.member {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.75rem 2rem 1.75rem 0;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.memberName {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.memberRole {
+  color: var(--cobalt);
+}
+
+.memberFocus {
+  @include type('small');
+  color: var(--ink-muted);
+}
+
+/* Registered details ------------------------------------------------------ */
+
+.detailsWrap {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 8fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.detailsHeading {
+  color: var(--ink-faint);
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 3rem;
+
+  dt {
+    @include mono(0.5625rem, 0.15em);
+    color: var(--ink-faint);
+    margin-bottom: 0.4rem;
+  }
+
+  dd {
+    @include type('small');
+    color: var(--ink-muted);
+  }
+}
+
+.mono {
+  font-family: $font-mono;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.link {
+  border-bottom: 1px solid var(--rule);
+  @include transition(color, border-color);
+  @include focusable;
+
+  @include hover {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+  }
+}
+
+/* Outro ------------------------------------------------------------------- */
+
+.outro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+}
+
+.outroText {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 400;
+  color: var(--ink);
+  max-width: 44ch;
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('lg') {
+  .statementGrid,
+  .detailsWrap {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .statementHead {
+    position: static;
+  }
+
+  .principles {
+    grid-template-columns: 1fr;
+  }
+
+  .principle {
+    padding: 1.5rem 0;
+
+    &:nth-child(even) {
+      padding-left: 0;
+      border-left: none;
+    }
+  }
+}
+
+@include down('sm') {
+  .details {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .principlesHead,
+  .lead,
+  .body,
+  .outroText {
+    max-width: none;
+  }
+
+  .principle dd {
+    padding-left: 0;
+    max-width: none;
+  }
+
+  .member {
+    padding-right: 0;
+  }
+}

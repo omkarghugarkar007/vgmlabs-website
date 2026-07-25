@@ -1,0 +1,231 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  max-width: 46ch;
+  margin-bottom: clamp(3rem, 8vw, 6rem);
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+.intro {
+  @include type('lead');
+  color: var(--ink-muted);
+}
+
+/* Process ----------------------------------------------------------------- */
+
+.process {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.pathColumn {
+  position: relative;
+  // Matches the steps column height exactly so the path anchors line up with row
+  // centres.
+  align-self: stretch;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.signal {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  // Centres the marker on the path point rather than hanging off it.
+  margin: -4.5px 0 0 -4.5px;
+  background: var(--amber);
+  transform: rotate(45deg);
+  box-shadow: 0 0 14px 2px #{rgba($amber, 0.4)};
+  opacity: 0;
+  @include transition(opacity);
+}
+
+/* Steps ------------------------------------------------------------------- */
+
+.steps {
+  display: grid;
+  // Equal rows: the SVG anchors are at fixed percentages, so rows must be equal
+  // height for the curve to meet each step.
+  grid-auto-rows: 1fr;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-block: clamp(1.75rem, 4vw, 3rem);
+  border-top: 1px solid var(--rule-faint);
+  @include transition(border-color);
+
+  &:last-child {
+    border-bottom: 1px solid var(--rule-faint);
+  }
+}
+
+.stepHead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.stepIndex {
+  @include mono(0.6875rem, 0.16em);
+  color: var(--ink-faint);
+  @include transition(color);
+}
+
+.stepSlash {
+  @include mono(0.6875rem, 0);
+  color: var(--metal);
+}
+
+.stepTitle {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+.stepBody {
+  @include type('body');
+  color: var(--ink-muted);
+  max-width: 56ch;
+}
+
+.outputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 1.75rem;
+  margin-top: 0.35rem;
+
+  li {
+    position: relative;
+    padding-left: 0.9rem;
+    @include mono-data(0.6875rem);
+    color: var(--ink-faint);
+
+    // A 3px square marker rather than a bullet glyph.
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.5em;
+      width: 3px;
+      height: 3px;
+      background: var(--metal);
+    }
+  }
+}
+
+/* States ------------------------------------------------------------------ */
+
+.step[data-state='active'] {
+  border-top-color: #{rgba($cobalt, 0.45)};
+
+  .stepIndex {
+    color: var(--amber);
+  }
+
+  .stepTitle {
+    color: var(--ink);
+  }
+
+  .outputs li::before {
+    background: var(--cobalt);
+  }
+}
+
+.step[data-state='passed'] {
+  .stepTitle {
+    color: var(--ink);
+  }
+
+  .stepIndex {
+    color: var(--cobalt);
+  }
+}
+
+/* Footer ------------------------------------------------------------------ */
+
+.footer {
+  margin-top: clamp(2rem, 5vw, 3.5rem);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.footerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  @include mono(0.625rem, 0.14em);
+  color: var(--ink-muted);
+  @include transition(color);
+  @include focusable;
+
+  svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 1.2;
+    @include transition(transform);
+  }
+
+  @include hover {
+    color: var(--cobalt);
+
+    svg {
+      transform: translateX(3px);
+    }
+  }
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('lg') {
+  .process {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+
+  .outputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include down('sm') {
+  .header {
+    max-width: none;
+    margin-bottom: 2.5rem;
+  }
+
+  .process {
+    // The curve becomes a narrow spine. Any wider and the content column drops
+    // below a readable measure at 360px.
+    grid-template-columns: 26px minmax(0, 1fr);
+    gap: 1.1rem;
+  }
+
+  .step {
+    padding-block: 1.5rem;
+    gap: 0.7rem;
+  }
+
+  .stepBody {
+    max-width: none;
+  }
+
+  .footer {
+    justify-content: flex-start;
+  }
+}

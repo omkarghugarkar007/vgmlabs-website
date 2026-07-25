@@ -1,0 +1,233 @@
+.header {
+  max-width: 40ch;
+  margin-bottom: clamp(3rem, 8vw, 6rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 8fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+/* Index ------------------------------------------------------------------- */
+
+.index {
+  position: sticky;
+  top: calc(var(--nav-h) + 4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  ol {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.indexItem {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--rule-faint);
+  // Colour only — the index must not move when the active chapter changes, or the
+  // eye is pulled away from the chapter being read.
+  @include transition(color, border-color);
+}
+
+.indexNum {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--ink-faint);
+  @include transition(color);
+}
+
+.indexLabel {
+  @include mono(0.6875rem, 0.1em);
+  color: var(--ink-faint);
+  @include transition(color);
+}
+
+.indexItemActive {
+  border-bottom-color: #{rgba($cobalt, 0.5)};
+
+  .indexNum {
+    color: var(--amber);
+  }
+
+  .indexLabel {
+    color: var(--ink);
+  }
+}
+
+.indexNote {
+  @include mono-data(0.6875rem);
+  color: var(--ink-faint);
+  max-width: 26ch;
+}
+
+/* Chapters ---------------------------------------------------------------- */
+
+.chapters {
+  display: flex;
+  flex-direction: column;
+}
+
+.chapter {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  // Generous, uneven spacing: each chapter needs room to own the viewport while
+  // its field state is active.
+  padding-block: clamp(3rem, 9vw, 7.5rem);
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--rule-faint);
+  }
+}
+
+.chapterHead {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.chapterNum {
+  @include mono(0.6875rem, 0.18em);
+  color: var(--amber);
+}
+
+.chapterRule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule-faint);
+}
+
+.chapterBody {
+  @include type('lead');
+  color: var(--ink-muted);
+  max-width: 58ch;
+}
+
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  // The separator is drawn as a border on the item rather than a character, so it
+  // never wraps onto its own line.
+  gap: 0.5rem 0;
+
+  li {
+    padding: 0 0.9rem;
+    border-left: 1px solid var(--rule);
+
+    &:first-child {
+      padding-left: 0;
+      border-left: none;
+    }
+  }
+}
+
+.chapterLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  align-self: flex-start;
+  min-height: 44px;
+  @include mono(0.625rem, 0.14em);
+  color: var(--ink-muted);
+  @include transition(color);
+  @include focusable;
+
+  svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 1.2;
+    @include transition(transform);
+  }
+
+  @include hover {
+    color: var(--cobalt);
+
+    svg {
+      transform: translateX(3px);
+    }
+  }
+}
+
+/* iPad and below ---------------------------------------------------------- */
+
+@include down('lg') {
+  .body {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .index {
+    position: static;
+    // Becomes a horizontal contents strip rather than a sidebar. Scrollable
+    // rather than wrapped, so the four titles stay on one line.
+    ol {
+      flex-direction: row;
+      gap: 0;
+      overflow-x: auto;
+      // Contains its own horizontal scroll; the page never scrolls sideways.
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--rule-faint);
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  .indexItem {
+    grid-template-columns: auto auto;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+    padding: 0.75rem 1.25rem 0.75rem 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .indexItemActive {
+    border-bottom-color: var(--cobalt);
+  }
+
+  .indexNote {
+    max-width: none;
+  }
+}
+
+@include down('sm') {
+  .header {
+    max-width: none;
+    margin-bottom: 2.5rem;
+  }
+
+  .chapter {
+    gap: 1.25rem;
+    padding-block: 2.75rem;
+  }
+
+  .labels {
+    // Vertical borders between wrapped mono labels look broken once they stack;
+    // a plain gapped list is cleaner at this width.
+    gap: 0.5rem 1rem;
+
+    li {
+      padding: 0;
+      border-left: none;
+    }
+  }
+}

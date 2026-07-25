@@ -1,0 +1,227 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  // Reset fieldset chrome for the OptionGroup variant.
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  @include mono(0.625rem, 0.14em);
+  color: var(--ink-muted);
+  // legend needs this to sit in the flex flow like a label does.
+  padding: 0;
+  float: none;
+}
+
+.required {
+  color: var(--cobalt);
+}
+
+.optional {
+  @include mono(0.5rem, 0.1em);
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.hint {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+  max-width: 62ch;
+}
+
+/* Controls ---------------------------------------------------------------- */
+
+.input,
+.textarea {
+  width: 100%;
+  // 48px, comfortably over the 44px minimum.
+  min-height: 48px;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: $radius-control;
+  background: #{rgba($surface, 0.55)};
+  color: var(--ink);
+  @include type('body');
+  font-size: 1rem; // 16px: anything smaller triggers zoom-on-focus in iOS Safari.
+  @include transition(border-color, background-color);
+
+  &::placeholder {
+    color: var(--ink-faint);
+  }
+
+  &:hover {
+    border-color: var(--rule-bright);
+  }
+
+  &:focus-visible {
+    @include focus-ring(2px);
+    border-color: var(--cobalt);
+  }
+}
+
+.textareaWrap {
+  position: relative;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 7rem;
+  line-height: 1.6;
+}
+
+.count {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.5rem;
+  @include mono-data(0.5625rem);
+  color: var(--ink-faint);
+  background: #{rgba($void, 0.8)};
+  padding: 0.1rem 0.3rem;
+  border-radius: $radius-subtle;
+}
+
+/* Option chips ------------------------------------------------------------ */
+
+.optionsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: 0.5rem;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: $radius-control;
+  background: #{rgba($surface, 0.4)};
+  @include mono(0.625rem, 0.1em);
+  color: var(--ink-muted);
+  cursor: pointer;
+  @include transition(border-color, background-color, color);
+
+  &:hover {
+    border-color: var(--rule-bright);
+    color: var(--ink);
+  }
+
+  // Focus lives on the hidden input; surface it on the visible chip.
+  &:focus-within {
+    @include focus-ring(2px);
+  }
+}
+
+.chipActive {
+  border-color: #{rgba($cobalt, 0.7)};
+  background: #{rgba($cobalt, 0.12)};
+  color: var(--ink);
+
+  .chipMark {
+    border-color: var(--cobalt);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+}
+
+.radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.chipMark {
+  position: relative;
+  width: 9px;
+  height: 9px;
+  flex: 0 0 auto;
+  border: 1px solid var(--rule-bright);
+  transform: rotate(45deg);
+  @include transition(border-color);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    background: var(--cobalt);
+    opacity: 0;
+    @include transition(opacity);
+  }
+}
+
+/* Messages ---------------------------------------------------------------- */
+
+.notice {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--amber);
+  padding-left: 0.75rem;
+  border-left: 1px solid #{rgba($amber, 0.45)};
+}
+
+.error {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--danger);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+
+  &[hidden] {
+    display: none;
+  }
+
+  &::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 4px;
+    height: 4px;
+    margin-top: 0.55em;
+    background: currentColor;
+  }
+}
+
+.fieldError {
+  .input,
+  .textarea {
+    border-color: #{rgba($danger, 0.7)};
+  }
+}
+
+/* Honeypot ---------------------------------------------------------------- */
+
+/* Off-screen rather than display:none — automation that skips hidden inputs still
+   fills this one, which is the entire point. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}

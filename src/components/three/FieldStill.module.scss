@@ -1,0 +1,21 @@
+.still {
+  position: absolute;
+  // Oversized and centred so the spiral's edges are never visible as a hard
+  // circular boundary inside the viewport.
+  top: 50%;
+  left: 50%;
+  width: max(120vh, 120vw);
+  height: max(120vh, 120vw);
+  transform: translate(-50%, -50%);
+  // The 3D field sits low in the frame, leaving the upper area to typography.
+  // Match that here so switching between the two is not a jump.
+  margin-top: 6vh;
+
+  @include down('md') {
+    width: max(150vh, 150vw);
+    height: max(150vh, 150vw);
+    margin-top: 2vh;
+    // Quieter on small screens: the mobile composition leads with typography.
+    opacity: 0.72;
+  }
+}

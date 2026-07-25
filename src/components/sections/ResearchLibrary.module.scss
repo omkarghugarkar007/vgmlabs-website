@@ -1,0 +1,259 @@
+.library {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+/* Filters ----------------------------------------------------------------- */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--rule-faint);
+  border-radius: $radius-subtle;
+  @include mono(0.625rem, 0.1em);
+  color: var(--ink-muted);
+  @include transition(border-color, color, background-color);
+  @include focusable(2px);
+
+  @include hover {
+    border-color: var(--rule-bright);
+    color: var(--ink);
+  }
+}
+
+.filterActive {
+  border-color: #{rgba($cobalt, 0.6)};
+  background: #{rgba($cobalt, 0.1)};
+  color: var(--ink);
+
+  .filterCount {
+    color: var(--cobalt);
+  }
+}
+
+.filterCount {
+  @include mono-data(0.5625rem);
+  color: var(--ink-faint);
+  @include transition(color);
+}
+
+.categoryNote {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 62ch;
+  margin-top: -1.5rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--cobalt);
+}
+
+/* Blocks ------------------------------------------------------------------ */
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.blockHead {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule-faint);
+}
+
+.blockCount {
+  color: var(--ink-faint);
+  font-size: 0.5625rem;
+  white-space: nowrap;
+}
+
+/* Entries ----------------------------------------------------------------- */
+
+.entries {
+  border-top: 1px solid var(--rule-faint);
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 3rem);
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.entryMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.entryCategory {
+  color: var(--cobalt);
+  font-size: 0.5625rem;
+}
+
+.entryDate {
+  @include mono-data(0.6875rem);
+  color: var(--ink-faint);
+}
+
+.entryBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.entryTitle {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.entryLink {
+  @include focusable;
+
+  @include hover {
+    color: var(--cobalt);
+  }
+}
+
+.entrySummary {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 68ch;
+}
+
+.entryAuthors {
+  @include mono-data(0.6875rem);
+  color: var(--ink-faint);
+}
+
+/* Empty ------------------------------------------------------------------- */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid var(--rule-faint);
+  background: #{rgba($surface, 0.3)};
+}
+
+.emptyStatement {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.emptyBody {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 66ch;
+}
+
+/* Themes ------------------------------------------------------------------ */
+
+.themes {
+  border-top: 1px solid var(--rule-faint);
+}
+
+.theme {
+  display: grid;
+  grid-template-columns: 12rem minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 3rem);
+  padding-block: clamp(1.5rem, 3vw, 2.25rem);
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.themeMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.themeRef {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--amber);
+  font-variant-numeric: tabular-nums;
+}
+
+.themeCategory {
+  color: var(--ink-faint);
+  font-size: 0.5625rem;
+}
+
+.themeBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.themeTitle {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.themeQuestion {
+  @include type('body');
+  color: var(--cyan);
+  max-width: 64ch;
+}
+
+.themeDetail {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 68ch;
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('xl') {
+  .entry,
+  .theme {
+    grid-template-columns: 9rem minmax(0, 1fr);
+  }
+}
+
+@include down('sm') {
+  .entry,
+  .theme {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .entryMeta,
+  .themeMeta {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.85rem;
+  }
+
+  .categoryNote,
+  .entrySummary,
+  .emptyBody,
+  .themeQuestion,
+  .themeDetail {
+    max-width: none;
+  }
+}

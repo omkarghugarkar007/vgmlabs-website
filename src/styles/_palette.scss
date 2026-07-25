@@ -1,0 +1,38 @@
+// ---------------------------------------------------------------------------
+// Palette — compile-time colour source of truth.
+//
+// These Sass values are mirrored into CSS custom properties in global.scss.
+// Prefer the custom properties (var(--ink)) inside component styles; reach for
+// the Sass values only where a compile-time colour operation is required
+// (colour-mix at build time, rgba() with a literal, gradient stops).
+//
+// Art direction: a graphite environment with three signal accents. Accents are
+// used as *signals* — state, focus, data — never as decorative gradient fills.
+// ---------------------------------------------------------------------------
+
+// Environment ---------------------------------------------------------------
+$void: #050607; // page background — near-black graphite
+$surface: #0d1012; // raised panels, nav backdrop, matrix cells
+$surface-2: #14181b; // hover/active panel state
+$metal: #24282d; // soft metallic grey — hairlines, borders, dividers
+$metal-dim: #1a1e21; // quieter hairline for dense grids
+
+// Type ----------------------------------------------------------------------
+$ink: #ece9e2; // warm off-white — primary text
+$ink-muted: #92979d; // secondary text, annotations
+$ink-faint: #5f656b; // tertiary metadata, disabled
+
+// Signals -------------------------------------------------------------------
+$cobalt: #4f72ff; // technical accent — primary interactive, links, focus
+$cobalt-deep: #2b46b8; // cobalt shadow/edge for depth
+$amber: #ffb45c; // secondary signal — emphasis, active process step
+$cyan: #8ce8e3; // system-state — telemetry, verified/live states
+
+// Semantic ------------------------------------------------------------------
+$danger: #ff6b5c; // form errors only
+
+// Alpha helpers --------------------------------------------------------------
+// Written as literal rgba so they survive into custom properties unchanged.
+@function alpha($color, $amount) {
+  @return rgba($color, $amount);
+}

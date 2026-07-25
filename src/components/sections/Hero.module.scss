@@ -1,0 +1,230 @@
+.hero {
+  position: relative;
+  // svh, not vh: on iOS the address bar makes 100vh taller than the visible
+  // viewport, which pushes the scroll guidance off screen at exactly the moment
+  // it is meant to be read.
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: calc(var(--nav-h) + clamp(2rem, 6vh, 5rem));
+  padding-bottom: clamp(4.5rem, 10vh, 7rem);
+}
+
+.grid {
+  @include grid(12);
+  row-gap: clamp(1.25rem, 3vh, 2.25rem);
+  align-content: center;
+}
+
+.status {
+  grid-column: 1 / -1;
+}
+
+.statusItem {
+  display: inline;
+}
+
+.statusSep {
+  display: inline-block;
+  margin: 0 0.6em;
+  color: #{rgba($metal, 1)};
+}
+
+.headline {
+  grid-column: 1 / span 9;
+  // Pulls the headline up against the status label so they read as one block.
+  margin-top: clamp(0.5rem, 2vh, 1.5rem);
+}
+
+.support {
+  grid-column: 1 / span 5;
+  margin-top: clamp(0.75rem, 2.5vh, 2rem);
+  @include type('lead');
+  color: var(--ink-muted);
+  max-width: 46ch;
+}
+
+.actions {
+  grid-column: 1 / span 6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: clamp(1rem, 2.5vh, 1.75rem);
+}
+
+/* Metadata column --------------------------------------------------------- */
+
+.meta {
+  grid-column: 8 / -1;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.metaRow {
+  display: grid;
+  grid-template-columns: 4.75rem minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: baseline;
+
+  dt {
+    @include mono(0.625rem, 0.14em);
+    color: var(--ink-faint);
+  }
+
+  dd {
+    @include mono-data(0.6875rem);
+    color: var(--ink-muted);
+    // Long chains (the layer list) need to break cleanly rather than overflow.
+    overflow-wrap: break-word;
+  }
+}
+
+/* Scroll guidance --------------------------------------------------------- */
+
+.guide {
+  position: absolute;
+  left: $shell-gutter;
+  bottom: clamp(1.5rem, 4vh, 2.75rem);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.guideRail {
+  display: block;
+  position: relative;
+  width: 56px;
+  height: 1px;
+  background: #{rgba($metal, 0.9)};
+  overflow: hidden;
+}
+
+.guideFill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent, var(--cyan), transparent);
+  transform: translateX(-100%);
+
+  @include motion-safe {
+    animation: sweep 3.6s $ease-in-out infinite;
+  }
+}
+
+@keyframes sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  // A long pause at the end of each pass: a continuously moving element in the
+  // corner of the eye is exactly the kind of ambient motion to avoid.
+  55%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.guideLabel {
+  color: var(--ink-faint);
+}
+
+/* ------------------------------------------------------------------------- */
+/* iPad and small laptop: 768–1180px                                          */
+/* Portrait iPad is 820px wide. The 9-column headline and a right metadata     */
+/* column cannot coexist at that width, so the metadata moves below.           */
+/* ------------------------------------------------------------------------- */
+
+@include down('xl') {
+  .headline {
+    grid-column: 1 / span 11;
+  }
+
+  .support {
+    grid-column: 1 / span 7;
+  }
+
+  .meta {
+    grid-column: 1 / -1;
+    margin-top: clamp(1.5rem, 4vh, 3rem);
+  }
+
+  .metaRow {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+  }
+}
+
+@include down('lg') {
+  .hero {
+    // Content, not the field, leads at this width. Slightly less vertical
+    // centring so the headline sits nearer the top of the fold.
+    justify-content: flex-start;
+    padding-top: calc(var(--nav-h) + clamp(3rem, 12vh, 7rem));
+  }
+
+  .headline,
+  .support,
+  .actions {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* Phone: an intentionally different composition                              */
+/* Not the desktop layout scaled down — the metadata list becomes a stacked    */
+/* spec block, actions go full width, and the guidance moves centre.           */
+/* ------------------------------------------------------------------------- */
+
+@include down('sm') {
+  .hero {
+    min-height: auto;
+    padding-top: calc(var(--nav-h) + 3.5rem);
+    padding-bottom: 4.5rem;
+  }
+
+  .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .headline {
+    margin-top: 0;
+  }
+
+  .support {
+    max-width: none;
+    margin-top: 0;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 0.5rem;
+  }
+
+  .meta {
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  .metaRow {
+    // Stacked: a 5.5rem label column leaves too little for the value at 360px.
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--rule-faint);
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
+  .guide {
+    position: static;
+    margin-top: 2.5rem;
+  }
+}

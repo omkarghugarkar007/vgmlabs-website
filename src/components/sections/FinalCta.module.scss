@@ -1,0 +1,92 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  // The tallest section on the site. The field's final stable state is the point
+  // of this space — the structure has resolved, and the page gives it room.
+  min-height: 78svh;
+  justify-content: center;
+}
+
+.eyebrow {
+  color: var(--cyan);
+}
+
+.headline {
+  max-width: 20ch;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  align-items: end;
+  margin-top: clamp(1rem, 3vw, 2rem);
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--rule);
+}
+
+.copy {
+  @include type('lead');
+  color: var(--ink-muted);
+  max-width: 44ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+  justify-content: flex-end;
+}
+
+.email {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  @include mono-data(0.8125rem);
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--rule);
+  @include transition(color, border-color);
+  @include focusable;
+
+  @include hover {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+  }
+}
+
+@include down('lg') {
+  .body {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 2rem;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+}
+
+@include down('sm') {
+  .wrap {
+    min-height: auto;
+    padding-block: 1rem;
+  }
+
+  .headline,
+  .copy {
+    max-width: none;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
+  .email {
+    // Long address, small screen: allow it to break rather than overflow.
+    word-break: break-all;
+  }
+}

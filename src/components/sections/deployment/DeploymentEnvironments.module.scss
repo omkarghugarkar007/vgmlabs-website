@@ -1,0 +1,269 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 7vw, 5rem);
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+.headerAside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.principle {
+  @include type('lead');
+  color: var(--ink);
+  max-width: 46ch;
+}
+
+.scope {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+  max-width: 50ch;
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule);
+}
+
+/* Body -------------------------------------------------------------------- */
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.list {
+  // Reset the browser's fieldset chrome; the grouping is semantic only.
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.option {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule-faint);
+  cursor: pointer;
+  @include transition(border-color);
+
+  // The whole row is the label, so the target is the full width and well over
+  // 44px tall.
+  &:focus-within {
+    @include focus-ring(4px);
+  }
+
+  @include hover {
+    .optionLabel {
+      color: var(--ink);
+    }
+    .optionMark {
+      border-color: var(--rule-bright);
+    }
+  }
+}
+
+/* The native input stays in the accessibility tree and keeps arrow-key behaviour;
+   only its appearance is replaced. */
+.radio {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.optionMark {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  margin-top: 0.3rem;
+  border: 1px solid var(--rule);
+  transform: rotate(45deg);
+  @include transition(border-color, background-color);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: var(--cyan);
+    opacity: 0;
+    @include transition(opacity);
+  }
+}
+
+.optionBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.optionLabel {
+  @include mono(0.75rem, 0.1em);
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+.optionSummary {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+  max-width: 56ch;
+}
+
+.optionActive {
+  border-bottom-color: #{rgba($cyan, 0.35)};
+
+  .optionMark {
+    border-color: var(--cyan);
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  .optionLabel {
+    color: var(--ink);
+  }
+
+  .optionSummary {
+    color: var(--ink-muted);
+  }
+}
+
+/* Visual ------------------------------------------------------------------ */
+
+.visual {
+  position: sticky;
+  top: calc(var(--nav-h) + 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 2rem);
+  border: 1px solid var(--rule-faint);
+  background: #{rgba($surface, 0.35)};
+}
+
+.visualCaption {
+  color: var(--ink-faint);
+  align-self: center;
+  font-size: 0.5625rem;
+}
+
+/* Traits ------------------------------------------------------------------ */
+
+.traits {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.traitsHead {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.traitsRule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule-faint);
+}
+
+.traitsHint {
+  color: var(--ink-faint);
+  font-size: 0.5625rem;
+}
+
+.traitGrid {
+  display: grid;
+  // Seven characteristics: a 3/2/1 column progression rather than a fixed grid, so
+  // no row is ever left with one orphaned cell at an awkward width.
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 0;
+}
+
+.trait {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1.35rem 1.5rem 1.35rem 0;
+  border-bottom: 1px solid var(--rule-faint);
+
+  dt {
+    @include mono(0.5625rem, 0.15em);
+    color: var(--cobalt);
+  }
+
+  dd {
+    @include type('small');
+    font-size: 0.8125rem;
+    color: var(--ink-muted);
+  }
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('xl') {
+  .header,
+  .body {
+    grid-template-columns: 1fr;
+    gap: 2.25rem;
+    align-items: start;
+  }
+
+  .visual {
+    position: static;
+    // Constrain the square diagram so it does not become the tallest thing on the
+    // page once it spans the full width.
+    max-width: 30rem;
+    align-self: center;
+    width: 100%;
+  }
+
+  .principle,
+  .scope,
+  .optionSummary {
+    max-width: none;
+  }
+}
+
+@include down('sm') {
+  .visual {
+    padding: 1rem;
+    max-width: none;
+  }
+
+  .traitsHead {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .traitsRule {
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .trait {
+    padding-right: 0;
+  }
+}

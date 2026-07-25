@@ -1,0 +1,40 @@
+{
+  "name": "vgmlabs-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VGM Labs \u2014 applied AI engineering and research. Marketing and information site.",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && node scripts/finalize-export.mjs",
+    "preview": "npx --yes serve out --single=false",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run lint && npm run build"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@react-three/postprocessing": "^3.0.4",
+    "gsap": "^3.15.0",
+    "motion": "^12.42.2",
+    "next": "^16.2.11",
+    "postprocessing": "^6.37.9",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@types/node": "^22.13.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@types/three": "^0.185.0",
+    "eslint": "^9.20.0",
+    "eslint-config-next": "^16.2.11",
+    "sass": "^1.102.0",
+    "typescript": "^5.9.3"
+  }
+}

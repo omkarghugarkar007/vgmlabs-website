@@ -1,0 +1,92 @@
+name: Deploy to GitHub Pages
+
+# Builds the static export and publishes it to GitHub Pages.
+#
+# Uses the Pages deployment API rather than pushing to a gh-pages branch: no build
+# output is ever committed, and the workflow needs no personal access token — the
+# `id-token` and `pages` permissions below are enough.
+#
+# Before the first run: Settings → Pages → Build and deployment → Source =
+# "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+  # Manual re-deploy without a commit, e.g. after changing a repository variable.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let an in-progress deploy finish rather than cancelling it — a half-published
+# site is worse than a slightly stale one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` rather than `npm install`: installs exactly the lockfile and fails
+      # if package.json and the lockfile disagree.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build static export
+        env:
+          # Set these as repository variables (Settings → Secrets and variables →
+          # Actions → Variables). Neither is secret.
+          #
+          #   SITE_URL   canonical origin, e.g. https://vgmlabs.ai
+          #              Drives canonical tags, sitemap URLs and Open Graph.
+          #   SITE_CNAME custom domain for Pages, e.g. vgmlabs.ai
+          #              Omit when serving from <user>.github.io.
+          #   BASE_PATH  only when serving from a repo subpath, e.g. /VGMLabs-website
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.BASE_PATH }}
+          SITE_CNAME: ${{ vars.SITE_CNAME }}
+        run: npm run build
+
+      - name: Verify export
+        # Fail loudly here rather than publishing a broken site. Catches an empty
+        # export, a missing Jekyll opt-out (which would silently drop _next/), and a
+        # missing social image.
+        run: |
+          test -f out/index.html      || { echo "::error::out/index.html missing"; exit 1; }
+          test -f out/404.html        || { echo "::error::out/404.html missing"; exit 1; }
+          test -f out/.nojekyll       || { echo "::error::out/.nojekyll missing — _next/ would be dropped by Jekyll"; exit 1; }
+          test -f out/sitemap.xml     || { echo "::error::out/sitemap.xml missing"; exit 1; }
+          test -f out/og.png          || { echo "::error::out/og.png missing"; exit 1; }
+          echo "Export verified: $(find out -type f | wc -l) files"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

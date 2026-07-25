@@ -1,0 +1,118 @@
+.footer {
+  position: relative;
+  margin-top: clamp(5rem, 12vw, 10rem);
+  border-top: 1px solid var(--rule);
+  // A near-solid base: the field should recede here, not compete with legal text.
+  background: linear-gradient(to bottom, #{rgba($void, 0.72)}, #{rgba($void, 0.97)});
+}
+
+.inner {
+  @include shell;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.4fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 4vw, 3rem);
+
+  @include down('lg') {
+    grid-template-columns: 1fr;
+    gap: 2.75rem;
+  }
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 34ch;
+}
+
+.statement {
+  @include type('small');
+  color: var(--ink-muted);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+
+  @include down('sm') {
+    // Two columns rather than three: three columns of link lists at 360px gives
+    // each one about eight characters.
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 2rem;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+}
+
+.columnTitle {
+  color: var(--ink-faint);
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.link {
+  display: inline-block;
+  // 44px targets in a dense link list would look wrong; 2.75rem of line box with
+  // padding gets close while keeping the list compact, and the tappable area
+  // spans the full column width.
+  padding: 0.35rem 0;
+  @include type('small');
+  color: var(--ink-muted);
+  @include transition(color);
+  @include focusable;
+
+  @include hover {
+    color: var(--ink);
+  }
+
+  @include down('md') {
+    padding: 0.55rem 0;
+  }
+}
+
+.plain {
+  padding: 0.35rem 0;
+  @include type('small');
+  color: var(--ink-faint);
+}
+
+.legal {
+  @include shell;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  padding-block: 1.5rem 2rem;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.legalLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  @include mono(0.625rem, 0.1em);
+  text-transform: none;
+  color: var(--ink-faint);
+}
+
+.sep {
+  color: #{rgba($metal, 0.9)};
+}
+
+.cin {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-muted);
+}

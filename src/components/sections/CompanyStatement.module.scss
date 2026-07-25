@@ -1,0 +1,227 @@
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+/* Statement --------------------------------------------------------------- */
+
+.statement {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  // Indented into the grid rather than left-aligned with the heading: the shift
+  // marks it as commentary on the headline above.
+  margin: clamp(2rem, 5vw, 3.5rem) 0 clamp(3rem, 7vw, 5.5rem);
+  padding-left: clamp(0rem, 8vw, 9rem);
+}
+
+.lead {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 400;
+  color: var(--ink);
+  max-width: 44ch;
+}
+
+.support {
+  @include type('body');
+  color: var(--ink-muted);
+  max-width: 54ch;
+}
+
+/* Principles -------------------------------------------------------------- */
+
+.principlesHead {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+}
+
+.rule {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--rule-faint);
+}
+
+.principleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.principle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1.75rem 2.5rem 1.75rem 0;
+  border-top: 1px solid var(--rule-faint);
+
+  // Vertical rule between the two columns, drawn only on the left-hand cells.
+  &:nth-child(odd) {
+    padding-right: 3rem;
+  }
+
+  &:nth-child(even) {
+    padding-left: 2.5rem;
+    border-left: 1px solid var(--rule-faint);
+  }
+
+  dt {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    @include type('body');
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  dd {
+    @include type('small');
+    color: var(--ink-muted);
+    max-width: 46ch;
+    // Aligns the body under the label rather than under the index.
+    padding-left: 1.9rem;
+  }
+}
+
+.principleIndex {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--amber);
+  flex: 0 0 auto;
+  min-width: 1.15rem;
+}
+
+/* Team (rendered only when real entries exist) ----------------------------- */
+
+.team {
+  margin-top: clamp(3rem, 7vw, 5rem);
+}
+
+.teamList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0;
+}
+
+.member {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.75rem 2rem 1.75rem 0;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.memberName {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.memberRole {
+  color: var(--cobalt);
+}
+
+.memberFocus {
+  @include type('small');
+  color: var(--ink-muted);
+}
+
+.memberLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.35rem;
+
+  a {
+    @include mono(0.5625rem, 0.14em);
+    color: var(--ink-faint);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    @include transition(color);
+    @include focusable;
+
+    @include hover {
+      color: var(--ink);
+    }
+  }
+}
+
+/* Footer ------------------------------------------------------------------ */
+
+.footer {
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+}
+
+.footerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  @include mono(0.625rem, 0.14em);
+  color: var(--ink-muted);
+  @include transition(color);
+  @include focusable;
+
+  svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 1.2;
+    @include transition(transform);
+  }
+
+  @include hover {
+    color: var(--cobalt);
+
+    svg {
+      transform: translateX(3px);
+    }
+  }
+}
+
+/* iPad and below ---------------------------------------------------------- */
+
+@include down('lg') {
+  .statement {
+    padding-left: 0;
+  }
+
+  .principleGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .principle {
+    padding: 1.5rem 0;
+
+    &:nth-child(odd),
+    &:nth-child(even) {
+      padding-left: 0;
+      padding-right: 0;
+      border-left: none;
+    }
+  }
+}
+
+@include down('sm') {
+  .lead,
+  .support {
+    max-width: none;
+  }
+
+  .principle dd {
+    padding-left: 0;
+    max-width: none;
+  }
+
+  .member {
+    padding-right: 0;
+  }
+}

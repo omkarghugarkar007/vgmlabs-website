@@ -1,0 +1,258 @@
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+/* Phase strip ------------------------------------------------------------- */
+
+.phases {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+}
+
+.phase {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0 1.5rem 0 0;
+  border-left: 1px solid var(--rule-faint);
+  padding-left: 1.5rem;
+
+  &:first-child {
+    padding-left: 0;
+    border-left: none;
+  }
+}
+
+.phaseTitle {
+  @include mono(0.75rem, 0.1em);
+  color: var(--ink);
+}
+
+.phaseBody {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+/* Topics ------------------------------------------------------------------ */
+
+.topicsHead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.topics {
+  border-top: 1px solid var(--rule);
+}
+
+.topic {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(1.25rem, 3vw, 3rem);
+  padding-block: clamp(1.75rem, 3.5vw, 2.75rem);
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.topicIndex {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--ink-faint);
+  padding-top: 0.3rem;
+}
+
+.topicBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.topicTitle {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.topicText {
+  @include type('body');
+  color: var(--ink-muted);
+}
+
+.topicQuestions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  // A quiet panel, not a card: one hairline on the left, no fill, no radius.
+  padding-left: clamp(1rem, 2vw, 1.75rem);
+  border-left: 1px solid var(--rule-faint);
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  li {
+    @include mono-data(0.6875rem);
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+}
+
+.questionsLabel {
+  color: var(--cobalt);
+  font-size: 0.5rem;
+}
+
+/* Failure section --------------------------------------------------------- */
+
+.failureHead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  max-width: 62ch;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.failureIntro {
+  @include type('lead');
+  color: var(--ink-muted);
+}
+
+.requirements {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+
+.requirement {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: start;
+  padding: 1.5rem 1.75rem 1.5rem 0;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.requirementIndex {
+  @include mono(0.5625rem, 0.14em);
+  color: var(--amber);
+  padding-top: 0.25em;
+}
+
+.requirementTitle {
+  @include type('body');
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 0.4rem;
+}
+
+.requirementBody {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--ink-muted);
+}
+
+.failureOutro {
+  @include type('body');
+  color: var(--ink-muted);
+  max-width: 62ch;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule);
+}
+
+/* Outro ------------------------------------------------------------------- */
+
+.outro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem 3rem;
+}
+
+.outroText {
+  @include type('d4');
+  font-family: $font-display;
+  font-weight: 400;
+  color: var(--ink);
+  max-width: 46ch;
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('xl') {
+  .phases {
+    // Five columns of prose do not fit at 820px; two rows of readable columns do.
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 1.75rem;
+  }
+
+  .phase {
+    padding-left: 1.25rem;
+
+    &:nth-child(odd) {
+      padding-left: 0;
+      border-left: none;
+    }
+  }
+
+  .topic {
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    row-gap: 1.5rem;
+  }
+
+  .topicQuestions {
+    grid-column: 2;
+  }
+
+  .requirements {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include down('sm') {
+  .phases {
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem;
+  }
+
+  .phase {
+    padding: 0 0 1.5rem;
+    border-left: none;
+    border-bottom: 1px solid var(--rule-faint);
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
+  .topic {
+    grid-template-columns: 1fr;
+    row-gap: 1.1rem;
+  }
+
+  .topicQuestions {
+    grid-column: 1;
+    padding-left: 0.9rem;
+  }
+
+  .requirements {
+    grid-template-columns: 1fr;
+  }
+
+  .requirement {
+    padding-right: 0;
+  }
+
+  .failureHead,
+  .failureOutro,
+  .outroText {
+    max-width: none;
+  }
+}

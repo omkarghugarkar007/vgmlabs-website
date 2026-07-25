@@ -1,0 +1,232 @@
+.rail {
+  --signal: 0;
+  position: relative;
+  margin-top: clamp(3rem, 7vw, 5.5rem);
+}
+
+/* Track ------------------------------------------------------------------- */
+
+.track {
+  position: absolute;
+  // Sits on the row where the ticks are, which is below the first label row.
+  top: 3.25rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+}
+
+.trackFill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  // scaleX driven by a custom property: one compositor-friendly property, no
+  // layout, no paint.
+  transform: scaleX(var(--signal));
+  background: linear-gradient(to right, #{rgba($cobalt, 0.3)}, var(--cobalt));
+}
+
+.signal {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--signal) * 100%);
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  background: var(--amber);
+  // A 45° square, not a circle: the same signal motif as the Intelligence Field's
+  // octahedral pulses.
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px 1px #{rgba($amber, 0.45)};
+}
+
+/* Stations ---------------------------------------------------------------- */
+
+.stations {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0;
+}
+
+.station {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-right: 1rem;
+  // Reserve the label row above the track so odd and even stations can swap
+  // sides without shifting the track.
+  padding-top: 3.25rem;
+}
+
+.tick {
+  position: absolute;
+  top: 3.25rem;
+  left: 0;
+  width: 1px;
+  height: 10px;
+  margin-top: -4px;
+  background: var(--rule-bright);
+  @include transition(background-color, height);
+}
+
+.stationBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 0.9rem;
+}
+
+.stationIndex {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--ink-faint);
+  @include transition(color);
+}
+
+.stationLabel {
+  @include mono(0.75rem, 0.1em);
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+.stationNote {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--ink-faint);
+  max-width: 22ch;
+  @include transition(color);
+}
+
+/* Alternate above / below the line so seven full labels fit a desktop width. */
+.station:nth-child(odd) {
+  padding-top: 0;
+  justify-content: flex-end;
+
+  .stationBody {
+    padding-top: 0;
+    padding-bottom: 0.9rem;
+    // Pushes the block above the track line.
+    margin-bottom: 3.25rem;
+  }
+
+  .tick {
+    top: auto;
+    bottom: 0;
+    margin-top: 0;
+    margin-bottom: calc(3.25rem - 6px);
+  }
+}
+
+/* States ------------------------------------------------------------------ */
+
+.station[data-state='active'] {
+  .tick {
+    background: var(--amber);
+    height: 16px;
+  }
+  .stationIndex {
+    color: var(--amber);
+  }
+  .stationLabel {
+    color: var(--ink);
+  }
+  .stationNote {
+    color: var(--ink-muted);
+  }
+}
+
+.station[data-state='passed'] {
+  .tick {
+    background: var(--cobalt);
+  }
+  .stationLabel {
+    color: var(--ink-muted);
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* iPad: seven columns of prose do not fit at 820px.                          */
+/* The notes are dropped and the rail becomes a compact station index.        */
+/* ------------------------------------------------------------------------- */
+
+@include down('xl') {
+  .stationNote {
+    display: none;
+  }
+
+  .stationLabel {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+  }
+}
+
+/* ------------------------------------------------------------------------- */
+/* Phone: the rail rotates.                                                   */
+/* A horizontal seven-stage pipeline is unreadable at 360px, so the same       */
+/* structure is rebuilt vertically — full labels and notes return.             */
+/* ------------------------------------------------------------------------- */
+
+@include down('md') {
+  .track {
+    top: 0;
+    bottom: 0;
+    left: 3px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+
+  .trackFill {
+    transform-origin: top;
+    transform: scaleY(var(--signal));
+    background: linear-gradient(to bottom, #{rgba($cobalt, 0.3)}, var(--cobalt));
+  }
+
+  .signal {
+    top: calc(var(--signal) * 100%);
+    left: 50%;
+  }
+
+  .stations {
+    grid-template-columns: 1fr;
+    row-gap: 1.75rem;
+  }
+
+  .station,
+  .station:nth-child(odd) {
+    padding-top: 0;
+    padding-left: 1.75rem;
+    padding-right: 0;
+    justify-content: flex-start;
+
+    .stationBody {
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-bottom: 0;
+      gap: 0.25rem;
+    }
+
+    .tick {
+      top: 0.5rem;
+      bottom: auto;
+      left: 0;
+      width: 10px;
+      height: 1px;
+      margin: 0;
+    }
+  }
+
+  .stationNote {
+    display: block;
+    max-width: none;
+  }
+
+  .stationLabel {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  .station[data-state='active'] .tick {
+    height: 1px;
+    width: 16px;
+  }
+}

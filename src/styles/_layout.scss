@@ -1,0 +1,136 @@
+// ---------------------------------------------------------------------------
+// Layout — breakpoints, grid, spacing, stacking order.
+// ---------------------------------------------------------------------------
+
+@use 'sass:map';
+@use 'sass:math';
+
+// Breakpoints ---------------------------------------------------------------
+$breakpoints: (
+  'xs': 400px,
+  'sm': 560px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1280px,
+  'xxl': 1600px,
+);
+
+/// Min-width query. Use for progressive enhancement of the composition.
+@mixin up($name) {
+  $size: map.get($breakpoints, $name);
+  @if not $size {
+    @error 'Unknown breakpoint `#{$name}`.';
+  }
+  @media (min-width: $size) {
+    @content;
+  }
+}
+
+/// Max-width query. Use for the deliberately different small-screen
+/// compositions — not as a way to shrink the desktop layout.
+@mixin down($name) {
+  $size: map.get($breakpoints, $name);
+  @if not $size {
+    @error 'Unknown breakpoint `#{$name}`.';
+  }
+  @media (max-width: ($size - 0.02px)) {
+    @content;
+  }
+}
+
+/// Pointer-capable devices only — for hover affordances that must not become
+/// sticky tap states on touch screens.
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+// Shell ---------------------------------------------------------------------
+$shell-max: 1560px;
+$shell-gutter: clamp(1.25rem, 4vw, 4.5rem);
+$rail-width: 1px;
+
+/// The page shell. Content is inset by a fluid gutter and capped so long
+/// measures never break the editorial rhythm on ultrawide displays.
+@mixin shell($max: $shell-max) {
+  width: 100%;
+  max-width: $max;
+  margin-inline: auto;
+  padding-inline: $shell-gutter;
+}
+
+/// 12-column grid. Column gap tracks the gutter so the grid feels part of the
+/// same measuring system as the shell.
+@mixin grid($columns: 12, $gap: clamp(1rem, 2vw, 2rem)) {
+  display: grid;
+  grid-template-columns: repeat($columns, minmax(0, 1fr));
+  gap: $gap;
+}
+
+// Spacing -------------------------------------------------------------------
+// Deliberately uneven at the top of the scale: section rhythm should vary, and
+// a purely geometric scale nudges every section toward the same height.
+$space: (
+  '3xs': 0.25rem,
+  '2xs': 0.5rem,
+  'xs': 0.75rem,
+  'sm': 1rem,
+  'md': 1.5rem,
+  'lg': 2.25rem,
+  'xl': 3.5rem,
+  '2xl': 5rem,
+  '3xl': 7.5rem,
+  '4xl': 11rem,
+);
+
+@function space($name) {
+  $value: map.get($space, $name);
+  @if not $value {
+    @error 'Unknown space step `#{$name}`.';
+  }
+  @return $value;
+}
+
+/// Vertical section rhythm. `$density` lets individual sections breathe more or
+/// less than their neighbours — variation is the point.
+@mixin section-pad($density: 'default') {
+  @if $density == 'tight' {
+    padding-block: clamp(3.5rem, 7vw, 6rem);
+  } @else if $density == 'loose' {
+    padding-block: clamp(6rem, 15vw, 14rem);
+  } @else if $density == 'hero' {
+    padding-block: 0;
+  } @else {
+    padding-block: clamp(5rem, 11vw, 10rem);
+  }
+}
+
+// Stacking ------------------------------------------------------------------
+$z: (
+  'field': 0,
+  // WebGL canvas, fixed behind everything
+  'content': 10,
+  'raised': 20,
+  'nav': 60,
+  'menu': 70,
+  'overlay': 80,
+  'skip-link': 100,
+);
+
+@function z($name) {
+  $value: map.get($z, $name);
+  @if not $value {
+    @error 'Unknown z step `#{$name}`.';
+  }
+  @return $value;
+}
+
+// Radii ---------------------------------------------------------------------
+// Near-zero by design. The visual language is hairlines and precise edges, not
+// rounded containers.
+$radius-sharp: 0;
+$radius-subtle: 2px;
+$radius-control: 3px;

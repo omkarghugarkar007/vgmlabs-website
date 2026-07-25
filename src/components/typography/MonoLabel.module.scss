@@ -1,0 +1,38 @@
+.label {
+  @include mono;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  color: var(--ink-muted);
+}
+
+.marked {
+  gap: 0.7em;
+}
+
+.marker {
+  // A precise 4px square, not a dot: the visual language is engineered, and a
+  // square reads as a measurement mark rather than a bullet.
+  width: 4px;
+  height: 4px;
+  flex: 0 0 auto;
+  background: currentColor;
+  // Optical alignment with uppercase mono, which sits above the baseline centre.
+  transform: translateY(-0.5px);
+}
+
+.cobalt {
+  color: var(--cobalt);
+}
+
+.amber {
+  color: var(--amber);
+}
+
+.cyan {
+  color: var(--cyan);
+}
+
+.ink {
+  color: var(--ink);
+}

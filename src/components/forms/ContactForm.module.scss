@@ -1,0 +1,251 @@
+.form {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+/* Error summary ----------------------------------------------------------- */
+
+.summary {
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #{rgba($danger, 0.5)};
+  border-radius: $radius-control;
+  background: #{rgba($danger, 0.07)};
+
+  &[hidden] {
+    display: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring(2px);
+  }
+}
+
+.summaryText {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--ink);
+}
+
+/* Grid ------------------------------------------------------------------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+}
+
+.half {
+  grid-column: span 1;
+  min-width: 0;
+}
+
+.full {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+/* Actions ---------------------------------------------------------------- */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem 2rem;
+  padding-top: clamp(0.5rem, 2vw, 1rem);
+  border-top: 1px solid var(--rule-faint);
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 52px;
+  padding: 0 1.35rem;
+  border: 1px solid #{rgba($cobalt, 0.6)};
+  border-radius: $radius-control;
+  background: #{rgba($cobalt, 0.14)};
+  @include mono(0.6875rem, 0.14em);
+  color: var(--ink);
+  @include transition(border-color, background-color, opacity);
+  @include focusable;
+
+  svg {
+    width: 14px;
+    height: 14px;
+    stroke-width: 1.2;
+    @include transition(transform);
+  }
+
+  @include hover {
+    border-color: var(--cobalt);
+    background: #{rgba($cobalt, 0.24)};
+
+    svg {
+      transform: translateX(3px);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+}
+
+/* A rotating square rather than a circular spinner: consistent with the signal
+   motif used across the site. */
+.spinner {
+  width: 11px;
+  height: 11px;
+  border: 1px solid #{rgba($ink, 0.3)};
+  border-top-color: var(--cyan);
+
+  @include motion-safe {
+    animation: spin 900ms $ease-linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.transportNote {
+  @include mono-data(0.625rem);
+  color: var(--ink-faint);
+  max-width: 46ch;
+  line-height: 1.6;
+}
+
+/* Success ---------------------------------------------------------------- */
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.1rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  border: 1px solid #{rgba($cyan, 0.28)};
+  background: #{rgba($cyan, 0.04)};
+}
+
+.successTitle {
+  @include type('d3');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+  max-width: 28ch;
+}
+
+.successBody {
+  @include type('body');
+  color: var(--ink-muted);
+  max-width: 62ch;
+}
+
+.strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.copyRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 0.35rem;
+}
+
+.copyButton {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 1.1rem;
+  border: 1px solid var(--rule);
+  border-radius: $radius-control;
+  @include mono(0.625rem, 0.13em);
+  color: var(--ink);
+  @include transition(border-color, background-color);
+  @include focusable;
+
+  @include hover {
+    border-color: var(--cyan);
+    background: #{rgba($cyan, 0.1)};
+  }
+}
+
+.plainLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  @include mono-data(0.75rem);
+  color: var(--ink-muted);
+  border-bottom: 1px solid var(--rule);
+  @include transition(color, border-color);
+  @include focusable;
+
+  @include hover {
+    color: var(--cyan);
+    border-bottom-color: var(--cyan);
+  }
+}
+
+/* The formatted message, shown so it can be copied or selected manually. */
+.preview {
+  width: 100%;
+  max-height: 22rem;
+  overflow: auto;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--rule-faint);
+  background: #{rgba($void, 0.6)};
+  @include mono-data(0.6875rem);
+  color: var(--ink-muted);
+  line-height: 1.65;
+  // Preserve the formatting but wrap long lines rather than scroll sideways.
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.resetButton {
+  margin-top: 0.5rem;
+  min-height: 44px;
+  @include mono(0.625rem, 0.14em);
+  color: var(--ink-faint);
+  border-bottom: 1px solid var(--rule);
+  @include transition(color, border-color);
+  @include focusable;
+
+  @include hover {
+    color: var(--ink);
+    border-bottom-color: var(--rule-bright);
+  }
+}
+
+/* Phone ------------------------------------------------------------------ */
+
+@include down('md') {
+  .grid {
+    // Single column: two-up text inputs at tablet-portrait width leave labels
+    // wrapping awkwardly, and the form reads better as one sequence anyway.
+    grid-template-columns: 1fr;
+  }
+}
+
+@include down('sm') {
+  .submit {
+    width: 100%;
+  }
+
+  .transportNote,
+  .successBody,
+  .successTitle {
+    max-width: none;
+  }
+
+  .preview {
+    font-size: 0.625rem;
+  }
+}

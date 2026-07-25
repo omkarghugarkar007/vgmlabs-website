@@ -1,0 +1,187 @@
+'use client';
+
+import { useMemo, useState } from 'react';
+import type { ResearchCategoryId } from '@/types/content';
+import {
+  publishedResearch,
+  researchCategories,
+  researchThemes,
+} from '@/data/research';
+import { MonoLabel } from '@/components/typography/MonoLabel';
+import styles from './ResearchLibrary.module.scss';
+
+type Filter = ResearchCategoryId | 'all';
+
+/**
+ * The research library.
+ *
+ * Two lists, one filter. `publishedResearch` is pre-filtered on `publish === true`
+ * and `status === 'published'` at the data layer, so an unfinished entry cannot
+ * reach this component even by mistake — the gate is not a rendering condition that
+ * someone might remove.
+ *
+ * When nothing is published (the current state), the entries list shows an explicit
+ * note rather than an empty container. The themes below are always shown: an open
+ * question makes no claim that needs verifying.
+ */
+export function ResearchLibrary() {
+  const [filter, setFilter] = useState<Filter>('all');
+
+  const categoryLabel = (id: ResearchCategoryId) =>
+    researchCategories.find((category) => category.id === id)?.label ?? id;
+
+  const visibleThemes = useMemo(
+    () => (filter === 'all' ? researchThemes : researchThemes.filter((t) => t.category === filter)),
+    [filter],
+  );
+
+  const visibleEntries = useMemo(
+    () =>
+      filter === 'all'
+        ? publishedResearch
+        : publishedResearch.filter((entry) => entry.category === filter),
+    [filter],
+  );
+
+  const activeCategory =
+    filter === 'all' ? null : researchCategories.find((category) => category.id === filter);
+
+  return (
+    <div className={styles.library}>
+      {/* Filters. A toolbar of toggle buttons rather than tabs: the list below is
+          filtered content, not a separate panel per category. */}
+      <div className={styles.filters} role="group" aria-label="Filter by research area">
+        <button
+          type="button"
+          className={[styles.filter, filter === 'all' ? styles.filterActive : '']
+            .filter(Boolean)
+            .join(' ')}
+          aria-pressed={filter === 'all'}
+          onClick={() => setFilter('all')}
+        >
+          All areas
+          <span className={styles.filterCount}>{researchThemes.length}</span>
+        </button>
+
+        {researchCategories.map((category) => {
+          const count = researchThemes.filter((t) => t.category === category.id).length;
+          const active = filter === category.id;
+          return (
+            <button
+              key={category.id}
+              type="button"
+              className={[styles.filter, active ? styles.filterActive : '']
+                .filter(Boolean)
+                .join(' ')}
+              aria-pressed={active}
+              onClick={() => setFilter(category.id)}
+            >
+              {category.label}
+              <span className={styles.filterCount}>{count}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {activeCategory ? (
+        <p className={styles.categoryNote}>{activeCategory.description}</p>
+      ) : null}
+
+      {/* Published write-ups. */}
+      <section className={styles.block} aria-labelledby="entries-heading">
+        <div className={styles.blockHead}>
+          <MonoLabel as="h2" id="entries-heading">
+            Notes and write-ups
+          </MonoLabel>
+          <span className={styles.rule} aria-hidden="true" />
+          <MonoLabel className={styles.blockCount}>
+            {visibleEntries.length} published
+          </MonoLabel>
+        </div>
+
+        {visibleEntries.length > 0 ? (
+          <ol className={styles.entries}>
+            {visibleEntries.map((entry) => (
+              <li key={entry.id} className={styles.entry}>
+                <div className={styles.entryMeta}>
+                  <MonoLabel className={styles.entryCategory}>
+                    {categoryLabel(entry.category)}
+                  </MonoLabel>
+                  <time dateTime={entry.date} className={styles.entryDate}>
+                    {formatDate(entry.date)}
+                  </time>
+                </div>
+
+                <div className={styles.entryBody}>
+                  <h3 className={styles.entryTitle}>
+                    {entry.href ? (
+                      <a href={entry.href} className={styles.entryLink}>
+                        {entry.title}
+                      </a>
+                    ) : (
+                      entry.title
+                    )}
+                  </h3>
+                  <p className={styles.entrySummary}>{entry.summary}</p>
+                  {entry.authors?.length ? (
+                    <p className={styles.entryAuthors}>{entry.authors.join(', ')}</p>
+                  ) : null}
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <div className={styles.empty}>
+            <p className={styles.emptyStatement}>Nothing published in this area yet.</p>
+            <p className={styles.emptyBody}>
+              Write-ups appear here once they exist and their claims have been checked.
+              Nothing is listed as research until it has been done — no placeholder
+              papers, no benchmark figures we have not reproduced ourselves.
+            </p>
+          </div>
+        )}
+      </section>
+
+      {/* Open questions. */}
+      <section className={styles.block} aria-labelledby="themes-heading">
+        <div className={styles.blockHead}>
+          <MonoLabel as="h2" id="themes-heading">
+            Open questions
+          </MonoLabel>
+          <span className={styles.rule} aria-hidden="true" />
+          <MonoLabel className={styles.blockCount}>{visibleThemes.length} themes</MonoLabel>
+        </div>
+
+        <ol className={styles.themes}>
+          {visibleThemes.map((theme) => (
+            <li key={theme.id} className={styles.theme}>
+              <div className={styles.themeMeta}>
+                <span className={styles.themeRef}>{theme.ref}</span>
+                <MonoLabel className={styles.themeCategory}>
+                  {categoryLabel(theme.category)}
+                </MonoLabel>
+              </div>
+
+              <div className={styles.themeBody}>
+                <h3 className={styles.themeTitle}>{theme.title}</h3>
+                <p className={styles.themeQuestion}>{theme.question}</p>
+                <p className={styles.themeDetail}>{theme.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+  );
+}
+
+/** ISO date to a compact, unambiguous display form. */
+function formatDate(iso: string): string {
+  const date = new Date(`${iso}T00:00:00Z`);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleDateString('en-GB', {
+    year: 'numeric',
+    month: 'short',
+    timeZone: 'UTC',
+  });
+}

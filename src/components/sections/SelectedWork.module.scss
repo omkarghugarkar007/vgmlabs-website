@@ -1,0 +1,226 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+/* Published items --------------------------------------------------------- */
+
+.items {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-block: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.itemHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+}
+
+.itemDiscipline {
+  color: var(--ink-faint);
+}
+
+.itemTitle {
+  @include type('d3');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.itemSummary {
+  @include type('lead');
+  color: var(--ink-muted);
+  max-width: 62ch;
+}
+
+.itemDetail {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding-top: 1.5rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.detailLabel {
+  color: var(--ink-faint);
+  font-size: 0.5625rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.establishes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    position: relative;
+    padding-left: 0.95rem;
+    @include type('small');
+    font-size: 0.8125rem;
+    color: var(--ink-muted);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.6em;
+      width: 3px;
+      height: 3px;
+      background: var(--cobalt);
+    }
+  }
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+
+  dt {
+    @include mono(0.5625rem, 0.15em);
+    color: var(--ink-faint);
+    margin-bottom: 0.25rem;
+  }
+
+  dd {
+    @include mono-data(0.6875rem);
+    color: var(--ink-muted);
+  }
+}
+
+/* Empty state ------------------------------------------------------------- */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--rule);
+}
+
+.emptyStatement {
+  @include type('d3');
+  font-family: $font-display;
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  max-width: 30ch;
+}
+
+.emptyBody {
+  @include type('body');
+  color: var(--ink-muted);
+  max-width: 62ch;
+}
+
+.pending {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+}
+
+.pendingItem {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 5fr) minmax(0, 4fr) auto;
+  gap: 1.5rem;
+  align-items: baseline;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--rule-faint);
+
+  &:first-child {
+    border-top: 1px solid var(--rule-faint);
+  }
+}
+
+.pendingIndex {
+  @include mono(0.5625rem, 0.16em);
+  color: var(--ink-faint);
+}
+
+.pendingTitle {
+  @include type('body');
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+
+.pendingDiscipline {
+  @include mono-data(0.6875rem);
+  color: var(--ink-muted);
+}
+
+.pendingStatus {
+  color: var(--amber);
+  font-size: 0.5rem;
+  white-space: nowrap;
+}
+
+.emptyNote {
+  @include mono-data(0.6875rem);
+  color: var(--ink-faint);
+  max-width: 56ch;
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule);
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('xl') {
+  .itemDetail {
+    grid-template-columns: 1fr;
+  }
+
+  .pendingItem {
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    gap: 0.75rem 1rem;
+  }
+
+  .pendingDiscipline {
+    grid-column: 2;
+  }
+
+  .pendingStatus {
+    grid-row: 1;
+    grid-column: 3;
+  }
+}
+
+@include down('sm') {
+  .emptyStatement {
+    max-width: none;
+  }
+
+  .emptyBody,
+  .emptyNote,
+  .itemSummary {
+    max-width: none;
+  }
+
+  .pendingItem {
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    row-gap: 0.4rem;
+  }
+
+  .pendingDiscipline,
+  .pendingStatus {
+    grid-column: 2;
+    grid-row: auto;
+  }
+}

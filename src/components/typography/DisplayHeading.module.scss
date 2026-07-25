@@ -1,0 +1,84 @@
+.heading {
+  font-family: $font-display;
+  font-weight: 500;
+  // Optical margin: display type at these sizes reads better with the first
+  // character pulled slightly left of the grid line.
+  margin-left: -0.04em;
+  text-wrap: nowrap;
+}
+
+.line {
+  // The mask that makes the reveal read as type rising out of the page rather
+  // than sliding over it.
+  display: block;
+  overflow: hidden;
+  // Descenders (g, y, p) are clipped by `overflow: hidden` at tight leading, so
+  // the mask is padded and pulled back by the same amount.
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+.inner {
+  display: block;
+  // No initial transform here: GSAP sets the from-state. Declaring it in CSS as
+  // well would double-apply on hydration and cause a visible jump.
+  will-change: transform, opacity;
+}
+
+.dim {
+  color: var(--ink-muted);
+}
+
+/* Steps ------------------------------------------------------------------- */
+
+.d1 {
+  @include type('d1');
+  // The hero and final CTA only.
+  text-transform: none;
+}
+
+.d2 {
+  @include type('d2');
+}
+
+.d3 {
+  @include type('d3');
+}
+
+.d4 {
+  @include type('d4');
+}
+
+/* Alignment --------------------------------------------------------------- */
+
+.start {
+  text-align: left;
+}
+
+.end {
+  text-align: right;
+  margin-left: 0;
+  margin-right: -0.04em;
+}
+
+.center {
+  text-align: center;
+  margin-left: 0;
+}
+
+/* Long display lines cannot stay on one line on a phone. Below `sm` the nowrap
+   is released so nothing overflows the viewport — the authored breaks still
+   apply, the browser just adds its own where a line is too long. */
+@include down('sm') {
+  .heading {
+    text-wrap: pretty;
+    white-space: normal;
+  }
+
+  .line {
+    // With wrapping allowed, a per-line mask would clip the second visual row.
+    overflow: visible;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+}

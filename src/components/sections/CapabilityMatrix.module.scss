@@ -1,0 +1,220 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 5vw, 5rem);
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+.headerNote {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 52ch;
+}
+
+/* List -------------------------------------------------------------------- */
+
+.list {
+  display: grid;
+  // Two columns of dense rows. `align-content: start` keeps rows top-aligned so an
+  // expanded panel in one column does not stretch its neighbour.
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(2rem, 5vw, 4.5rem);
+  align-content: start;
+}
+
+.row {
+  border-bottom: 1px solid var(--rule-faint);
+  @include transition(border-color);
+}
+
+.rowOpen {
+  border-bottom-color: #{rgba($cobalt, 0.4)};
+}
+
+.trigger {
+  display: grid;
+  grid-template-columns: 3.25rem minmax(0, 1fr) 1rem;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  // 52px: comfortably above the 44px minimum, and tall enough that eighteen rows
+  // read as an index rather than a cramped table.
+  min-height: 52px;
+  padding: 0.75rem 0;
+  text-align: left;
+  @include focusable(2px);
+
+  @include hover {
+    .name {
+      color: var(--ink);
+    }
+    .ref {
+      color: var(--cobalt);
+    }
+  }
+}
+
+.ref {
+  @include mono(0.5625rem, 0.14em);
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  @include transition(color);
+}
+
+.name {
+  @include type('body');
+  font-size: 0.9375rem;
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+/* A plus that becomes a minus. Two 1px rules, one rotated — no icon font. */
+.marker {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  justify-self: end;
+
+  span {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--ink-faint);
+    @include transition(transform, background-color);
+  }
+
+  span:last-child {
+    transform: rotate(90deg);
+  }
+}
+
+.rowOpen {
+  .name {
+    color: var(--ink);
+  }
+
+  .ref {
+    color: var(--cobalt);
+  }
+
+  .marker span {
+    background: var(--cobalt);
+
+    &:last-child {
+      transform: rotate(0deg);
+    }
+  }
+}
+
+/* Panel ------------------------------------------------------------------- */
+
+.panel {
+  padding: 0 0 1.5rem 4.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.summary {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 54ch;
+}
+
+.detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.detailBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.detailLabel {
+  color: var(--ink-faint);
+  font-size: 0.5625rem;
+}
+
+.disciplines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+
+  li {
+    @include mono-data(0.6875rem);
+    color: var(--ink-muted);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule-faint);
+    border-radius: $radius-subtle;
+  }
+}
+
+.outcome {
+  @include type('small');
+  font-size: 0.8125rem;
+  color: var(--cyan);
+  max-width: 48ch;
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('xl') {
+  .header {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .headerNote {
+    max-width: none;
+  }
+}
+
+@include down('lg') {
+  .list {
+    // One column below 1024px. Two columns of expanding disclosures on an iPad
+    // means the row you opened can end up beside an unrelated block of text.
+    grid-template-columns: 1fr;
+  }
+}
+
+@include down('sm') {
+  .trigger {
+    grid-template-columns: 2.75rem minmax(0, 1fr) 1rem;
+    gap: 0.75rem;
+  }
+
+  .panel {
+    padding-left: 0;
+    padding-bottom: 1.25rem;
+  }
+
+  .summary,
+  .outcome {
+    max-width: none;
+  }
+}
