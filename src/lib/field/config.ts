@@ -43,11 +43,16 @@ export interface QualityProfile {
   readonly maxEdges: number;
   /** Travelling signals along the connection paths. */
   readonly signals: number;
-  /** Translucent surfaces. Zero on low tier — large transparent fills are the
-   *  most expensive thing on mobile GPUs after post-processing. */
+  /**
+   * Translucent surfaces. Currently 0 on every tier — see the note on the profiles
+   * below. The component is retained and working; raise this to bring them back.
+   */
   readonly planes: number;
+  /**
+   * Bloom. Off on every tier. See the note on the profiles below before enabling.
+   */
   readonly bloom: boolean;
-  /** Screen-space vignette + faint grain. Cheap, but pointless on small screens. */
+  /** Screen-space vignette. Off on every tier — it shares bloom's composer. */
   readonly grade: boolean;
   /** Clamp on devicePixelRatio. Retina at 3x costs 9x the fragments. */
   readonly dpr: readonly [number, number];
@@ -55,6 +60,40 @@ export interface QualityProfile {
   readonly nodeDetail: number;
 }
 
+/**
+ * Quality profiles.
+ *
+ * ── Why post-processing is off on every tier ──────────────────────────────────
+ *
+ * Bloom was tried twice and produced visible artefacts both times on real
+ * hardware:
+ *
+ *   1. `mipmapBlur` at a 0.72 luminance threshold smeared the field into
+ *      screen-sized rectangles. The cause is that additive particles with no tone
+ *      mapping accumulate luminance far above 1.0, so nearly everything cleared
+ *      the threshold, and mipmap downsampling turns a large bright region into a
+ *      blocky one.
+ *   2. Switching to a Kawase kernel at threshold 1.0 and intensity 0.16 still
+ *      produced a pyramid of nested square halos, plus a hard-edged block from an
+ *      incompletely cleared render target.
+ *
+ * A bloom that has to be nursed is not worth having. The additive particles
+ * already read as luminous on their own — that is what the blending is for — so
+ * the composer is simply not created (`PostFX` returns null when both flags are
+ * false), which removes the entire class of framebuffer artefact along with a
+ * full-resolution buffer and two passes per frame.
+ *
+ * The translucent planes are off for a related reason: as filled quads they tinted
+ * the whole environment blue, and as wireframe grids they were the geometry the
+ * blur pass was smearing into those nested squares. The component works; it is the
+ * interaction with post-processing that was the problem.
+ *
+ * To experiment: set `bloom: true` on `high` only, keep `mipmapBlur: false` and
+ * `luminanceThreshold` at 1.0 in PostFX.tsx, and check a scrolled screenshot at a
+ * normal viewport — the artefact does not appear in the hero, only further down.
+ * Contrast at the frame edges is handled by the CSS veil in
+ * IntelligenceField.module.scss, not by the vignette.
+ */
 export const QUALITY_PROFILES: Readonly<Record<Exclude<QualityTier, 'off'>, QualityProfile>> = {
   high: {
     tier: 'high',
@@ -62,9 +101,9 @@ export const QUALITY_PROFILES: Readonly<Record<Exclude<QualityTier, 'off'>, Qual
     nodes: 26,
     maxEdges: 132,
     signals: 26,
-    planes: 3,
-    bloom: true,
-    grade: true,
+    planes: 0,
+    bloom: false,
+    grade: false,
     dpr: [1, 1.75],
     nodeDetail: 1,
   },
@@ -74,11 +113,9 @@ export const QUALITY_PROFILES: Readonly<Record<Exclude<QualityTier, 'off'>, Qual
     nodes: 20,
     maxEdges: 88,
     signals: 16,
-    planes: 2,
-    bloom: true,
-    // The vignette is a single full-screen pass with no sampling radius, and it
-    // buys real contrast at the frame edges where the nav and footer sit.
-    grade: true,
+    planes: 0,
+    bloom: false,
+    grade: false,
     dpr: [1, 1.4],
     nodeDetail: 0,
   },
