@@ -143,9 +143,17 @@ implementation with an adapter for a shared store.
 Pages cannot set response headers. The compensations:
 
 - **CSP** is a `<meta http-equiv="Content-Security-Policy">` tag in the root layout.
-  It covers script, style, image, font, connect, form-action, base-uri and
-  frame-ancestors. A meta CSP cannot express `frame-options` or `Strict-Transport-
-  Security`; those genuinely require headers.
+  It is a partial mitigation, not an equivalent to the header:
+  - App Router places root-layout head content **after** Next's own stylesheet and
+    script tags, so those are not governed by it. They are same-origin and would be
+    allowed regardless.
+  - `frame-ancestors` is **ignored by spec** in a meta-delivered policy, so this
+    provides no clickjacking protection. That needs a real header.
+  - It does enforce `connect-src` (runtime fetches), `img-src`, `font-src`,
+    `form-action`, `base-uri`, and the origin of dynamically injected scripts such
+    as the WebGL chunk.
+  - `unsafe-inline` is unavoidable for both styles and scripts under static export,
+    since no nonce can be generated at request time. `unsafe-eval` is not granted.
 - **HSTS** comes from GitHub Pages once **Enforce HTTPS** is enabled.
 - `X-Content-Type-Options`, `Referrer-Policy` and `Permissions-Policy` are not
   settable. If they are required for a compliance review, that is a reason to move to

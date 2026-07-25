@@ -51,11 +51,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/*
           Content Security Policy as a meta tag.
+
           Static hosting cannot set response headers, so this is the available
-          mechanism. `unsafe-inline` for styles is required by Next's inlined
-          critical CSS; `unsafe-eval` is not granted. `connect-src 'self'` is
-          widened only if you configure NEXT_PUBLIC_CONTACT_ENDPOINT — see
-          docs/DEPLOYMENT.md.
+          mechanism — but it is a partial one, and worth being precise about:
+
+          - App Router places root-layout head content *after* Next's own
+            stylesheet and script tags, so those specific tags are not governed by
+            this policy. They are all same-origin and would be permitted anyway.
+          - `frame-ancestors` is ignored by spec when a policy is delivered via
+            <meta>. Clickjacking protection genuinely needs a header.
+          - `unsafe-inline` is required for styles (Next inlines critical CSS) and
+            for scripts (no nonce is available in a static export). `unsafe-eval`
+            is not granted.
+
+          What it does enforce: runtime fetches (`connect-src`), dynamically
+          injected scripts such as the WebGL chunk, image and font origins,
+          `form-action` and `base-uri`. Widen `connect-src` only if you configure
+          NEXT_PUBLIC_CONTACT_ENDPOINT — see docs/DEPLOYMENT.md.
         */}
         <meta
           httpEquiv="Content-Security-Policy"
@@ -68,7 +80,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             "connect-src 'self'",
             "form-action 'self'",
             "base-uri 'self'",
-            "frame-ancestors 'self'",
+            // `frame-ancestors` is deliberately absent: browsers ignore it in a
+            // meta-delivered policy and log a console warning for including it.
             'upgrade-insecure-requests',
           ].join('; ')}
         />
