@@ -230,7 +230,7 @@
   .grid {
     // Single column: two-up text inputs at tablet-portrait width leave labels
     // wrapping awkwardly, and the form reads better as one sequence anyway.
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

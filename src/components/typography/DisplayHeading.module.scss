@@ -4,7 +4,15 @@
   // Optical margin: display type at these sizes reads better with the first
   // character pulled slightly left of the grid line.
   margin-left: -0.04em;
-  text-wrap: nowrap;
+
+  // NOT `text-wrap: nowrap`.
+  //
+  // Each line is masked by `overflow: hidden` for the reveal, and overflow clips
+  // both axes — so any line wider than its container was being cut off mid-word
+  // rather than wrapping. Authored breaks still hold, because every line is its
+  // own block; if one is too narrow to fit, the browser adds a break inside it,
+  // which is far better than losing the text.
+  text-wrap: pretty;
 }
 
 .line {
@@ -66,19 +74,6 @@
   margin-left: 0;
 }
 
-/* Long display lines cannot stay on one line on a phone. Below `sm` the nowrap
-   is released so nothing overflows the viewport — the authored breaks still
-   apply, the browser just adds its own where a line is too long. */
-@include down('sm') {
-  .heading {
-    text-wrap: pretty;
-    white-space: normal;
-  }
-
-  .line {
-    // With wrapping allowed, a per-line mask would clip the second visual row.
-    overflow: visible;
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
-}
+/* The mask works with wrapped text: `.line` is a block, so its height grows to
+   fit however many visual rows the text needs, and the inner span is translated
+   by a percentage of that height. No special small-screen case is required. */

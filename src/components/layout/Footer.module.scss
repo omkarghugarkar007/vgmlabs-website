@@ -14,7 +14,7 @@
   padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 4vw, 3rem);
 
   @include down('lg') {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.75rem;
   }
 }

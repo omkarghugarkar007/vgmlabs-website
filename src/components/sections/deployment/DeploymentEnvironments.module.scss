@@ -226,7 +226,7 @@
 @include down('xl') {
   .header,
   .body {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.25rem;
     align-items: start;
   }

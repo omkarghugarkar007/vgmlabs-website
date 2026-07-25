@@ -62,7 +62,7 @@
 
 @include down('lg') {
   .body {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.75rem;
   }
 
@@ -81,7 +81,7 @@
   }
 
   .metaRow {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.3rem;
   }
 }

@@ -184,7 +184,7 @@
 
 @include down('xl') {
   .header {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
     align-items: start;
   }
@@ -198,7 +198,7 @@
   .list {
     // One column below 1024px. Two columns of expanding disclosures on an iPad
     // means the row you opened can end up beside an unrelated block of text.
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

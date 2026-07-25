@@ -48,6 +48,7 @@ export function Reveal({
     const el = ref.current;
     if (!el) return;
 
+    // Reduced motion: present, unmoved, no tween.
     if (prefersReducedMotion()) {
       gsap.set(el, { opacity: 1, y: 0 });
       gsap.set(el.children, { opacity: 1, y: 0 });
@@ -55,6 +56,7 @@ export function Reveal({
     }
 
     const targets = stagger ? Array.from(el.children) : el;
+    let safety = 0;
 
     const tween = gsap.fromTo(
       targets,
@@ -66,11 +68,26 @@ export function Reveal({
         ease: 'power3.out',
         delay,
         stagger: stagger ? 0.07 : 0,
+
+        // The from-state is applied when the reveal begins, not on load, so content
+        // that has not been revealed yet is still readable. See the longer note in
+        // DisplayHeading — the failure this prevents is an entire page of invisible
+        // text whenever GSAP's ticker stops advancing.
+        immediateRender: false,
+
+        onStart: () => {
+          safety = window.setTimeout(() => {
+            if (tween.progress() < 1) tween.progress(1);
+          }, 4000);
+        },
+        onComplete: () => window.clearTimeout(safety),
+
         scrollTrigger: { trigger: el, start: 'top 90%', once: true },
       },
     );
 
     return () => {
+      window.clearTimeout(safety);
       tween.scrollTrigger?.kill();
       tween.kill();
     };

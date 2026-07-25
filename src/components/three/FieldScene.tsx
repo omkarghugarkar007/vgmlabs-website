@@ -40,10 +40,14 @@ export function FieldScene({ profile, dpr, distanceScale, still }: FieldScenePro
       <CameraRig distanceScale={distanceScale} still={still} />
 
       {/* Two lights, both for the nodes. A key light to define the facets and a
-          cool fill so unlit faces read as metal rather than black. */}
-      <directionalLight position={[3.5, 5, 4]} intensity={2.1} color={FIELD_COLORS.ink} />
-      <directionalLight position={[-4, -2, -3]} intensity={0.7} color={FIELD_COLORS.cobalt} />
-      <ambientLight intensity={0.12} />
+          cool fill so unlit faces read as metal rather than black.
+          
+          Kept dim on purpose: at higher intensity a facet catching the key light
+          clears the bloom threshold and the node becomes a star. The nodes should
+          read as machined metal, not as light sources. */}
+      <directionalLight position={[3.5, 5, 4]} intensity={1.15} color={FIELD_COLORS.ink} />
+      <directionalLight position={[-4, -2, -3]} intensity={0.45} color={FIELD_COLORS.cobalt} />
+      <ambientLight intensity={0.1} />
 
       <ParticleField count={profile.particles} dpr={dpr} />
 

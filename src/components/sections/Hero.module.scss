@@ -212,7 +212,7 @@
 
   .metaRow {
     // Stacked: a 5.5rem label column leaves too little for the value at 360px.
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.3rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--rule-faint);

@@ -44,12 +44,12 @@
   flex-direction: column;
   gap: 1.1rem;
   margin-bottom: clamp(2rem, 5vw, 3rem);
-  max-width: 52ch;
 }
 
 .principlesNote {
   @include type('small');
   color: var(--ink-muted);
+  max-width: 52ch;
 }
 
 .principles {
@@ -198,7 +198,7 @@
 @include down('lg') {
   .statementGrid,
   .detailsWrap {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2rem;
   }
 
@@ -207,7 +207,7 @@
   }
 
   .principles {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .principle {
@@ -222,7 +222,7 @@
 
 @include down('sm') {
   .details {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
   }
 

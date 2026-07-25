@@ -255,7 +255,7 @@
 
 .panelLink {
   display: grid;
-  grid-template-columns: 2.5rem 1fr;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
   align-items: baseline;
   gap: 0.25rem 0.75rem;
   padding: 1rem 0;

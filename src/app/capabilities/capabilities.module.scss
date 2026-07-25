@@ -259,7 +259,7 @@
 
 @include down('xl') {
   .layerBody {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .secondary {
@@ -280,7 +280,7 @@
 
 @include down('sm') {
   .contents ol {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .layerTitleRow {
@@ -293,7 +293,7 @@
   }
 
   .secondary {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .purpose,

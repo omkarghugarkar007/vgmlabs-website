@@ -62,26 +62,18 @@ export function DisplayHeading({
     const inners = root.querySelectorAll<HTMLElement>(`.${styles.inner}`);
     if (inners.length === 0) return;
 
-    const reduced = prefersReducedMotion();
-
-    if (reduced) {
-      // Simple fade, no transform, no stagger.
-      gsap.set(inners, { yPercent: 0, opacity: 1 });
-      const tween = gsap.fromTo(
-        root,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.5,
-          ease: 'none',
-          scrollTrigger: immediate ? undefined : { trigger: root, start: 'top 92%', once: true },
-        },
-      );
-      return () => {
-        tween.scrollTrigger?.kill();
-        tween.kill();
-      };
+    // Under reduced motion the heading is simply present. No tween at all —
+    // not even a fade.
+    //
+    // The previous version animated opacity here, which was wrong twice over: it
+    // still animated for someone who asked for no animation, and it made the text
+    // depend on a tween completing in order to become visible.
+    if (prefersReducedMotion()) {
+      gsap.set(inners, { yPercent: 0, opacity: 1, clearProps: 'willChange' });
+      return;
     }
+
+    let safety = 0;
 
     const tween = gsap.fromTo(
       inners,
@@ -95,6 +87,30 @@ export function DisplayHeading({
         ease: 'expo.out',
         stagger: 0.085,
         delay: immediate ? 0.25 : 0,
+
+        // Never pre-hide content that is not being animated yet.
+        //
+        // By default a `fromTo` applies its from-state the moment it is created, so
+        // every heading on the page was set to `opacity: 0` on load and relied on a
+        // tween firing later to become readable. Anything that stopped GSAP's
+        // ticker — a starved rAF, a script error elsewhere, an aggressive power
+        // saver — left the whole page's text permanently invisible.
+        //
+        // With `immediateRender: false` the from-state is applied only when the
+        // animation actually begins, so unrevealed content stays visible.
+        immediateRender: false,
+
+        // Belt to that brace: once the tween has started, guarantee it finishes.
+        // If the ticker dies mid-reveal, this jumps to the end state rather than
+        // leaving text half-faded. 4s against a ~1.4s animation, so it never
+        // interferes with a healthy run.
+        onStart: () => {
+          safety = window.setTimeout(() => {
+            if (tween.progress() < 1) tween.progress(1);
+          }, 4000);
+        },
+        onComplete: () => window.clearTimeout(safety),
+
         scrollTrigger: immediate
           ? undefined
           : {
@@ -106,7 +122,12 @@ export function DisplayHeading({
       },
     );
 
+    // `immediateRender: false` means an immediate tween needs an explicit kick;
+    // without a ScrollTrigger there is nothing else to start it.
+    if (immediate) tween.play(0);
+
     return () => {
+      window.clearTimeout(safety);
       tween.scrollTrigger?.kill();
       tween.kill();
     };

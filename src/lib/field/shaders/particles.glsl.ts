@@ -289,14 +289,24 @@ void main() {
   col = mix(col, mix(uInk, uCobalt, 0.6), production * 0.30);
 
   // Slight per-particle luminance variation stops the cloud reading as flat.
-  col *= 0.78 + aSeed.x * 0.44;
+  // Keep the multiplier at or below 1.0 so no particle exceeds its palette colour.
+  col *= 0.72 + aSeed.x * 0.28;
 
   /* ---- opacity --------------------------------------------------------- */
   // Depth attenuation stands in for volumetric falloff.
   float fade  = smoothstep(17.0, 2.6, depth);
-  float alpha = fade * (0.30 + aSeed.y * 0.70) * uFocus;
+
+  // Low per-particle alpha, deliberately.
+  //
+  // Blending is additive, so overlapping particles accumulate. In the dense core
+  // twenty or more can stack on one pixel, and at the alpha this used to carry
+  // (0.30–1.00) that saturated to white and washed out the typography in front of
+  // it. Keeping each particle faint is what makes the accumulation read as a
+  // luminous volume rather than a blown-out highlight.
+  float alpha = fade * (0.05 + aSeed.y * 0.17) * uFocus;
+
   // Signals are brighter than structure — they are the thing to look at.
-  alpha *= aRole > 0.885 ? 1.35 : 1.0;
+  alpha *= aRole > 0.885 ? 1.5 : 1.0;
   // Fade in with assembly so nothing pops.
   alpha *= smoothstep(0.0, 0.35, asm);
 
@@ -305,7 +315,7 @@ void main() {
   vCore  = aRole > 0.885 ? 1.0 : 0.0;
 
   gl_Position  = projectionMatrix * mv;
-  gl_PointSize = clamp(uSize * aScale * uDpr * (3.6 / depth), 0.6, 9.0);
+  gl_PointSize = clamp(uSize * aScale * uDpr * (3.4 / depth), 0.6, 7.0);
 }
 `;
 

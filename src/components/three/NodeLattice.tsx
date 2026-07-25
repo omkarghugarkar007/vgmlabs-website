@@ -85,7 +85,7 @@ export function NodeLattice({ count, detail }: NodeLatticeProps) {
       <meshStandardMaterial
         color={FIELD_COLORS.metal}
         emissive={emissive}
-        emissiveIntensity={0.55}
+        emissiveIntensity={0.3}
         metalness={0.72}
         roughness={0.34}
         // Flat shading keeps the facets crisp at this size; smooth normals on a

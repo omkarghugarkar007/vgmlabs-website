@@ -83,7 +83,7 @@
 
 @include down('lg') {
   .layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.75rem;
   }
 
@@ -103,7 +103,7 @@
 
 @include down('sm') {
   .aside {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .email {

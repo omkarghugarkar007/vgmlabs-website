@@ -128,7 +128,7 @@
 
 @include down('xl') {
   .header {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.75rem;
     align-items: start;
   }
@@ -146,7 +146,7 @@
 @include down('sm') {
   .theme {
     // Stacked: a metadata column plus a title at 360px leaves nothing for either.
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.85rem;
   }
 

@@ -2,8 +2,15 @@
   @include mono;
   display: inline-flex;
   align-items: center;
-  gap: 0.55em;
+  // A label can hold several items — the hero's "Applied AI / Agentic Systems /
+  // Edge Intelligence" is one label with three. An inline-flex container does not
+  // wrap by default, so without this those items run off a narrow viewport with no
+  // way to break.
+  flex-wrap: wrap;
+  gap: 0.35em 0.55em;
   color: var(--ink-muted);
+  // The marker must not be pulled away from the first word when the label wraps.
+  min-width: 0;
 }
 
 .marked {

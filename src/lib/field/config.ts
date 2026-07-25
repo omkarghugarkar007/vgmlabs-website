@@ -76,7 +76,9 @@ export const QUALITY_PROFILES: Readonly<Record<Exclude<QualityTier, 'off'>, Qual
     signals: 16,
     planes: 2,
     bloom: true,
-    grade: false,
+    // The vignette is a single full-screen pass with no sampling radius, and it
+    // buys real contrast at the frame edges where the nav and footer sit.
+    grade: true,
     dpr: [1, 1.4],
     nodeDetail: 0,
   },

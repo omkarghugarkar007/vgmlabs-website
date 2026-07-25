@@ -26,7 +26,7 @@ interface ParticleFieldProps {
  * positions, not rendered ones — three's computed bounding sphere would be wrong
  * and the whole cloud would vanish at certain camera angles.
  */
-export function ParticleField({ count, size = 1.9, dpr }: ParticleFieldProps) {
+export function ParticleField({ count, size = 1.55, dpr }: ParticleFieldProps) {
   const materialRef = useRef<ShaderMaterial>(null);
 
   const attributes = useMemo(() => {

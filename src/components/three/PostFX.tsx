@@ -10,15 +10,23 @@ interface PostFXProps {
 }
 
 /**
- * Post-processing. Restrained by design.
+ * Post-processing. Restrained to the point of near-absence, for a reason.
  *
- * Bloom is set with a high luminance threshold and low intensity so only the
- * genuinely bright things — signal particles, node highlights — pick up a halo.
- * A low threshold would wash the graphite environment into grey mush and turn the
- * palette into the generic glowing-AI look the art direction avoids.
+ * The first version of this used `mipmapBlur` bloom at a 0.72 luminance threshold.
+ * With additive particles and no tone mapping, the dense core accumulates luminance
+ * far above 1.0, so almost the whole field cleared the threshold — and mipmap
+ * downsampling smeared it into enormous soft rectangles that washed the typography
+ * out completely. It looked like a bug because it was one.
  *
- * There is no depth-of-field: it is the most expensive effect available and it
- * would blur the very structure the section copy refers to.
+ * What replaced it:
+ *   - a Gaussian kernel rather than mipmap sampling, so a bright region produces a
+ *     tight halo instead of a screen-sized block
+ *   - a luminance threshold at 1.0, so only genuinely over-bright pixels bloom —
+ *     in practice the signal particles and the node highlights, which is the point
+ *   - low intensity, so the effect adds a glint rather than a glow
+ *
+ * There is no depth-of-field: it is the most expensive effect available and it would
+ * blur the very structure the section copy refers to.
  */
 export function PostFX({ bloom, grade }: PostFXProps) {
   if (!bloom && !grade) return null;
@@ -31,13 +39,17 @@ export function PostFX({ bloom, grade }: PostFXProps) {
     passes.push(
       <Bloom
         key="bloom"
-        intensity={0.62}
-        luminanceThreshold={0.72}
-        luminanceSmoothing={0.22}
-        // Mipmap blur is both cheaper and softer than a large Gaussian kernel at
-        // this radius.
-        mipmapBlur
-        kernelSize={KernelSize.MEDIUM}
+        // Deliberately low. Raising this is the fastest way back to the washed-out
+        // version — if the field ever needs more presence, raise particle alpha in
+        // the shader instead, where the effect is bounded.
+        intensity={0.16}
+        // Only pixels already at full brightness contribute. Anything lower and the
+        // core's additive accumulation blooms as a mass.
+        luminanceThreshold={1.0}
+        luminanceSmoothing={0.06}
+        // NOT mipmapBlur — see the note above.
+        mipmapBlur={false}
+        kernelSize={KernelSize.SMALL}
       />,
     );
   }
@@ -46,8 +58,8 @@ export function PostFX({ bloom, grade }: PostFXProps) {
     passes.push(
       <Vignette
         key="vignette"
-        offset={0.28}
-        darkness={0.62}
+        offset={0.3}
+        darkness={0.7}
         blendFunction={BlendFunction.NORMAL}
         eskil={false}
       />,

@@ -2,7 +2,12 @@
   display: flex;
   flex-direction: column;
   gap: 1.35rem;
-  max-width: 46ch;
+  // No max-width here.
+  //
+  // `ch` on a container resolves against the *container's* font-size (body), not
+  // the display heading inside it — so a 46ch cap was about 390px wide holding
+  // ~800px of 76px type. Measure is constrained on the paragraphs, which are the
+  // things that actually need a reading measure.
   margin-bottom: clamp(3rem, 8vw, 6rem);
 }
 
@@ -13,6 +18,7 @@
 .intro {
   @include type('lead');
   color: var(--ink-muted);
+  max-width: 52ch;
 }
 
 /* Process ----------------------------------------------------------------- */
@@ -199,13 +205,12 @@
   }
 
   .outputs {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @include down('sm') {
   .header {
-    max-width: none;
     margin-bottom: 2.5rem;
   }
 
