@@ -42,6 +42,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Catches GLSL reserved words and stray backticks in shader sources. A shader
+      # that fails to compile draws nothing and reports only to the browser console,
+      # so this is the only place it can be caught before deploy.
+      - name: Check shaders
+        run: npm run check:shaders
+
       - name: Type check
         run: npm run typecheck
 

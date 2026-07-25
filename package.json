@@ -8,11 +8,12 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/finalize-export.mjs",
+    "build": "node scripts/check-shaders.mjs && next build && node scripts/finalize-export.mjs",
     "preview": "npx --yes serve out --single=false",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "check": "npm run typecheck && npm run lint && npm run build"
+    "check": "npm run typecheck && npm run lint && npm run build",
+    "check:shaders": "node scripts/check-shaders.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
