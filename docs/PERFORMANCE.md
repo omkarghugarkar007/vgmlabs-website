@@ -57,7 +57,8 @@ and how to check it has not regressed.
 - ambient camera movement and pointer parallax stop (`CameraRig` `still`)
 - scroll-linked 3D transformation is removed — the field holds its first state
 - the scrubbed rail and process path render complete and static
-- line-by-line reveals become plain fades
+- line-by-line reveals are dropped entirely — the text is simply present, with no
+  tween created at all
 - CSS keyframe animations are wrapped in `@include motion-safe`
 
 All content and navigation remain fully available.
@@ -134,6 +135,10 @@ field should show and every word of content should be present.
 
 | Symptom | First suspect |
 | --- | --- |
+| Text invisible on load | A reveal missing `immediateRender: false`, so its `opacity: 0` from-state was applied without the tween running |
+| The field washes out the type | Bloom `luminanceThreshold` lowered, `mipmapBlur` re-enabled, or particle alpha raised in the shader |
+| Content clipped mid-word | `text-wrap: nowrap` reintroduced on a display heading, or a container capping width in `ch` around one |
+| A section wider than the viewport | A bare `1fr` grid track — it means `minmax(auto, 1fr)` and lets min-content win; use `minmax(0, 1fr)` |
 | Frame rate drops after an edit | A new allocation inside `useFrame`, or a `setState` in a frame loop |
 | Scrolling feels heavy | A second `backdrop-filter`, or a section animating a layout property instead of `transform`/`opacity` |
 | LCP regresses | Something added above the fold that waits on JS |

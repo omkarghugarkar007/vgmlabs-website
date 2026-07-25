@@ -45,9 +45,12 @@ Three rules the codebase enforces rather than merely intends:
    appear anywhere. Work items and research entries are gated behind a `publish`
    flag that is currently `false` for everything, so an unfinished item cannot reach
    the page by accident.
-2. **Everything works without WebGL.** All copy is real DOM rendered into the
-   exported HTML. The 3D layer is decorative and marked `aria-hidden`; a static SVG
-   field stands in where WebGL is unavailable or has failed.
+2. **Everything works without WebGL, and without JavaScript.** All copy is real DOM
+   rendered into the exported HTML. The 3D layer is decorative and marked
+   `aria-hidden`; a static SVG field stands in where WebGL is unavailable or has
+   failed. Reveal animations use `immediateRender: false`, so content is never
+   pre-hidden waiting for a tween — if the animation never runs, the text is simply
+   already there.
 3. **Content lives in data files.** `src/data/*` holds every editable string. Layout
    and WebGL code contains no marketing copy.
 

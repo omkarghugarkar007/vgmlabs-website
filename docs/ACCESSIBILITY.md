@@ -78,7 +78,9 @@ Under `prefers-reduced-motion: reduce`:
 - scroll-linked 3D transformation is removed — the field holds one state
 - the scroll-scrubbed rail and process path render **complete**, so no information is
   withheld from someone who does not get the animation
-- line-by-line reveals become plain opacity fades
+- line-by-line reveals are dropped entirely: the heading is simply present. An
+  earlier version substituted an opacity fade, which both animated for someone who
+  asked for no animation and made the text depend on that tween completing
 - CSS keyframes are gated behind `@include motion-safe`
 - the assembly sequence is skipped; the field is simply already assembled
 
