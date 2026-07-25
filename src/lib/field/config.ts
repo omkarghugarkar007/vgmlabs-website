@@ -83,16 +83,20 @@ export interface QualityProfile {
  * false), which removes the entire class of framebuffer artefact along with a
  * full-resolution buffer and two passes per frame.
  *
- * The translucent planes are off for a related reason: as filled quads they tinted
- * the whole environment blue, and as wireframe grids they were the geometry the
- * blur pass was smearing into those nested squares. The component works; it is the
- * interaction with post-processing that was the problem.
+ * The wireframe grid planes are back on (2 / 1 / 0). They were never the artefact —
+ * the blur pass was smearing them into those nested squares. With no composer they
+ * read as intended: faint constraint planes intersecting the organic flow.
  *
- * To experiment: set `bloom: true` on `high` only, keep `mipmapBlur: false` and
- * `luminanceThreshold` at 1.0 in PostFX.tsx, and check a scrolled screenshot at a
- * normal viewport — the artefact does not appear in the hero, only further down.
+ * A separate and far more consequential bug sat underneath all of this: the particle
+ * vertex shader declared a variable named `asm`, which is a GLSL ES reserved word, so
+ * the program never compiled and every particle was silently absent. A failed shader
+ * draws nothing and throws no page-level error — the field was only its nodes and
+ * links, which is why tuning bloom kept not helping. If the field ever looks sparse
+ * or static again, read the browser console for `THREE.WebGLProgram: Shader Error`
+ * before adjusting any value in this file.
+ *
  * Contrast at the frame edges is handled by the CSS veil in
- * IntelligenceField.module.scss, not by the vignette.
+ * IntelligenceField.module.scss, not by a vignette pass.
  */
 export const QUALITY_PROFILES: Readonly<Record<Exclude<QualityTier, 'off'>, QualityProfile>> = {
   high: {
@@ -101,7 +105,7 @@ export const QUALITY_PROFILES: Readonly<Record<Exclude<QualityTier, 'off'>, Qual
     nodes: 26,
     maxEdges: 132,
     signals: 26,
-    planes: 0,
+    planes: 2,
     bloom: false,
     grade: false,
     dpr: [1, 1.75],
@@ -113,7 +117,7 @@ export const QUALITY_PROFILES: Readonly<Record<Exclude<QualityTier, 'off'>, Qual
     nodes: 20,
     maxEdges: 88,
     signals: 16,
-    planes: 0,
+    planes: 1,
     bloom: false,
     grade: false,
     dpr: [1, 1.4],

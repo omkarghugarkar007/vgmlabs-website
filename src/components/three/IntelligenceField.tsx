@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   useAssembly,
   useMotionBudget,
@@ -51,6 +51,32 @@ export function IntelligenceField() {
 
   usePointerDriver(shouldMount);
   useAssembly(shouldMount);
+
+  /**
+   * Hand over from the static field to the canvas.
+   *
+   * This used to wait purely on `onReady` from inside the Canvas. When that did not
+   * arrive — and it did not, reproducibly — the fallback stayed at full opacity on
+   * top of the live scene, so the static spiral and the WebGL field were composited
+   * together and the result looked like neither.
+   *
+   * Making one layer's visibility depend on a callback from inside the other is the
+   * mistake. The canvas being mounted is sufficient evidence to start the handover,
+   * so a timer drives it and `onReady` only ever makes it happen sooner. If the
+   * context is subsequently lost, `onFailure` unmounts the canvas and the fallback
+   * returns on its own.
+   */
+  useEffect(() => {
+    // No reset branch here: `onFailure` is the only path that unmounts the canvas,
+    // and it already clears this. Resetting synchronously in the effect body would
+    // also be a cascading render.
+    if (!shouldMount || canvasReady) return;
+
+    // Long enough to cover shader compilation and the first frame, short enough
+    // that nobody sees both layers for meaningfully long.
+    const timer = window.setTimeout(() => setCanvasReady(true), 1100);
+    return () => window.clearTimeout(timer);
+  }, [shouldMount, canvasReady]);
 
   const showCanvas = shouldMount && canvasReady;
 

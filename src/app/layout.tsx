@@ -73,7 +73,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           httpEquiv="Content-Security-Policy"
           content={[
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline'",
+            // React's development build uses eval() for debugging features such as
+            // reconstructing call stacks. Production never does, so the allowance is
+            // scoped to dev — otherwise `npm run dev` logs a CSP violation and loses
+            // those tools. This is evaluated at build time and inlined.
+            process.env.NODE_ENV === 'development'
+              ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+              : "script-src 'self' 'unsafe-inline'",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob:",
             "font-src 'self' data:",

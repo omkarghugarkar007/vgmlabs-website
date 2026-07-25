@@ -258,8 +258,15 @@ void main() {
   vec3 p = mix(pA, pB, m);
 
   // First-load assembly out of independent scattered particles.
-  float asm = easeOut(uAssemble * 1.55 - aIndex * 0.52);
-  p = mix(position, p, asm);
+  //
+  // Deliberately NOT named asm -- that is a reserved word in GLSL ES, and using it
+  // made this whole shader fail to compile. Silently, as far as the page was
+  // concerned: a failed program simply draws nothing and raises no page-level
+  // error, so every particle was absent while the nodes and links carried on.
+  // Other reserved words to avoid in here: this, input, output, half, short, long,
+  // double, static, switch, default, template, class, union, packed, goto.
+  float assembled = easeOut(uAssemble * 1.55 - aIndex * 0.52);
+  p = mix(position, p, assembled);
 
   // Procedural drift. Amplitude follows the blended state.
   float org = mix(organicFor(uStateA), organicFor(uStateB), m) * uMotion;
@@ -296,26 +303,28 @@ void main() {
   // Depth attenuation stands in for volumetric falloff.
   float fade  = smoothstep(17.0, 2.6, depth);
 
-  // Low per-particle alpha, deliberately.
+  // Per-particle alpha is kept low because blending is additive: overlapping
+  // particles accumulate, and in the dense core twenty or more can stack on one
+  // pixel. Faint individually is what makes the accumulation read as a luminous
+  // volume rather than a blown-out highlight.
   //
-  // Blending is additive, so overlapping particles accumulate. In the dense core
-  // twenty or more can stack on one pixel, and at the alpha this used to carry
-  // (0.30–1.00) that saturated to white and washed out the typography in front of
-  // it. Keeping each particle faint is what makes the accumulation read as a
-  // luminous volume rather than a blown-out highlight.
-  float alpha = fade * (0.05 + aSeed.y * 0.17) * uFocus;
+  // This sat at 0.05-0.22 for a while, which was an over-correction: the washout it
+  // was meant to fix came from the bloom pass, not from here, and with no composer
+  // the field just looked thin. 0.09-0.37 gives the core real presence while
+  // staying well under saturation.
+  float alpha = fade * (0.09 + aSeed.y * 0.28) * uFocus;
 
   // Signals are brighter than structure — they are the thing to look at.
   alpha *= aRole > 0.885 ? 1.5 : 1.0;
   // Fade in with assembly so nothing pops.
-  alpha *= smoothstep(0.0, 0.35, asm);
+  alpha *= smoothstep(0.0, 0.35, assembled);
 
   vColor = col;
   vAlpha = clamp(alpha, 0.0, 1.0);
   vCore  = aRole > 0.885 ? 1.0 : 0.0;
 
   gl_Position  = projectionMatrix * mv;
-  gl_PointSize = clamp(uSize * aScale * uDpr * (3.4 / depth), 0.6, 7.0);
+  gl_PointSize = clamp(uSize * aScale * uDpr * (3.5 / depth), 0.7, 8.0);
 }
 `;
 

@@ -26,6 +26,17 @@ interface Point {
   o: number;
 }
 
+/**
+ * Round to a fixed precision before it reaches the DOM.
+ *
+ * The maths is deterministic, but the *string* form of a float is not portable:
+ * Node serialised 453.5981141827905 where the browser produced
+ * 453.59811418279054, and React reported a hydration mismatch on every one of
+ * these nodes. Rounding to three decimals is far finer than a pixel at this
+ * viewBox scale and makes the two environments agree exactly.
+ */
+const fx = (n: number): number => Math.round(n * 1000) / 1000;
+
 const points: Point[] = Array.from({ length: NODE_COUNT }, (_, i) => {
   const k = (i + 0.5) / NODE_COUNT;
   // sqrt distribution keeps areal density even, so the core reads as a volume
@@ -33,11 +44,11 @@ const points: Point[] = Array.from({ length: NODE_COUNT }, (_, i) => {
   const radius = Math.sqrt(k) * CENTRE * 0.82;
   const angle = i * GOLDEN_ANGLE;
   return {
-    x: CENTRE + Math.cos(angle) * radius,
+    x: fx(CENTRE + Math.cos(angle) * radius),
     // Slight vertical compression matches the camera's framing in the 3D scene.
-    y: CENTRE + Math.sin(angle) * radius * 0.88,
-    r: 1.1 + (1 - k) * 2.6,
-    o: 0.14 + (1 - k) * 0.5,
+    y: fx(CENTRE + Math.sin(angle) * radius * 0.88),
+    r: fx(1.1 + (1 - k) * 2.6),
+    o: fx(0.14 + (1 - k) * 0.5),
   };
 });
 
@@ -48,7 +59,7 @@ const links = points
     if (!q) return null;
     const d = Math.hypot(p.x - q.x, p.y - q.y);
     if (d > 96) return null;
-    return { x1: p.x, y1: p.y, x2: q.x, y2: q.y, o: 0.16 * (1 - d / 96) };
+    return { x1: p.x, y1: p.y, x2: q.x, y2: q.y, o: fx(0.16 * (1 - d / 96)) };
   })
   .filter((link): link is NonNullable<typeof link> => link !== null);
 
