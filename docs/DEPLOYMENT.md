@@ -38,17 +38,17 @@ these are secret):
 
 | Variable | Example | When |
 | --- | --- | --- |
-| `SITE_URL` | `https://vgmlabs.ai` | Recommended. Drives canonical URLs, sitemap, Open Graph, JSON-LD `@id`. No trailing slash. |
-| `SITE_CNAME` | `vgmlabs.ai` | Only with a custom domain. |
+| `SITE_URL` | `https://vgmlabsai.com` | Recommended. Drives canonical URLs, sitemap, Open Graph, JSON-LD `@id`. No trailing slash. |
+| `SITE_CNAME` | `vgmlabsai.com` | Only with a custom domain. |
 | `BASE_PATH` | `/VGMLabs-website` | Only when serving from a repository subpath. |
 
-If `SITE_URL` is unset the build falls back to `https://vgmlabs.ai`, which is a
+If `SITE_URL` is unset the build falls back to `https://vgmlabsai.com`, which is a
 placeholder. Canonical tags pointing at a domain you do not control is the one SEO
 mistake here with real consequences — set it.
 
 **3. DNS**
 
-Apex domain (`vgmlabs.ai`) — four `A` records:
+Apex domain (`vgmlabsai.com`) — four `A` records:
 
 ```
 185.199.108.153
@@ -66,7 +66,7 @@ Optionally the matching `AAAA` records:
 2606:50c0:8003::153
 ```
 
-Subdomain (`www.vgmlabs.ai`) — one `CNAME` to `<username>.github.io`.
+Subdomain (`www.vgmlabsai.com`) — one `CNAME` to `<username>.github.io`.
 
 Then Settings → Pages → **Custom domain**, enter the domain, and tick **Enforce
 HTTPS** once the certificate is issued (usually minutes; occasionally up to an hour).

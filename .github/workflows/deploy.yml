@@ -59,9 +59,9 @@ jobs:
           # Set these as repository variables (Settings → Secrets and variables →
           # Actions → Variables). Neither is secret.
           #
-          #   SITE_URL   canonical origin, e.g. https://vgmlabs.ai
+          #   SITE_URL   canonical origin, e.g. https://vgmlabsai.com
           #              Drives canonical tags, sitemap URLs and Open Graph.
-          #   SITE_CNAME custom domain for Pages, e.g. vgmlabs.ai
+          #   SITE_CNAME custom domain for Pages, e.g. vgmlabsai.com
           #              Omit when serving from <user>.github.io.
           #   BASE_PATH  only when serving from a repo subpath, e.g. /VGMLabs-website
           NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}

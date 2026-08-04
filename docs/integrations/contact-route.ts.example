@@ -145,7 +145,7 @@ interface DeliveryAdapter {
  * The sending domain must be verified in Resend, or use their onboarding sender.
  */
 function createResendAdapter(apiKey: string): DeliveryAdapter {
-  const from = process.env.CONTACT_FROM_EMAIL ?? 'website@vgmlabs.ai';
+  const from = process.env.CONTACT_FROM_EMAIL ?? 'website@vgmlabsai.com';
   const to = process.env.CONTACT_TO_EMAIL ?? 'info.vgmlabs@gmail.com';
 
   return {

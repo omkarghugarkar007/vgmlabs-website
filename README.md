@@ -25,7 +25,7 @@ Node 20.9 or newer. No environment variables are required to run or build.
 
 ### One thing to change before going live
 
-`NEXT_PUBLIC_SITE_URL` defaults to `https://vgmlabs.ai`. Set it to the real domain —
+`NEXT_PUBLIC_SITE_URL` defaults to `https://vgmlabsai.com`. Set it to the real domain —
 it drives canonical URLs, the sitemap, Open Graph tags and JSON-LD `@id` values.
 See **Deployment** below.
 
@@ -149,15 +149,15 @@ Target: **GitHub Pages**, via `.github/workflows/deploy.yml`.
 
    | Variable | Value | Required |
    | --- | --- | --- |
-   | `SITE_URL` | `https://vgmlabs.ai` — canonical origin, no trailing slash | Recommended |
-   | `SITE_CNAME` | `vgmlabs.ai` — writes `out/CNAME` for the custom domain | Only with a custom domain |
+   | `SITE_URL` | `https://vgmlabsai.com` — canonical origin, no trailing slash | Recommended |
+   | `SITE_CNAME` | `vgmlabsai.com` — writes `out/CNAME` for the custom domain | Only with a custom domain |
    | `BASE_PATH` | `/VGMLabs-website` — only when serving from a repo subpath | Rarely |
 
 4. Point DNS at GitHub Pages:
-   - **Apex** (`vgmlabs.ai`) — four `A` records to `185.199.108.153`,
+   - **Apex** (`vgmlabsai.com`) — four `A` records to `185.199.108.153`,
      `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
      (and/or the equivalent `AAAA` records).
-   - **Subdomain** (`www.vgmlabs.ai`) — one `CNAME` to `<user>.github.io`.
+   - **Subdomain** (`www.vgmlabsai.com`) — one `CNAME` to `<user>.github.io`.
    - Then **Settings → Pages → Custom domain**, and tick **Enforce HTTPS** once the
      certificate has been issued.
 

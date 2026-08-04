@@ -1,3 +1,4 @@
+import { company } from '@/data/company';
 import {
   BUDGET_OPTIONS,
   CONTACT_STAGES,
@@ -60,8 +61,17 @@ export const activeTransport: 'mailto' | 'http' = ENDPOINT ? 'http' : 'mailto';
  * not require the reader to know the option identifiers.
  */
 export function formatSubmission(values: ContactSubmission): string {
+  // Derived from the configured origin rather than written out, so changing the
+  // domain in one place does not leave the wrong host in every enquiry email.
+  let host = 'the website';
+  try {
+    host = new URL(company.siteUrl).host;
+  } catch {
+    // A malformed NEXT_PUBLIC_SITE_URL should not stop someone contacting us.
+  }
+
   const lines: string[] = [
-    'New enquiry from vgmlabs.ai',
+    `New enquiry from ${host}`,
     '',
     `Name:          ${values.name.trim()}`,
     `Email:         ${values.email.trim()}`,

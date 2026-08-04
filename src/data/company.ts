@@ -14,9 +14,10 @@ import type { CompanyIdentity, NavItem } from '@/types/content';
 const resolveSiteUrl = (): string => {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) return explicit.replace(/\/$/, '');
-  // Placeholder origin. Set NEXT_PUBLIC_SITE_URL before the first production
-  // deploy so canonical URLs, the sitemap and Open Graph tags are correct.
-  return 'https://vgmlabs.ai';
+  // The live origin. CI still sets NEXT_PUBLIC_SITE_URL (see the deploy workflow),
+  // but this fallback means a local build also emits correct canonical URLs,
+  // sitemap entries and JSON-LD @id values instead of a placeholder domain.
+  return 'https://vgmlabsai.com';
 };
 
 export const company: CompanyIdentity = {
