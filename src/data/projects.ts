@@ -44,13 +44,13 @@ export const workItems: readonly WorkItem[] = [
     title: 'Edge inference demonstration',
     discipline: 'On-device inference',
     summary:
-      'A quantized small language model plus a vision model running entirely on constrained hardware, with local queueing and deferred synchronisation when connectivity returns.',
+      'A quantised small language model plus a vision model running entirely on constrained hardware, with local queueing and deferred synchronisation when connectivity returns.',
     establishes: [
       'The system continues to function with the network physically removed',
-      'Quality change from quantization is measured on a task-specific evaluation set',
+      'Quality change from quantisation is measured on a task-specific evaluation set',
       'Sustained-load behaviour, including thermal throttling, is characterised',
     ],
-    stack: ['On-device runtime', 'Quantized weights', 'Local vector store', 'Deferred sync'],
+    stack: ['On-device runtime', 'Quantised weights', 'Local vector store', 'Deferred sync'],
     deployment: 'Edge device',
   },
   {

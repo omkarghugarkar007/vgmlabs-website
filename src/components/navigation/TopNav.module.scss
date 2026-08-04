@@ -7,6 +7,64 @@
   // The bar itself must not block clicks on the field or on content beside it;
   // the inner row re-enables pointer events for its own children.
   pointer-events: none;
+
+  // The backdrop and the hairline live on this element, NOT on `.inner`.
+  //
+  // They used to live on `.inner`, which carries `@include shell` and is
+  // therefore capped at $shell-max. Above that width the backdrop was a
+  // floating centred rectangle, so display headings scrolling past in the
+  // gutters passed the nav links with nothing behind them at all. Below that
+  // width the fill was rgba($void, 0.72), which a d1/d2 heading in #ece9e2
+  // reads straight through. Both together are why headings appeared to collide
+  // with the navigation on nearly every page.
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    pointer-events: none;
+    opacity: 0;
+    @include transition(opacity);
+  }
+
+  // Fill.
+  &::before {
+    top: 0;
+    height: var(--nav-h);
+    background: #{rgba($void, 0.92)};
+    // A single small-radius blur on one fixed element. Deliberately restrained:
+    // backdrop-filter is the most expensive property on this page, and stacking
+    // it on every panel is what makes glassmorphic sites stutter.
+    backdrop-filter: blur(16px) saturate(118%);
+    -webkit-backdrop-filter: blur(16px) saturate(118%);
+  }
+
+  // Hairline, drawn separately so it can fade independently of the fill without
+  // animating a compositor-hostile property.
+  &::after {
+    top: var(--nav-h);
+    height: 1px;
+    background: var(--rule);
+  }
+}
+
+.scrolled {
+  // Once the bar is opaque it should also intercept the pointer. Otherwise a
+  // link sitting underneath is invisible but still clickable.
+  pointer-events: auto;
+
+  &::before,
+  &::after {
+    opacity: 1;
+  }
+}
+
+// Where backdrop-filter is unavailable there is no blur to help separate the
+// bar from the content behind it, so the fill goes effectively solid.
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav::before {
+    background: #{rgba($void, 0.985)};
+  }
 }
 
 .inner {
@@ -17,42 +75,8 @@
   gap: clamp(1rem, 3vw, 3rem);
   height: var(--nav-h);
   position: relative;
-  @include transition(background-color, border-color, backdrop-filter);
-
-  // The hairline is drawn as a pseudo-element so it can fade independently of
-  // the backdrop without animating `border-color` on a compositor-hostile
-  // property.
-  &::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 1px;
-    background: var(--rule-faint);
-    opacity: 0;
-    @include transition(opacity);
-  }
-}
-
-.scrolled .inner {
-  background: #{rgba($void, 0.72)};
-  // A single small-radius blur on one fixed element. Deliberately restrained:
-  // backdrop-filter is the most expensive property on this page, and stacking it
-  // on every panel is what makes glassmorphic sites stutter.
-  backdrop-filter: blur(14px) saturate(120%);
-  -webkit-backdrop-filter: blur(14px) saturate(120%);
-
-  &::after {
-    opacity: 1;
-  }
-}
-
-// Where backdrop-filter is unavailable, fall back to a more opaque fill so the
-// bar stays legible over the field.
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .scrolled .inner {
-    background: #{rgba($void, 0.93)};
-  }
+  // Above the ::before fill painted by the parent.
+  z-index: 1;
 }
 
 /* Desktop links ----------------------------------------------------------- */
@@ -71,7 +95,7 @@
   position: relative;
   display: inline-block;
   padding: 0.4rem 0;
-  @include mono(0.6875rem, 0.13em);
+  @include mono(0.75rem, 0.13em);
   color: var(--ink-muted);
   @include transition(color);
   @include focusable;
@@ -126,7 +150,7 @@
   padding: 0 1rem;
   border: 1px solid var(--rule);
   border-radius: $radius-control;
-  @include mono(0.6875rem, 0.13em);
+  @include mono(0.75rem, 0.13em);
   color: var(--ink);
   background: #{rgba($surface, 0.5)};
   @include transition(border-color, background-color, color);
@@ -162,7 +186,7 @@
   min-height: 44px;
   min-width: 44px;
   padding: 0 0.5rem;
-  @include mono(0.6875rem, 0.13em);
+  @include mono(0.75rem, 0.13em);
   color: var(--ink);
   @include focusable;
 }
@@ -270,7 +294,7 @@
 }
 
 .panelIndex {
-  @include mono(0.625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--ink-faint);
 }
 
@@ -284,7 +308,7 @@
 
 .panelHint {
   grid-column: 2;
-  @include mono(0.625rem, 0.1em);
+  @include mono(0.75rem, 0.08em);
   text-transform: none;
   letter-spacing: 0.02em;
   color: var(--ink-muted);

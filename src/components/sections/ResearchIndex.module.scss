@@ -29,7 +29,7 @@
 }
 
 .note {
-  @include mono-data(0.6875rem);
+  @include mono-data(0.75rem);
   color: var(--ink-faint);
   max-width: 52ch;
 }
@@ -57,14 +57,14 @@
 }
 
 .themeRef {
-  @include mono(0.5625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--amber);
   font-variant-numeric: tabular-nums;
 }
 
 .themeCategory {
   color: var(--ink-faint);
-  font-size: 0.5625rem;
+  font-size: 0.75rem;
 }
 
 .themeBody {
@@ -103,7 +103,7 @@
   align-items: center;
   gap: 0.6rem;
   min-height: 44px;
-  @include mono(0.625rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   color: var(--ink-muted);
   @include transition(color);
   @include focusable;

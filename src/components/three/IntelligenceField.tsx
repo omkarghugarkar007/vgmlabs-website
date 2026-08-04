@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import {
   useAssembly,
@@ -11,6 +12,20 @@ import {
 import { useWebGLSupport } from '@/hooks/useMediaQuery';
 import { FieldStill } from './FieldStill';
 import styles from './IntelligenceField.module.scss';
+
+/**
+ * Routes that get the static field only — no WebGL, no render loop.
+ *
+ * These are long, dense, text-only documents that people read rather than
+ * browse. A continuous particle animation behind several thousand words of
+ * policy is pure cost: it earns nothing there, it is a battery drain on the page
+ * most likely to be read on a phone, and this is where the renderer was observed
+ * becoming unresponsive during review.
+ *
+ * The static SVG field still renders, so the composition is unchanged — the page
+ * looks like the rest of the site, it simply is not animating.
+ */
+const QUIET_ROUTES: readonly string[] = ['/privacy', '/terms'];
 
 /**
  * The WebGL bundle. `ssr: false` keeps three.js out of the exported HTML and out
@@ -47,7 +62,26 @@ export function IntelligenceField() {
   const reducedMotion = useMotionBudget();
   const active = useRenderGate(rootRef);
 
-  const shouldMount = webglSupported && !canvasFailed;
+  // `trailingSlash: true` means pathnames arrive as "/privacy/". Normalised so
+  // the route list does not have to encode that detail.
+  const pathname = usePathname();
+  const route = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
+  const quiet = QUIET_ROUTES.includes(route);
+
+  const shouldMount = webglSupported && !canvasFailed && !quiet;
+
+  // Entering a quiet route unmounts the canvas, so the readiness flag has to go
+  // with it — otherwise navigating back would mark the canvas ready before it
+  // had produced a frame and hide the static layer over nothing.
+  //
+  // Adjusted during render rather than in an effect. React's documented pattern
+  // for state that depends on a changing prop; an effect here would be a
+  // cascading render, and the lint rules in this project reject it.
+  const [lastQuiet, setLastQuiet] = useState(quiet);
+  if (quiet !== lastQuiet) {
+    setLastQuiet(quiet);
+    if (quiet) setCanvasReady(false);
+  }
 
   usePointerDriver(shouldMount);
   useAssembly(shouldMount);

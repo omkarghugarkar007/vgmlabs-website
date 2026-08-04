@@ -8,19 +8,19 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/check-shaders.mjs && next build && node scripts/finalize-export.mjs",
+    "build": "node scripts/check-shaders.mjs && next build && node scripts/finalize-export.mjs && node scripts/check-budget.mjs",
     "preview": "npx --yes serve out --single=false",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run lint && npm run build",
-    "check:shaders": "node scripts/check-shaders.mjs"
+    "check:shaders": "node scripts/check-shaders.mjs",
+    "icons": "node scripts/build-icons.mjs",
+    "check:budget": "node scripts/check-budget.mjs"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@react-three/postprocessing": "^3.0.4",
     "gsap": "^3.15.0",
-    "motion": "^12.42.2",
     "next": "^16.2.11",
     "postprocessing": "^6.37.9",
     "react": "^19.2.8",

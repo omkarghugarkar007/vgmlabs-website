@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { companySection } from '@/data/company';
 import { teamMembers } from '@/data/projects';
+import { homeEyebrow, showWorkChapter } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
 import { Reveal } from '@/components/motion/Reveal';
@@ -16,14 +17,27 @@ import styles from './CompanyStatement.module.scss';
  * The operating principles are commitments about how work is run, each one
  * specific enough to be held to. They are not claims about what has been achieved.
  */
+/**
+ * How many operating principles the homepage shows.
+ *
+ * All four were printed here and then repeated verbatim on /company, so a visitor
+ * who read the homepage had nothing to gain by clicking through. Two establishes
+ * the kind of commitment these are; the rest, with the note about how they are
+ * held to, is on the page someone chose to open.
+ */
+const TEASER_COUNT = 2;
+
 export function CompanyStatement() {
   const hasTeam = teamMembers.length > 0;
+
+  const shown = companySection.principles.slice(0, TEASER_COUNT);
+  const remaining = companySection.principles.length - shown.length;
 
   return (
     <div className={styles.wrap}>
       <div className={styles.head}>
         <MonoLabel marker className={styles.eyebrow}>
-          09 / Company
+          {homeEyebrow('company')}
         </MonoLabel>
         <DisplayHeading
           as="h2"
@@ -49,7 +63,7 @@ export function CompanyStatement() {
         </div>
 
         <dl className={styles.principleGrid}>
-          {companySection.principles.map((principle, i) => (
+          {shown.map((principle, i) => (
             <div key={principle.id} className={styles.principle}>
               <dt>
                 <span className={styles.principleIndex} aria-hidden="true">
@@ -93,9 +107,23 @@ export function CompanyStatement() {
         </div>
       ) : null}
 
+      {/* What is left of the Work chapter while nothing is published.
+          One line stating the publishing rule, rather than a numbered section
+          whose only content was the absence of content. See homeSections in
+          src/data/navigation.ts. */}
+      {showWorkChapter ? null : (
+        <p className={styles.publishingNote}>
+          Client engagements are published only as verified case studies, with the
+          client’s approval. Nothing appears here before it can be described
+          accurately.
+        </p>
+      )}
+
       <div className={styles.footer}>
         <Link href="/company" className={styles.footerLink}>
-          <span>About VGM Labs</span>
+          <span>
+            {remaining > 0 ? `${remaining} more commitments, and who we are` : 'About VGM Labs'}
+          </span>
           <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">
             <path d="M2 7h10M8.5 3.5 12 7l-3.5 3.5" fill="none" stroke="currentColor" />
           </svg>

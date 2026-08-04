@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  @include mono(0.6875rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   @include focusable;
   @include transition(border-color, background-color, color);
 }

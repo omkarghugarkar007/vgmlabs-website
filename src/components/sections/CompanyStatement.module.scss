@@ -18,6 +18,9 @@
   // marks it as commentary on the headline above.
   margin: clamp(2rem, 5vw, 3.5rem) 0 clamp(3rem, 7vw, 5.5rem);
   padding-left: clamp(0rem, 8vw, 9rem);
+  // "Models are a component" was one of the three blocks specifically reported
+  // as hard to read through the field.
+  @include prose-scrim(0.84, 3rem);
 }
 
 .lead {
@@ -92,7 +95,7 @@
 }
 
 .principleIndex {
-  @include mono(0.5625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--amber);
   flex: 0 0 auto;
   min-width: 1.15rem;
@@ -141,7 +144,7 @@
   margin-top: 0.35rem;
 
   a {
-    @include mono(0.5625rem, 0.14em);
+    @include mono(0.75rem, 0.11em);
     color: var(--ink-faint);
     min-height: 44px;
     display: inline-flex;
@@ -155,6 +158,19 @@
   }
 }
 
+/* Publishing note --------------------------------------------------------- */
+
+/* Stands in for the Work chapter while nothing is published. A quiet aside on a
+   hairline, not a section — the point is to state the rule once and move on. */
+.publishingNote {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 62ch;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding-left: 1rem;
+  border-left: 1px solid var(--rule);
+}
+
 /* Footer ------------------------------------------------------------------ */
 
 .footer {
@@ -166,7 +182,7 @@
   align-items: center;
   gap: 0.6rem;
   min-height: 44px;
-  @include mono(0.625rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   color: var(--ink-muted);
   @include transition(color);
   @include focusable;

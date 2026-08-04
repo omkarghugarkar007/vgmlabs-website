@@ -1,8 +1,9 @@
 'use client';
 
 import { useRef } from 'react';
-import { gsap, prefersReducedMotion } from '@/lib/gsap';
+import { gsap } from '@/lib/gsap';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
+import { REVEAL_SAFETY_MS, REVEAL_START, shouldAnimateReveal } from '@/lib/reveal';
 import styles from './DisplayHeading.module.scss';
 
 type Step = 'd1' | 'd2' | 'd3' | 'd4';
@@ -62,13 +63,21 @@ export function DisplayHeading({
     const inners = root.querySelectorAll<HTMLElement>(`.${styles.inner}`);
     if (inners.length === 0) return;
 
-    // Under reduced motion the heading is simply present. No tween at all —
-    // not even a fade.
+    // Simply present, with no tween at all — not even a fade. Three cases reach
+    // this branch:
     //
-    // The previous version animated opacity here, which was wrong twice over: it
-    // still animated for someone who asked for no animation, and it made the text
-    // depend on a tween completing in order to become visible.
-    if (prefersReducedMotion()) {
+    //   - reduced motion. The previous version animated opacity here, which was
+    //     wrong twice over: it still animated for someone who asked for no
+    //     animation, and it made the text depend on a tween completing in order
+    //     to become visible.
+    //   - the heading is already on screen. `immediate` used to be passed by hand
+    //     for exactly this (the hero), which meant every other above-the-fold
+    //     heading on every other page was left to animate while visible.
+    //   - the heading is above the viewport, because the page was loaded scrolled
+    //     or arrived at via an anchor.
+    //
+    // See src/lib/reveal.ts.
+    if (!shouldAnimateReveal(root)) {
       gsap.set(inners, { yPercent: 0, opacity: 1, clearProps: 'willChange' });
       return;
     }
@@ -102,12 +111,11 @@ export function DisplayHeading({
 
         // Belt to that brace: once the tween has started, guarantee it finishes.
         // If the ticker dies mid-reveal, this jumps to the end state rather than
-        // leaving text half-faded. 4s against a ~1.4s animation, so it never
-        // interferes with a healthy run.
+        // leaving text half-faded.
         onStart: () => {
           safety = window.setTimeout(() => {
             if (tween.progress() < 1) tween.progress(1);
-          }, 4000);
+          }, REVEAL_SAFETY_MS);
         },
         onComplete: () => window.clearTimeout(safety),
 
@@ -115,8 +123,9 @@ export function DisplayHeading({
           ? undefined
           : {
               trigger: root,
-              // Fires once, slightly before the heading is fully on screen.
-              start: 'top 88%',
+              // Fires before the heading enters the viewport, so the lines are
+              // already rising by the time they can be seen.
+              start: REVEAL_START,
               once: true,
             },
       },

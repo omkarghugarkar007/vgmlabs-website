@@ -5,9 +5,11 @@
   // CSS also hid the element, anyone with JavaScript disabled — or with a failed
   // bundle — would get permanently invisible content. Starting visible means the
   // worst case is no animation, not no content.
-  will-change: opacity, transform;
-
-  @include motion-reduce {
-    will-change: auto;
-  }
+  //
+  // No `will-change` either. It used to be declared here permanently, which asks
+  // the compositor to hold a promoted layer for every revealable block on a
+  // 14,000px page, for the whole session, to serve one 0.85s animation each. That
+  // is a standing memory cost and a plausible contributor to the occasional heavy
+  // frames on this page. GSAP promotes what it is animating for the duration of
+  // the tween, which is the correct scope.
 }

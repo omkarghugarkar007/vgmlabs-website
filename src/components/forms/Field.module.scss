@@ -38,7 +38,7 @@
 
 .optional {
   // Was 8px, which is not a readable size for anything.
-  @include mono(0.6875rem, 0.06em);
+  @include mono(0.75rem, 0.06em);
   color: var(--ink-faint);
   text-transform: uppercase;
 }
@@ -95,7 +95,7 @@
   position: absolute;
   right: 0.6rem;
   bottom: 0.5rem;
-  @include mono-data(0.6875rem);
+  @include mono-data(0.75rem);
   color: var(--ink-faint);
   background: #{rgba($void, 0.8)};
   padding: 0.1rem 0.3rem;
@@ -112,7 +112,19 @@
 
 .optionsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  // 13.5rem, not 11rem.
+  //
+  // `auto-fit` with `minmax(X, 1fr)` lays down as many X-wide tracks as fit and
+  // then stretches them, so X is a floor on the track — and if X is narrower than
+  // the widest label, that label overflows its own border. It did: "US$25k – 100k"
+  // spilled out of its box while the shorter chips beside it fitted, which read as
+  // a broken control rather than a style.
+  //
+  // X is now sized for the longest label in any group on this form
+  // ("Production scale-up", 19 characters at 13px mono plus the marker, gap and
+  // padding). `min(100%, …)` keeps a single column when the viewport is narrower
+  // than one track.
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
   gap: 0.5rem;
 }
 
@@ -121,7 +133,7 @@
   align-items: center;
   gap: 0.6rem;
   min-height: 48px;
-  padding: 0 1rem;
+  padding: 0 0.9rem;
   border: 1px solid var(--rule);
   border-radius: $radius-control;
   background: #{rgba($surface, 0.4)};
@@ -130,6 +142,10 @@
   @include mono(0.8125rem, 0.05em);
   color: var(--ink-muted);
   cursor: pointer;
+  // A budget band or a deployment target broken across two lines is not a label
+  // any more. The grid track is sized to hold the longest of them, so nothing
+  // needs to wrap.
+  white-space: nowrap;
   @include transition(border-color, background-color, color);
 
   &:hover {

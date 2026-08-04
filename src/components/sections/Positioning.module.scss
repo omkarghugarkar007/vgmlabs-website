@@ -26,6 +26,9 @@
   flex-direction: column;
   gap: 1.75rem;
   padding-top: 0.5rem;
+  // These are the paragraphs that carry the argument, and they were the worst
+  // case for the field rendering over copy.
+  @include prose-scrim(0.84, 3.25rem);
 }
 
 .lead {
@@ -48,7 +51,7 @@
   display: flex;
   align-items: center;
   gap: 1.25rem;
-  margin-top: clamp(4rem, 10vw, 8rem);
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
 }
 
 .railRule {

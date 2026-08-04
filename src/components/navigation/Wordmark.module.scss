@@ -103,7 +103,7 @@
 }
 
 .descriptor {
-  @include mono(0.5625rem, 0.24em);
+  @include mono(0.75rem, 0.18em);
   color: var(--ink-faint);
   line-height: 1;
 }

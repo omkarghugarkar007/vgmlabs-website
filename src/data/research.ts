@@ -85,7 +85,7 @@ export const researchThemes: readonly ResearchTheme[] = [
     question:
       'What is the cheapest configuration that still meets a task’s quality bar on the target hardware?',
     detail:
-      'Quantization and distillation trade quality for footprint unevenly across task types. The question is which capabilities degrade first, and how to detect that on a task-specific evaluation set rather than a general benchmark.',
+      'Quantisation and distillation trade quality for footprint unevenly across task types. The question is which capabilities degrade first, and how to detect that on a task-specific evaluation set rather than a general benchmark.',
   },
   {
     id: 'tool-using-language-models',
@@ -164,14 +164,14 @@ export const researchEntries: readonly ResearchEntry[] = [
       'Placeholder. Template for a technical note. Replace the content and set publish: true only once the note exists and its claims have been reviewed.',
   },
   {
-    id: 'placeholder-quantization-task-quality',
-    title: 'Task-level quality change under 4-bit quantization',
+    id: 'placeholder-quantisation-task-quality',
+    title: 'Task-level quality change under 4-bit quantisation',
     category: 'efficient-inference',
     status: 'draft',
     publish: false,
     date: '2026-01-01',
     summary:
-      'Placeholder. Any published version must state the exact models, hardware, quantization method, task and evaluation set used. No figure should appear here that has not been reproduced.',
+      'Placeholder. Any published version must state the exact models, hardware, quantisation method, task and evaluation set used. No figure should appear here that has not been reproduced.',
   },
   {
     id: 'placeholder-retrieval-permission-filtering',

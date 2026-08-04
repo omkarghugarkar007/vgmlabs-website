@@ -231,6 +231,13 @@ export function OptionGroup({
         .join(' ')}
       aria-describedby={describedBy}
       aria-invalid={error ? true : undefined}
+      // The visible asterisk was the only thing saying these groups are required.
+      // Validation does enforce them (see validateContact) and shows an inline
+      // message tied to the group, but neither the DOM nor the accessibility tree
+      // carried the requirement, so a screen-reader user had no way to know before
+      // submitting. `aria-required` is the correct expression of it on a group;
+      // `required` goes on the inputs below.
+      aria-required={required ? true : undefined}
     >
       <div className={styles.head}>
         <legend className={styles.label}>
@@ -270,6 +277,12 @@ export function OptionGroup({
                 value={option.value}
                 checked={checked}
                 onChange={() => onChange(option.value)}
+                // `required` on a radio makes its whole group required. The form
+                // carries `noValidate`, so this sets the constraint state without
+                // the browser's own bubble competing with our inline message —
+                // which is deliberate: the custom messages say what to do, and a
+                // native bubble would appear beside a visually-hidden input.
+                required={required}
               />
               <span className={styles.chipMark} aria-hidden="true" />
               <span>{option.label}</span>

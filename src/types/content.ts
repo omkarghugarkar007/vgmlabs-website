@@ -75,8 +75,20 @@ export interface CapabilityChapter {
   readonly labels: readonly string[];
   /** Which Intelligence Field state this chapter drives. */
   readonly fieldState: FieldStateId;
-  /** Deep-link target on the capabilities page. */
-  readonly href: string;
+  /**
+   * The system layers this capability is built on, most central first, as layer
+   * ids from `src/data/layers.ts`.
+   *
+   * A list rather than a single `href`. Two of these capabilities genuinely span
+   * more than one layer, and forcing a one-to-one mapping is what produced a wrong
+   * link: "Generative and Multimodal AI" pointed at the knowledge layer (RAG,
+   * search, document understanding) when the models it describes live in the
+   * intelligence layer. It also left the experience and operations layers
+   * unreachable from the homepage entirely.
+   *
+   * Validated against the real layer ids at module load — see capabilities.ts.
+   */
+  readonly layers: readonly string[];
 }
 
 /** A row in the extended capability matrix. */

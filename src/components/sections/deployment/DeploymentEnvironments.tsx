@@ -12,6 +12,7 @@ import { MonoLabel } from '@/components/typography/MonoLabel';
 import { Reveal } from '@/components/motion/Reveal';
 import { DeploymentDiagram } from './DeploymentDiagram';
 import styles from './DeploymentEnvironments.module.scss';
+import { homeEyebrow } from '@/data/navigation';
 
 const TRAIT_ORDER: readonly DeploymentTrait[] = [
   'latency',
@@ -47,7 +48,7 @@ export function DeploymentEnvironments() {
       <div className={styles.header}>
         <div className={styles.headerText}>
           <MonoLabel marker className={styles.eyebrow}>
-            06 / Deployment
+            {homeEyebrow('deployment')}
           </MonoLabel>
           <DisplayHeading
             as="h2"

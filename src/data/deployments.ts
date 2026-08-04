@@ -43,7 +43,7 @@ export const deploymentEnvironments: readonly DeploymentEnvironment[] = [
     id: 'private-cloud',
     label: 'Private Cloud',
     summary:
-      'Single-tenant infrastructure in a chosen region, running open-weight models the operator controls and can pin to a version.',
+      'Single-tenant infrastructure in a chosen region, running open-weight models that the operator controls and can pin to a version.',
     traits: {
       latency: 'Comparable to cloud, with fewer noisy-neighbour and queueing effects.',
       privacy: 'Data remains within a tenant boundary and a chosen jurisdiction.',
@@ -67,7 +67,7 @@ export const deploymentEnvironments: readonly DeploymentEnvironment[] = [
       connectivity: 'Internal connectivity assumed; external access may be restricted.',
       compute: 'Fixed hardware. Model choice is bounded by installed accelerators.',
       reliability: 'Tied to local infrastructure, including power and cooling.',
-      modelSize: 'Mid-size open-weight models, often quantized to fit available memory.',
+      modelSize: 'Mid-size open-weight models, often quantised to fit available memory.',
       observability: 'Complete, but telemetry must stay inside the boundary.',
     },
     position: [2.75, 0.7, -0.35],
@@ -84,7 +84,7 @@ export const deploymentEnvironments: readonly DeploymentEnvironment[] = [
       connectivity: 'Intermittent by assumption. Offline operation is a requirement, not a fallback.',
       compute: 'Tightly bounded by memory, thermal envelope and power budget.',
       reliability: 'Must degrade predictably; sustained load introduces thermal throttling.',
-      modelSize: 'Small and specialised models, quantized, often task-specific.',
+      modelSize: 'Small and specialised models, quantised, often task-specific.',
       observability: 'Constrained. Telemetry is buffered locally and synchronised opportunistically.',
     },
     position: [-1.75, -1.65, 0.75],
@@ -111,7 +111,7 @@ export const deploymentEnvironments: readonly DeploymentEnvironment[] = [
 
 export const deploymentSection = {
   headlineLines: ['Intelligence,', 'where it needs to run.'] as const,
-  body: 'Architecture should follow the operational environment—not force the environment to follow the model.',
+  body: 'Architecture should follow the operational environment — not force the environment to follow the model.',
   /**
    * Explicit scope note. Prevents the section from implying delivered
    * engagements in each environment.

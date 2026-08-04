@@ -250,6 +250,9 @@ export function ContactForm() {
             error={touched.name ? errors.name : undefined}
             autoComplete="name"
             maxLength={LIMITS.name.max}
+            // Every other input on this form has one; the first field was the only
+            // one left blank, which read as an oversight.
+            placeholder="First and last name"
           />
         </div>
 

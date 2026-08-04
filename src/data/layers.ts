@@ -210,13 +210,13 @@ export const systemLayers: readonly SystemLayer[] = [
     technologies: [
       'Containerised serving and GPU scheduling',
       'On-device and embedded inference runtimes',
-      'Quantization, distillation and pruning toolchains',
+      'Quantisation, distillation and pruning toolchains',
       'Offline dependency packaging and deterministic builds',
       'Local vector and document stores for disconnected operation',
     ],
     architecture: [
       'Establish the operating envelope first — latency, memory, power, connectivity, residency — and select models to fit it.',
-      'Measure quality change whenever a model is quantized or distilled. Compression is a trade, and the trade must be quantified on your own task.',
+      'Measure quality change whenever a model is quantised or distilled. Compression is a trade, and the trade must be quantified on your own task.',
       'Design for degraded connectivity rather than treating it as an error: local queueing, deferred sync, and a smaller local model as fallback.',
       'Keep the serving interface identical across environments so the application layer does not fork per deployment target.',
       'Plan the update path before the first install. Air-gapped and edge fleets are defined by how hard they are to change later.',
@@ -229,7 +229,7 @@ export const systemLayers: readonly SystemLayer[] = [
     ],
     failureModes: [
       'Benchmarking on a workstation and deploying to a device with a fraction of the memory bandwidth.',
-      'Quantization applied without task-level evaluation, degrading exactly the reasoning the feature depended on.',
+      'Quantisation applied without task-level evaluation, degrading exactly the reasoning the feature depended on.',
       'Thermal throttling that turns acceptable latency into unacceptable latency under sustained load.',
       'Hidden network dependencies — telemetry, licence checks, model downloads — that fail in an isolated environment.',
       'An update mechanism that requires physical access, so the fleet is effectively frozen at v1.',

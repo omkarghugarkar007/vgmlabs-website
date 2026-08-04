@@ -35,6 +35,116 @@
   color: var(--ink-muted);
 }
 
+/* The artefacts each stage produces. This is the detail that distinguishes this
+   page from the homepage's version of the same five stages. */
+.phaseOutputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.35rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--rule-faint);
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  li {
+    position: relative;
+    padding-left: 0.85rem;
+    @include mono-data(0.75rem);
+    color: var(--ink-muted);
+    line-height: 1.5;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 4px;
+      height: 1px;
+      background: #{rgba($cyan, 0.75)};
+    }
+  }
+}
+
+.phaseOutputsLabel {
+  color: var(--cyan);
+}
+
+/* How an engagement starts ------------------------------------------------ */
+
+.startHead {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.startIntro {
+  @include type('lead');
+  color: var(--ink-muted);
+  max-width: 62ch;
+}
+
+.startSteps {
+  display: grid;
+  // Four steps: two across at desktop keeps each one a readable measure rather
+  // than a thin column, and avoids an orphan in a three-column row.
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--rule-faint);
+}
+
+.startStep {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.5rem 2.5rem 1.5rem 0;
+  border-bottom: 1px solid var(--rule-faint);
+
+  &:nth-child(even) {
+    padding-left: 2.5rem;
+    border-left: 1px solid var(--rule-faint);
+  }
+}
+
+.startIndex {
+  @include mono(0.75rem, 0.14em);
+  color: var(--amber);
+  padding-top: 0.2rem;
+}
+
+.startTitle {
+  @include type('body');
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.startDetail {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 54ch;
+}
+
+@include down('lg') {
+  .startSteps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .startStep {
+    padding-right: 0;
+
+    &:nth-child(even) {
+      padding-left: 0;
+      border-left: none;
+    }
+  }
+}
+
 /* Topics ------------------------------------------------------------------ */
 
 .topicsHead {
@@ -57,7 +167,7 @@
 }
 
 .topicIndex {
-  @include mono(0.5625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--ink-faint);
   padding-top: 0.3rem;
 }
@@ -95,7 +205,7 @@
   }
 
   li {
-    @include mono-data(0.6875rem);
+    @include mono-data(0.75rem);
     color: var(--ink-muted);
     line-height: 1.6;
   }
@@ -103,7 +213,7 @@
 
 .questionsLabel {
   color: var(--cobalt);
-  font-size: 0.5rem;
+  font-size: 0.75rem;
 }
 
 /* Failure section --------------------------------------------------------- */
@@ -143,7 +253,7 @@
 }
 
 .requirementIndex {
-  @include mono(0.5625rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   color: var(--amber);
   padding-top: 0.25em;
 }
@@ -204,6 +314,19 @@
     &:nth-child(odd) {
       padding-left: 0;
       border-left: none;
+    }
+
+    // Five items in two columns leaves the fifth alone beside an empty cell,
+    // which looked unfinished next to an otherwise disciplined layout. The last
+    // stage closes the sequence, so spanning the full width reads as a summary
+    // rather than as a leftover — and it is separated by a rule instead of
+    // sharing the vertical hairline of the column above it.
+    &:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      padding-left: 0;
+      padding-top: 1.75rem;
+      border-left: none;
+      border-top: 1px solid var(--rule-faint);
     }
   }
 

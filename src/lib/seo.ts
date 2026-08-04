@@ -13,6 +13,20 @@ import { company, positioningStatement, shortDescription } from '@/data/company'
 export const SITE_NAME = company.brand;
 export const TITLE_SUFFIX = `${company.brand}`;
 
+/**
+ * The site's language, in the two forms that need it.
+ *
+ * `<html lang>` was `en` while Open Graph declared `en_IN`, which is a mixed
+ * signal about the target market. Resolved in favour of `en-IN`: the company is
+ * India-registered, and en-IN conventionally uses the British spellings the copy
+ * already follows, so the tag, the card and the prose now all agree.
+ *
+ * Both constants are exported so `<html lang>`, the manifest and the JSON-LD
+ * cannot drift apart again.
+ */
+export const HTML_LANG = 'en-IN';
+export const OG_LOCALE = 'en_IN';
+
 /** Absolute URL for a route path. Trailing slashes match `trailingSlash: true`. */
 export function absoluteUrl(path = '/'): string {
   const normalised = path === '/' ? '/' : `/${path.replace(/^\/|\/$/g, '')}/`;
@@ -61,7 +75,7 @@ export function pageMetadata({ title, description, path, imageAlt }: PageMetaInp
       title: fullTitle,
       description,
       url,
-      locale: 'en_IN',
+      locale: OG_LOCALE,
       images: [
         {
           url: absoluteAsset(OG_IMAGE),
@@ -93,6 +107,30 @@ export const rootMetadata: Metadata = {
   creator: company.legalName,
   publisher: company.legalName,
   category: 'technology',
+
+  /**
+   * Icons and manifest.
+   *
+   * Only `/icon.svg` was declared (picked up automatically from `src/app/`), so
+   * `/favicon.ico`, `/apple-touch-icon.png` and `/manifest.webmanifest` all
+   * returned 404 — bookmarks, pinned tabs, iOS home-screen saves and any crawler
+   * that does not rasterise SVG showed a blank or default mark.
+   *
+   * The SVG stays first in the list because it is the sharpest at every density;
+   * the ICO is the fallback for consumers that ignore SVG. Generate the raster
+   * files with `npm run icons` after editing `src/app/icon.svg`.
+   */
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
+      { url: '/icon-192.png', type: 'image/png', sizes: '192x192' },
+    ],
+    shortcut: ['/favicon.ico'],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
+  manifest: '/manifest.webmanifest',
+
   formatDetection: { email: false, address: false, telephone: false },
   robots: {
     index: true,
@@ -147,7 +185,7 @@ export function organizationJsonLd() {
       'Edge AI and on-device inference',
       'Neuro-symbolic AI',
       'Retrieval-augmented generation',
-      'Model optimisation and quantization',
+      'Model optimisation and quantisation',
       'AI evaluation and observability',
       'MLOps and LLMOps',
     ],
@@ -169,7 +207,7 @@ export function websiteJsonLd() {
     name: company.brand,
     description: shortDescription,
     publisher: { '@id': `${company.siteUrl}/#organization` },
-    inLanguage: 'en',
+    inLanguage: HTML_LANG,
   };
 }
 

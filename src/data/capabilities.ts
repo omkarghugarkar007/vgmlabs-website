@@ -3,6 +3,7 @@ import type {
   CapabilityChapter,
   CapabilityMatrixEntry,
 } from '@/types/content';
+import { systemLayers } from './layers';
 
 /* -------------------------------------------------------------------------- */
 /* System architecture rail (homepage, positioning section)                    */
@@ -54,6 +55,12 @@ export const architectureStages: readonly ArchitectureStage[] = [
 /* Four core capability chapters (homepage)                                    */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * The four core capability chapters.
+ *
+ * `layers` names the system layers each capability is built on, most central
+ * first, and is what the homepage links to. See the note on the type.
+ */
 export const capabilityChapters: readonly CapabilityChapter[] = [
   {
     id: 'agentic-systems',
@@ -63,7 +70,7 @@ export const capabilityChapters: readonly CapabilityChapter[] = [
       'Autonomous and human-supervised systems that plan, use tools, coordinate specialised agents and execute complex workflows.',
     labels: ['Planning', 'Tool Use', 'Memory', 'Orchestration', 'Guardrails'],
     fieldState: 'agentic',
-    href: '/capabilities#agent-layer',
+    layers: ['agent-layer', 'operations-layer'],
   },
   {
     id: 'edge-intelligence',
@@ -71,9 +78,9 @@ export const capabilityChapters: readonly CapabilityChapter[] = [
     title: 'Edge Intelligence',
     description:
       'Optimised AI systems designed to operate locally with lower latency, stronger privacy and reduced dependence on continuous cloud connectivity.',
-    labels: ['On-device Inference', 'Quantization', 'Small Models', 'Offline Operation'],
+    labels: ['On-device Inference', 'Quantisation', 'Small Models', 'Offline Operation'],
     fieldState: 'distributed',
-    href: '/capabilities#infrastructure-layer',
+    layers: ['infrastructure-layer'],
   },
   {
     id: 'neuro-symbolic-ai',
@@ -83,7 +90,7 @@ export const capabilityChapters: readonly CapabilityChapter[] = [
       'Systems that combine learned representations with explicit rules, constraints, search and structured reasoning.',
     labels: ['Reasoning', 'Constraints', 'Search', 'Verification', 'Knowledge Graphs'],
     fieldState: 'symbolic',
-    href: '/capabilities#intelligence-layer',
+    layers: ['intelligence-layer', 'knowledge-layer'],
   },
   {
     id: 'generative-multimodal',
@@ -93,9 +100,47 @@ export const capabilityChapters: readonly CapabilityChapter[] = [
       'Applications that understand and generate information across text, images, documents, audio and structured enterprise data.',
     labels: ['LLMs', 'Vision', 'Documents', 'RAG', 'Multimodal Pipelines'],
     fieldState: 'production',
-    href: '/capabilities#knowledge-layer',
+    layers: ['intelligence-layer', 'experience-layer'],
   },
 ];
+
+/**
+ * Every layer id referenced above must exist, and every layer must be reachable
+ * from the homepage.
+ *
+ * Both halves of this were broken: one chapter deep-linked to a layer that did not
+ * describe it, and two layers were never linked at all. Neither showed up as a
+ * broken link — the anchor simply did not match anything, so the browser landed at
+ * the top of the page and the visitor had no way to know they were in the wrong
+ * place. A type cannot catch that; this can.
+ *
+ * Throwing at module load means it fails the build, not the visit.
+ */
+const layerIds = new Set(systemLayers.map((layer) => layer.id));
+
+for (const chapter of capabilityChapters) {
+  if (chapter.layers.length === 0) {
+    throw new Error(`capabilityChapters: "${chapter.id}" lists no layers.`);
+  }
+  for (const id of chapter.layers) {
+    if (!layerIds.has(id)) {
+      throw new Error(
+        `capabilityChapters: "${chapter.id}" references layer "${id}", which is not in systemLayers. ` +
+          `Valid ids: ${[...layerIds].join(', ')}.`,
+      );
+    }
+  }
+}
+
+const linkedLayers = new Set(capabilityChapters.flatMap((chapter) => chapter.layers));
+const unlinked = systemLayers.filter((layer) => !linkedLayers.has(layer.id));
+if (unlinked.length > 0) {
+  throw new Error(
+    `capabilityChapters: no homepage chapter links to ${unlinked.map((l) => l.id).join(', ')}. ` +
+      'Every system layer should be reachable from the homepage — add it to the most ' +
+      'relevant chapter\'s `layers`, or remove the layer.',
+  );
+}
 
 /* -------------------------------------------------------------------------- */
 /* Extended capability matrix (homepage)                                       */
@@ -177,8 +222,8 @@ export const capabilityMatrix: readonly CapabilityMatrixEntry[] = [
     ref: 'C-08',
     name: 'Model Optimisation',
     summary:
-      'Quantization, distillation, pruning, batching strategy and runtime selection to fit a model inside a target latency, memory and power envelope.',
-    disciplines: ['Quantization', 'Distillation', 'Kernel and runtime selection', 'Profiling'],
+      'Quantisation, distillation, pruning, batching strategy and runtime selection to fit a model inside a target latency, memory and power envelope.',
+    disciplines: ['Quantisation', 'Distillation', 'Kernel and runtime selection', 'Profiling'],
     outcome: 'A model that fits the hardware actually available, with quality changes measured.',
   },
   {

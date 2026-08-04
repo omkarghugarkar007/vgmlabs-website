@@ -51,7 +51,11 @@ const nextConfig: NextConfig = {
   experimental: {
     // Rewrites barrel imports to direct module paths so the client bundle only
     // carries the helpers actually referenced.
-    optimizePackageImports: ['@react-three/drei', 'motion', 'gsap'],
+    // `@react-three/drei` and `motion` were listed here but never imported
+    // anywhere in src/. Both have been removed from package.json — an unused
+    // dependency is install time, lockfile churn and supply-chain surface for
+    // nothing. Re-add them here if either is ever actually used.
+    optimizePackageImports: ['gsap'],
   },
 
   // Fail the build on type errors rather than shipping a broken export.

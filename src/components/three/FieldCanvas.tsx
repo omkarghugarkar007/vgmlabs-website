@@ -45,6 +45,19 @@ export default function FieldCanvas({ onReady, onFailure, still, active }: Field
     ({ gl }: { gl: { domElement: HTMLCanvasElement } }) => {
       const canvas = gl.domElement;
       canvas.addEventListener('webglcontextlost', handleFailure, { once: true });
+
+      // The wrapping layer is already aria-hidden, so the canvas is out of the
+      // accessibility tree either way. These are set directly on the element for
+      // the same reason the inline SVGs carry them: the attribute should be on
+      // the decorative thing itself, not inferred from an ancestor. R3F creates
+      // this element, so it cannot be set as a JSX prop.
+      canvas.setAttribute('aria-hidden', 'true');
+      canvas.setAttribute('role', 'presentation');
+      // R3F sets tabIndex=0 when it installs pointer events. Events are disabled
+      // here, but assert it regardless — a focusable decoration is a tab stop
+      // that leads nowhere.
+      canvas.removeAttribute('tabindex');
+
       onReady?.();
     },
     [handleFailure, onReady],

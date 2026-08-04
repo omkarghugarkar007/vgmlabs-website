@@ -90,21 +90,46 @@ All content and navigation remain fully available.
 | Cumulative Layout Shift | < 0.05 |
 | Interaction to Next Paint | < 200ms |
 | Total Blocking Time | < 250ms |
-| Initial JS (excluding the WebGL chunk) | < 200 KB gzipped |
 | Sustained frame rate, desktop high tier | 60fps |
 | Sustained frame rate, mobile low tier | ≥ 30fps |
-| Exported site size | ~5 MB, dominated by font files and the WebGL chunk |
 
 LCP is the hero headline, which is text rendered in the exported HTML — it does not
 wait for WebGL.
+
+### Enforced payload budgets
+
+These are **checked by the build**, not aspirational. `scripts/check-budget.mjs`
+runs as the last step of `npm run build` and again as its own CI step, and fails
+non-zero when a figure goes over. Uncompressed bytes on disk, because that is what
+the browser parses and it does not vary with the host's compression.
+
+| Budget | Ceiling | Currently |
+| --- | --- | --- |
+| Initial JS (critical path) | 1000 KB | ~809 KB |
+| Largest lazy chunk (the WebGL bundle) | 1000 KB | ~859 KB |
+| Total CSS | 200 KB | ~151 KB |
+| Total export | 8 MB | ~4.8 MB |
+
+The single most important property is that **`three`, `@react-three/fiber` and
+`postprocessing` are never in the initial payload.** They are reached only through
+the dynamic import in `IntelligenceField.tsx`. The budget script fails
+specifically, with an explanatory message, if any chunk over 400 KB appears on the
+critical path — that is the regression it exists to catch.
+
+`postprocessing` sits in its own chunk that is **never requested**, because bloom
+and grade are false on every quality tier. It is split out in `PostFX.tsx` so
+re-enabling an effect costs a download only then.
+
+Raising a ceiling is a decision. Put the reason in the commit message.
 
 ---
 
 ## Verifying
 
 ```bash
-npm run build
-npm run preview        # http://localhost:3000, serves out/ as static files
+npm run build           # includes the budget check
+npm run check:budget    # or on its own, against an existing out/
+npm run preview         # http://localhost:3000, serves out/ as static files
 ```
 
 Then, in Chrome DevTools:
@@ -136,6 +161,10 @@ field should show and every word of content should be present.
 | Symptom | First suspect |
 | --- | --- |
 | Text invisible on load | A reveal missing `immediateRender: false`, so its `opacity: 0` from-state was applied without the tween running |
+| A section renders blank when scrolled to fast | `shouldAnimateReveal` in `src/lib/reveal.ts` no longer returning false for in-viewport elements, or `REVEAL_START` moved back inside the viewport. A reveal must never begin its opacity-0 phase while the element is on screen |
+| The build fails on a payload figure | `scripts/check-budget.mjs`. If a >400 KB chunk is named on the critical path, something imported `three` or `postprocessing` statically from outside `src/components/three/` |
+| Type smaller than 12px | The `$mono-min` floor in `_type.scss` was removed, or a raw `font-size` was written that does not go through `mono()`/`mono-data()` |
+| A capability card deep-links to the wrong layer | `capabilityChapters[].layers` in `src/data/capabilities.ts`. The ids are validated at module load, so a *nonexistent* layer fails the build; a *wrong but real* one cannot be caught automatically |
 | The field washes out the type | Bloom `luminanceThreshold` lowered, `mipmapBlur` re-enabled, or particle alpha raised in the shader |
 | Content clipped mid-word | `text-wrap: nowrap` reintroduced on a display heading, or a container capping width in `ch` around one |
 | A section wider than the viewport | A bare `1fr` grid track — it means `minmax(auto, 1fr)` and lets min-content win; use `minmax(0, 1fr)` |

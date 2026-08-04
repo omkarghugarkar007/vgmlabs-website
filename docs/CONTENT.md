@@ -208,8 +208,54 @@ an edit.
 | "Industry-leading" | nothing; delete the sentence |
 | "Transform your business" | the workflow, decision or constraint addressed |
 
-British spelling throughout (`optimisation`, `organisation`, `analyse`) for
-consistency with the existing copy.
-
 Prefer sentences a sceptical engineer could check. If a claim cannot be defended when
 someone asks "how do you know?", it does not belong on the site.
+
+---
+
+## Style guide
+
+These are conventions, not preferences — the site is typographically disciplined
+enough that a single inconsistency is visible, so they are written down rather
+than left to be re-derived.
+
+### Spelling
+
+**British throughout**, including in technical terms: `optimisation`,
+`organisation`, `behaviour`, `authorisation`, `specialised`, `synchronisation`,
+and **`quantisation` / `quantised`**.
+
+There is no exception list. `quantization` was the one American form on the site
+and it appeared as a capability label and a research tag, where it was highly
+visible next to `optimised` and `specialised`. Establishing a "well-known
+technical terms keep US spelling" exception sounds reasonable and is unworkable in
+practice: every future contributor draws the line somewhere different. One rule,
+applied everywhere, is the maintainable choice.
+
+Proper nouns and code identifiers keep their own spelling — a library called
+`Tokenizer` is `Tokenizer`.
+
+### Dashes
+
+| Dash | Use | Spacing |
+| --- | --- | --- |
+| Em `—` | Parenthetical or a break in thought | **Spaced**: `the model — not the environment` |
+| En `–` | Ranges | **Unspaced**: `US$25k–100k`, `2019–2024` |
+| Hyphen `-` | Compounds | Unspaced: `on-premises`, `air-gapped` |
+
+Spaced em dashes are used consistently across the site. There was exactly one
+unspaced case (`environment—not force`) and on a page about precision it stood
+out. Numeric ranges take an unspaced en dash, which is why the budget bands in the
+contact form read `US$25k–100k` — that also stopped the longest label overflowing
+its chip.
+
+### Quotation marks
+
+Curly (`“ ”`, `’`), including apostrophes in possessives and contractions. Straight
+quotes appear only inside code.
+
+### Numbers
+
+Spell out one to nine in prose; use figures from 10 up. Always figures with a
+unit (`4-bit`, `9 layers`). No numbers that are claims about work delivered — see
+the content rules above.

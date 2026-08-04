@@ -48,7 +48,7 @@
 }
 
 .contentsIndex {
-  @include mono(0.5rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   color: var(--ink-faint);
 }
 
@@ -99,7 +99,7 @@
 }
 
 .headingIndex {
-  @include mono(0.5625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--amber);
   flex: 0 0 auto;
 }

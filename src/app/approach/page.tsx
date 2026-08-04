@@ -8,6 +8,7 @@ import { ActionLink } from '@/components/ui/ActionLink';
 import { FieldScrollDriver } from '@/components/three/FieldScrollDriver';
 import {
   approachTopics,
+  engagementStart,
   failureSection,
   processSteps,
   productionRequirements,
@@ -63,9 +64,13 @@ export default function ApproachPage() {
         />
       </Section>
 
-      {/* Five phases, as a compact reference strip. The full scroll-driven version
-          is on the homepage; repeating it verbatim here would waste the reader's
-          time, so this is the summary form. */}
+      {/* Five phases. The homepage carries the scroll-driven version of the same
+          sequence; this is where the detail is — what each stage actually
+          produces.
+
+          Those artefact lists used to be on the homepage and not here, so this
+          page read as a thinner restatement of something the visitor had already
+          seen. The depth belongs on the page a reader chose to open. */}
       <Section fieldState="agentic" density="tight" rule>
         <div className={styles.phases}>
           {processSteps.map((step) => (
@@ -73,6 +78,17 @@ export default function ApproachPage() {
               <MonoLabel tone="amber">{step.index}</MonoLabel>
               <h2 className={styles.phaseTitle}>{step.title}</h2>
               <p className={styles.phaseBody}>{step.description}</p>
+
+              <div className={styles.phaseOutputs}>
+                <MonoLabel as="h3" className={styles.phaseOutputsLabel}>
+                  What it produces
+                </MonoLabel>
+                <ul>
+                  {step.outputs.map((output) => (
+                    <li key={output}>{output}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
         </div>
@@ -158,7 +174,48 @@ export default function ApproachPage() {
         <p className={styles.failureOutro}>{failureSection.outro}</p>
       </Section>
 
-      <Section density="default" rule>
+      {/* How an engagement starts. Everything above describes how work is run once
+          it begins; this is the part that was missing — how a reader gets from a
+          first message to stage 01. See the note in src/data/approach.ts about why
+          it states no durations or prices. */}
+      <Section
+        id="how-to-start"
+        fieldState="core"
+        density="tight"
+        rule
+        aria-labelledby="start-heading"
+      >
+        <div className={styles.startHead}>
+          <MonoLabel marker className={styles.eyebrow}>
+            Getting started
+          </MonoLabel>
+          <DisplayHeading
+            as="h2"
+            step="d3"
+            lines={[engagementStart.heading]}
+            id="start-heading"
+          />
+          <Reveal>
+            <p className={styles.startIntro}>{engagementStart.intro}</p>
+          </Reveal>
+        </div>
+
+        <ol className={styles.startSteps}>
+          {engagementStart.steps.map((step) => (
+            <li key={step.id} className={styles.startStep}>
+              <span className={styles.startIndex} aria-hidden="true">
+                {step.index}
+              </span>
+              <div>
+                <h3 className={styles.startTitle}>{step.title}</h3>
+                <p className={styles.startDetail}>{step.detail}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Section>
+
+      <Section density="tight" rule>
         <div className={styles.outro}>
           <p className={styles.outroText}>
             If you already know which of these is missing from your system, that is the

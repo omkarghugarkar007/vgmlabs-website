@@ -60,7 +60,7 @@
 
 .detailLabel {
   color: var(--ink-faint);
-  font-size: 0.5625rem;
+  font-size: 0.75rem;
   margin-bottom: 0.75rem;
   display: block;
 }
@@ -95,13 +95,13 @@
   gap: 0.85rem;
 
   dt {
-    @include mono(0.5625rem, 0.15em);
+    @include mono(0.75rem, 0.12em);
     color: var(--ink-faint);
     margin-bottom: 0.25rem;
   }
 
   dd {
-    @include mono-data(0.6875rem);
+    @include mono-data(0.75rem);
     color: var(--ink-muted);
   }
 }
@@ -151,7 +151,7 @@
 }
 
 .pendingIndex {
-  @include mono(0.5625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--ink-faint);
 }
 
@@ -162,18 +162,18 @@
 }
 
 .pendingDiscipline {
-  @include mono-data(0.6875rem);
+  @include mono-data(0.75rem);
   color: var(--ink-muted);
 }
 
 .pendingStatus {
   color: var(--amber);
-  font-size: 0.5rem;
+  font-size: 0.75rem;
   white-space: nowrap;
 }
 
 .emptyNote {
-  @include mono-data(0.6875rem);
+  @include mono-data(0.75rem);
   color: var(--ink-faint);
   max-width: 56ch;
   padding-left: 1rem;

@@ -86,13 +86,13 @@
 }
 
 .stepIndex {
-  @include mono(0.6875rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--ink-faint);
   @include transition(color);
 }
 
 .stepSlash {
-  @include mono(0.6875rem, 0);
+  @include mono(0.75rem, 0);
   color: var(--metal);
 }
 
@@ -119,7 +119,7 @@
   li {
     position: relative;
     padding-left: 0.9rem;
-    @include mono-data(0.6875rem);
+    @include mono-data(0.75rem);
     color: var(--ink-faint);
 
     // A 3px square marker rather than a bullet glyph.
@@ -176,7 +176,7 @@
   align-items: center;
   gap: 0.6rem;
   min-height: 44px;
-  @include mono(0.625rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   color: var(--ink-muted);
   @include transition(color);
   @include focusable;

@@ -57,8 +57,23 @@ export const heroStatusLabels: readonly string[] = [
 export const hero = {
   /** Authored as explicit lines — the reveal animates on line boundaries. */
   headlineLines: ['Intelligence,', 'engineered for', 'the real world.'] as const,
+  /**
+   * The first sentence anyone reads, so it has to be the most specific one rather
+   * than the vaguest.
+   *
+   * It used to say "AI-first software and intelligent systems that reason, act and
+   * operate across cloud, edge and constrained environments" — a sentence any
+   * company in this category could have published verbatim, on a site whose whole
+   * argument is precision.
+   *
+   * This version says the thing the rest of the site actually earns: the work is at
+   * the seam between a probabilistic component and the deterministic system around
+   * it, and the deployment targets include environments most vendors will not go
+   * near. It names a problem, not an adjective. It still claims nothing about
+   * customers, results or track record.
+   */
   support:
-    'VGM Labs builds AI-first software and intelligent systems that reason, act and operate across cloud, edge and constrained environments.',
+    'We build the parts of an AI system that have to keep working when the model is wrong — evaluation, permission boundaries, fallbacks, and deployment into cloud, edge or air-gapped environments.',
   primaryCta: { label: 'Explore our capabilities', href: '/capabilities' },
   secondaryCta: { label: 'Discuss a project', href: '/contact' },
 } as const;

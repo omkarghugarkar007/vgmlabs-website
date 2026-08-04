@@ -30,7 +30,10 @@
   display: block;
   // No initial transform here: GSAP sets the from-state. Declaring it in CSS as
   // well would double-apply on hydration and cause a visible jump.
-  will-change: transform, opacity;
+  //
+  // No permanent `will-change` either — see the note in Reveal.module.scss. Every
+  // heading on the site has one of these per line; holding a promoted layer for
+  // each one for the whole session is not worth a one-second entrance.
 }
 
 .dim {

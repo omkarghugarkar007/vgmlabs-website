@@ -96,15 +96,64 @@ $space: (
 
 /// Vertical section rhythm. `$density` lets individual sections breathe more or
 /// less than their neighbours — variation is the point.
+///
+/// ── Why these numbers came down ───────────────────────────────────────────────
+/// Section padding is symmetric, so between any two sections the page gets both
+/// values: two adjacent `default` sections at the old 10rem produced a 20rem
+/// (320px) gap, and two `loose` ones produced 28rem (448px). That is what made
+/// the homepage about 26 laptop screens tall with visibly empty transition zones
+/// between chapters — most of the length was space, not content.
+///
+/// The values below are roughly 40% lower, which brings the *gap* between two
+/// sections back to about the size a single section's padding used to be. The
+/// relative rhythm is preserved: `loose` is still more than twice `tight`, and
+/// density is still varied deliberately down the page. Nothing was cut.
 @mixin section-pad($density: 'default') {
   @if $density == 'tight' {
-    padding-block: clamp(3.5rem, 7vw, 6rem);
+    padding-block: clamp(2.25rem, 4vw, 3.5rem);
   } @else if $density == 'loose' {
-    padding-block: clamp(6rem, 15vw, 14rem);
+    padding-block: clamp(3.5rem, 8vw, 8rem);
   } @else if $density == 'hero' {
     padding-block: 0;
   } @else {
-    padding-block: clamp(5rem, 11vw, 10rem);
+    padding-block: clamp(3rem, 6vw, 5.75rem);
+  }
+}
+
+// Legibility ----------------------------------------------------------------
+
+/// A local scrim between the WebGL field and a block of text.
+///
+/// The global veil in IntelligenceField.module.scss fades by *viewport*
+/// position, so it cannot know where copy actually sits. Mid-viewport — which is
+/// exactly where you read — it is at its weakest, and the field renders over
+/// paragraphs at close to full contrast. That is why the positioning copy, the
+/// edge-intelligence description and the company statement were hard to read.
+///
+/// This puts a soft-edged darkening directly behind a specific text block.
+/// Feathered with a radial gradient rather than a flat fill, so it reads as
+/// depth rather than as a panel pasted over the scene — the design language here
+/// is hairlines and open space, and a visible box would break it.
+///
+/// `z-index: -1` keeps it behind the text but above the field, which lives
+/// outside `.content-layer` entirely.
+@mixin prose-scrim($alpha: 0.82, $spread: 3rem) {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -$spread;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 84% 76% at 50% 50%,
+      rgba(5, 6, 7, $alpha) 0%,
+      rgba(5, 6, 7, $alpha * 0.88) 38%,
+      rgba(5, 6, 7, $alpha * 0.5) 68%,
+      transparent 100%
+    );
   }
 }
 

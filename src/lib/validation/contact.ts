@@ -34,8 +34,10 @@ export const DEPLOYMENT_OPTIONS = [
 export const BUDGET_OPTIONS = [
   { value: 'unspecified', label: 'Prefer to discuss' },
   { value: 'under-25k', label: 'Under US$25k' },
-  { value: '25k-100k', label: 'US$25k – 100k' },
-  { value: '100k-250k', label: 'US$100k – 250k' },
+  // Unspaced en dash. A spaced dash in a numeric range is a style error, and it
+  // was also what pushed this label past the width of its chip.
+  { value: '25k-100k', label: 'US$25k–100k' },
+  { value: '100k-250k', label: 'US$100k–250k' },
   { value: 'over-250k', label: 'Over US$250k' },
 ] as const;
 

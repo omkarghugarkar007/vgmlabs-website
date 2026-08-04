@@ -1,4 +1,5 @@
 import { positioning } from '@/data/company';
+import { homeEyebrow } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
 import { Reveal } from '@/components/motion/Reveal';
@@ -19,7 +20,7 @@ export function Positioning() {
       <div className={styles.split}>
         <div className={styles.left}>
           <MonoLabel marker className={styles.eyebrow}>
-            01 / Positioning
+            {homeEyebrow('positioning')}
           </MonoLabel>
           <DisplayHeading
             as="h2"

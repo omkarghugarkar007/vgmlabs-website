@@ -108,7 +108,12 @@ export const QUALITY_PROFILES: Readonly<Record<Exclude<QualityTier, 'off'>, Qual
     planes: 2,
     bloom: false,
     grade: false,
-    dpr: [1, 1.75],
+    // 1.5, not 1.75. The scene is points and hairlines with no hard silhouettes,
+    // so the visible difference between the two is close to nothing while the
+    // fragment cost scales with the square — 1.75² is 36% more shading than
+    // 1.5². That headroom is better spent on frame stability, which is what
+    // occasional heavy frames on this page were costing.
+    dpr: [1, 1.5],
     nodeDetail: 1,
   },
   medium: {

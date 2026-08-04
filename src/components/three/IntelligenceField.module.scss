@@ -46,34 +46,65 @@
 }
 
 /* The veil.
-   
+
    The field sits behind every word on the site, so this is not decoration — it is
-   what guarantees body copy stays above the contrast floor. The first version was
-   far too weak (10–22% through the middle of the page), which is why the hero
-   headline was competing with the structure behind it rather than sitting in front
-   of it.
+   what guarantees body copy stays above the contrast floor.
 
    Two layers: a vertical gradient that is strongest at the extremes where the
    navigation and footer sit, and a radial falloff that keeps the field brightest
-   behind the centre of the composition and quietest behind the text columns. */
+   behind the centre of the composition and quietest behind the text columns.
+
+   ── On the mid-viewport values ────────────────────────────────────────────────
+   The vertical gradient was previously weakest at 50% — 0.5 alpha — which is
+   precisely the band a reader's eye occupies. The field rendered over paragraphs
+   at close to full contrast there, and the positioning copy, the edge
+   intelligence description and the company statement were all genuinely hard to
+   read as a result.
+
+   Raising the middle helps, but this gradient can only ever be a coarse
+   instrument: it fades by viewport position and has no idea where text is. The
+   precise fix is `prose-scrim` (see _layout.scss), applied to the text blocks
+   themselves. This is the floor beneath that. */
 .veil {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(
       to bottom,
-      #{rgba($void, 0.92)} 0%,
-      #{rgba($void, 0.62)} 18%,
-      #{rgba($void, 0.5)} 50%,
-      #{rgba($void, 0.66)} 82%,
-      #{rgba($void, 0.95)} 100%
+      #{rgba($void, 0.93)} 0%,
+      #{rgba($void, 0.74)} 18%,
+      #{rgba($void, 0.7)} 50%,
+      #{rgba($void, 0.78)} 82%,
+      #{rgba($void, 0.96)} 100%
     ),
     radial-gradient(
-      120% 85% at 58% 52%,
+      120% 85% at 62% 54%,
       transparent 0%,
-      #{rgba($void, 0.34)} 55%,
-      #{rgba($void, 0.66)} 100%
+      #{rgba($void, 0.42)} 52%,
+      #{rgba($void, 0.7)} 100%
     );
+
+  /* 1024–1280px is the band where the hero headline widens to 11 columns while
+     the field's bright centre is still sitting at 58% — which is what put the
+     node graph straight through the word "engineered". The centre is pushed out
+     to the right and up, away from the headline block. */
+  @include down('xl') {
+    background:
+      linear-gradient(
+        to bottom,
+        #{rgba($void, 0.94)} 0%,
+        #{rgba($void, 0.78)} 18%,
+        #{rgba($void, 0.74)} 50%,
+        #{rgba($void, 0.8)} 82%,
+        #{rgba($void, 0.96)} 100%
+      ),
+      radial-gradient(
+        118% 80% at 74% 40%,
+        transparent 0%,
+        #{rgba($void, 0.46)} 50%,
+        #{rgba($void, 0.72)} 100%
+      );
+  }
 
   @include down('lg') {
     // Tablet and phone: content occupies far more of the frame, so the field has to
@@ -81,17 +112,17 @@
     background:
       linear-gradient(
         to bottom,
-        #{rgba($void, 0.94)} 0%,
-        #{rgba($void, 0.72)} 20%,
-        #{rgba($void, 0.66)} 50%,
-        #{rgba($void, 0.78)} 80%,
-        #{rgba($void, 0.96)} 100%
+        #{rgba($void, 0.95)} 0%,
+        #{rgba($void, 0.82)} 20%,
+        #{rgba($void, 0.78)} 50%,
+        #{rgba($void, 0.86)} 80%,
+        #{rgba($void, 0.97)} 100%
       ),
       radial-gradient(
-        130% 75% at 50% 46%,
+        130% 75% at 50% 42%,
         transparent 0%,
-        #{rgba($void, 0.5)} 55%,
-        #{rgba($void, 0.75)} 100%
+        #{rgba($void, 0.56)} 55%,
+        #{rgba($void, 0.8)} 100%
       );
   }
 }

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { researchCategories, researchSection, researchThemes } from '@/data/research';
+import { homeEyebrow } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
 import { Reveal } from '@/components/motion/Reveal';
@@ -16,16 +17,30 @@ import styles from './ResearchIndex.module.scss';
  * A numbered index with reference codes and hairline rows, deliberately closer to
  * an archive listing than a set of feature cards.
  */
+/**
+ * How many themes the homepage shows.
+ *
+ * All eight used to be printed here, and the Research page then repeated the same
+ * eight verbatim — so a visitor who read the homepage had no reason to click
+ * through, and this was the tallest section on the page at over two viewport
+ * heights. Three is enough to establish what kind of questions these are; the
+ * remaining count is stated, and the depth lives on /research where it belongs.
+ */
+const TEASER_COUNT = 3;
+
 export function ResearchIndex() {
   const categoryLabel = (id: string) =>
     researchCategories.find((category) => category.id === id)?.label ?? id;
+
+  const shown = researchThemes.slice(0, TEASER_COUNT);
+  const remaining = researchThemes.length - shown.length;
 
   return (
     <div className={styles.wrap}>
       <div className={styles.header}>
         <div className={styles.headerText}>
           <MonoLabel marker className={styles.eyebrow}>
-            07 / Research
+            {homeEyebrow('research')}
           </MonoLabel>
           <DisplayHeading
             as="h2"
@@ -41,8 +56,11 @@ export function ResearchIndex() {
         </Reveal>
       </div>
 
+      {/* A teaser, not the full index. `themeDetail` is deliberately absent here —
+          the question is what makes the point; the reasoning behind it is the
+          reason to open /research. */}
       <ol className={styles.themes}>
-        {researchThemes.map((theme) => (
+        {shown.map((theme) => (
           <li key={theme.id} className={styles.theme}>
             <div className={styles.themeMeta}>
               <span className={styles.themeRef}>{theme.ref}</span>
@@ -54,7 +72,6 @@ export function ResearchIndex() {
             <div className={styles.themeBody}>
               <h3 className={styles.themeTitle}>{theme.title}</h3>
               <p className={styles.themeQuestion}>{theme.question}</p>
-              <p className={styles.themeDetail}>{theme.detail}</p>
             </div>
           </li>
         ))}
@@ -62,7 +79,11 @@ export function ResearchIndex() {
 
       <div className={styles.footer}>
         <Link href="/research" className={styles.footerLink}>
-          <span>Research library</span>
+          <span>
+            {remaining > 0
+              ? `${remaining} more open questions, in full`
+              : 'Research library'}
+          </span>
           <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">
             <path d="M2 7h10M8.5 3.5 12 7l-3.5 3.5" fill="none" stroke="currentColor" />
           </svg>

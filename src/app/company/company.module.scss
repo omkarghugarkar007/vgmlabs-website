@@ -90,7 +90,7 @@
 }
 
 .principleIndex {
-  @include mono(0.5625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--amber);
   flex: 0 0 auto;
   min-width: 1.15rem;
@@ -147,7 +147,7 @@
   gap: 1.5rem 3rem;
 
   dt {
-    @include mono(0.5625rem, 0.15em);
+    @include mono(0.75rem, 0.12em);
     color: var(--ink-faint);
     margin-bottom: 0.4rem;
   }

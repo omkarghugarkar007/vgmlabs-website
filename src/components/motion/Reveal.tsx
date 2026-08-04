@@ -2,8 +2,9 @@
 
 import { useRef } from 'react';
 import type { ReactNode } from 'react';
-import { gsap, prefersReducedMotion } from '@/lib/gsap';
+import { gsap } from '@/lib/gsap';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
+import { REVEAL_SAFETY_MS, REVEAL_START, shouldAnimateReveal } from '@/lib/reveal';
 import styles from './Reveal.module.scss';
 
 /**
@@ -48,8 +49,10 @@ export function Reveal({
     const el = ref.current;
     if (!el) return;
 
-    // Reduced motion: present, unmoved, no tween.
-    if (prefersReducedMotion()) {
+    // Reduced motion, already in view, or already scrolled past: present,
+    // unmoved, no tween. See src/lib/reveal.ts for why in-view content is never
+    // animated — it is what stops a fast scroll landing on a blank panel.
+    if (!shouldAnimateReveal(el)) {
       gsap.set(el, { opacity: 1, y: 0 });
       gsap.set(el.children, { opacity: 1, y: 0 });
       return;
@@ -78,11 +81,13 @@ export function Reveal({
         onStart: () => {
           safety = window.setTimeout(() => {
             if (tween.progress() < 1) tween.progress(1);
-          }, 4000);
+          }, REVEAL_SAFETY_MS);
         },
         onComplete: () => window.clearTimeout(safety),
 
-        scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+        // Fires before the element enters the viewport, so the opacity-0 part of
+        // the animation happens off screen.
+        scrollTrigger: { trigger: el, start: REVEAL_START, once: true },
       },
     );
 

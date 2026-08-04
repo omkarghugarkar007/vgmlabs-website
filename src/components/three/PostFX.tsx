@@ -1,13 +1,26 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
-import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing';
-import { BlendFunction, KernelSize } from 'postprocessing';
 
 interface PostFXProps {
   bloom: boolean;
   grade: boolean;
 }
+
+/**
+ * The effect passes, behind a dynamic import.
+ *
+ * `bloom` and `grade` are false on every quality tier (see lib/field/config.ts for
+ * the two rounds of visible artefacts that led to that), so `PostFX` returns null
+ * in every code path that actually runs. A static import of `postprocessing` and
+ * `@react-three/postprocessing` still pulled both libraries into the WebGL chunk —
+ * a few hundred kilobytes downloaded on every visit to render nothing.
+ *
+ * Importing them lazily keeps the escape hatch exactly as it was: flip a tier's
+ * flag and the chunk is fetched. The cost only exists if the feature is used.
+ */
+const Passes = dynamic(() => import('./PostFXPasses'), { ssr: false, loading: () => null });
 
 /**
  * Post-processing. Restrained to the point of near-absence, for a reason.
@@ -29,53 +42,13 @@ interface PostFXProps {
  * blur the very structure the section copy refers to.
  */
 export function PostFX({ bloom, grade }: PostFXProps) {
+  // The early return is what makes the dynamic import free: with both flags off,
+  // `Passes` is never rendered, so its chunk is never requested.
   if (!bloom && !grade) return null;
-
-  // EffectComposer types its children as elements rather than ReactNode, so the
-  // passes are collected into an array instead of inlined with `&&`.
-  const passes = [];
-
-  if (bloom) {
-    passes.push(
-      <Bloom
-        key="bloom"
-        // Deliberately low. Raising this is the fastest way back to the washed-out
-        // version — if the field ever needs more presence, raise particle alpha in
-        // the shader instead, where the effect is bounded.
-        intensity={0.16}
-        // Only pixels already at full brightness contribute. Anything lower and the
-        // core's additive accumulation blooms as a mass.
-        luminanceThreshold={1.0}
-        luminanceSmoothing={0.06}
-        // NOT mipmapBlur — see the note above.
-        mipmapBlur={false}
-        kernelSize={KernelSize.SMALL}
-      />,
-    );
-  }
-
-  if (grade) {
-    passes.push(
-      <Vignette
-        key="vignette"
-        offset={0.3}
-        darkness={0.7}
-        blendFunction={BlendFunction.NORMAL}
-        eskil={false}
-      />,
-    );
-  }
 
   return (
     <Suspense fallback={null}>
-      <EffectComposer
-        // The scene has no opaque background, so depth-aware effects have nothing
-        // useful to read; skipping the depth pass saves a full-resolution buffer.
-        enableNormalPass={false}
-        multisampling={0}
-      >
-        {passes}
-      </EffectComposer>
+      <Passes bloom={bloom} grade={grade} />
     </Suspense>
   );
 }

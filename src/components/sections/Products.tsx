@@ -1,4 +1,5 @@
 import { productStatusLabels, productsSection, publishedProducts } from '@/data/products';
+import { homeEyebrow } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
 import { Reveal } from '@/components/motion/Reveal';
@@ -24,7 +25,7 @@ export function Products() {
       <div className={styles.header}>
         <div className={styles.headerText}>
           <MonoLabel marker className={styles.eyebrow}>
-            02 / Products
+            {homeEyebrow('products')}
           </MonoLabel>
           <DisplayHeading
             as="h2"

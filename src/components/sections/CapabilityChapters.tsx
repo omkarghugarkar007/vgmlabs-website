@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { FIELD_STATE_INDEX } from '@/lib/field/config';
 import { useActiveFieldState } from '@/hooks/useFieldDrivers';
 import { capabilityChapters } from '@/data/capabilities';
+import { systemLayers } from '@/data/layers';
+import { homeEyebrow } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
 import { Reveal } from '@/components/motion/Reveal';
@@ -22,6 +24,9 @@ import styles from './CapabilityChapters.module.scss';
  * so the DOM and the WebGL layer can never disagree about which chapter is
  * active.
  */
+/** Layer id → display title, so each deep link names its destination. */
+const layerTitles = new Map(systemLayers.map((layer) => [layer.id, layer.title]));
+
 export function CapabilityChapters() {
   const activeState = useActiveFieldState();
 
@@ -29,7 +34,7 @@ export function CapabilityChapters() {
     <div className={styles.wrap}>
       <div className={styles.header}>
         <MonoLabel marker className={styles.eyebrow}>
-          03 / Capabilities
+          {homeEyebrow('capabilities')}
         </MonoLabel>
         <DisplayHeading as="h2" step="d2" lines={['What we build']} id="capabilities-heading" />
       </div>
@@ -55,8 +60,13 @@ export function CapabilityChapters() {
               );
             })}
           </ol>
+          {/* Tells the reader something about the work, not about the website.
+              The line that used to sit here — "the structure behind this page
+              reorganises with each chapter" — was commentary on the build, in
+              prime position beside the capability list. */}
           <p className={styles.indexNote}>
-            The structure behind this page reorganises with each chapter.
+            These four are rarely used in isolation. Deciding which of them a
+            given system actually needs is the architecture work.
           </p>
         </nav>
 
@@ -89,12 +99,26 @@ export function CapabilityChapters() {
                 ))}
               </Reveal>
 
-              <Link href={chapter.href} className={styles.chapterLink}>
-                <span>How this layer is built</span>
-                <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">
-                  <path d="M2 7h10M8.5 3.5 12 7l-3.5 3.5" fill="none" stroke="currentColor" />
-                </svg>
-              </Link>
+              {/* One link per system layer this capability is built on, most
+                  central first. Named rather than a generic "how this layer is
+                  built", which gave no indication of where the link went — and
+                  concealed the fact that one of them went to the wrong layer. */}
+              <ul className={styles.chapterLinks}>
+                {chapter.layers.map((layerId) => (
+                  <li key={layerId}>
+                    <Link href={`/capabilities#${layerId}`} className={styles.chapterLink}>
+                      <span>{layerTitles.get(layerId) ?? layerId}</span>
+                      <svg viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+                        <path
+                          d="M2 7h10M8.5 3.5 12 7l-3.5 3.5"
+                          fill="none"
+                          stroke="currentColor"
+                        />
+                      </svg>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </article>
           ))}
         </div>

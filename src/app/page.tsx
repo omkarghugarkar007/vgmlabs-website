@@ -13,6 +13,7 @@ import { ResearchIndex } from '@/components/sections/ResearchIndex';
 import { SelectedWork } from '@/components/sections/SelectedWork';
 import { FieldScrollDriver } from '@/components/three/FieldScrollDriver';
 import { shortDescription } from '@/data/company';
+import { showWorkChapter } from '@/data/navigation';
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = pageMetadata({
@@ -109,9 +110,27 @@ export default function HomePage() {
         <ResearchIndex />
       </Section>
 
-      <Section id="work" fieldState="production" density="tight" rule aria-labelledby="work-heading">
-        <SelectedWork />
-      </Section>
+      {/* The Work chapter appears only when there is work to show.
+
+          It previously rendered its documented empty state as a full numbered
+          chapter, which framed the absence as a section of the narrative and drew
+          the eye straight to it — a headline reading "Selected work." over
+          "currently being documented" and four placeholders marked IN
+          DOCUMENTATION. The honesty was right; giving it a chapter was not.
+
+          Set `publish: true` on an item in src/data/projects.ts and this returns
+          in place, correctly numbered, with no other change needed. */}
+      {showWorkChapter ? (
+        <Section
+          id="work"
+          fieldState="production"
+          density="tight"
+          rule
+          aria-labelledby="work-heading"
+        >
+          <SelectedWork />
+        </Section>
+      ) : null}
 
       <Section
         id="company"

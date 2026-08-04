@@ -10,9 +10,25 @@
 // ---------------------------------------------------------------------------
 
 @use 'sass:map';
+@use 'sass:math';
 
 $font-display: var(--font-display);
 $font-mono: var(--font-mono);
+
+// Micro-type floor ----------------------------------------------------------
+// 12px is the smallest size any text on this site is allowed to render at.
+//
+// The mono micro-label is central to the art direction, and it was originally
+// set as small as 8px. That is not a readable size — not on a laptop, not on a
+// phone, and not for anyone whose near vision has started to go. Because the
+// label voice is used for eyebrows, spec values, metadata rows and status
+// badges, "decorative" was never true: these carry information.
+//
+// The floor is applied inside the mono() and mono-data() mixins rather than
+// left to each of the ~45 call sites, so a future edit cannot reintroduce 9px
+// type by writing a smaller number. Call sites still pass their intended size;
+// the mixin raises anything below the floor.
+$mono-min: 0.75rem;
 
 // Display -------------------------------------------------------------------
 // `-d1` is reserved for the hero and the final CTA only.
@@ -78,9 +94,9 @@ $type: (
 /// Mono label. Uppercase, letterspaced, small — the site's annotation voice.
 /// `$size` stays in rem (never fluid): annotations should not scale with the
 /// viewport, they should stay quiet.
-@mixin mono($size: 0.6875rem, $tracking: 0.14em) {
+@mixin mono($size: $mono-min, $tracking: 0.11em) {
   font-family: $font-mono;
-  font-size: $size;
+  font-size: math.max($size, $mono-min);
   font-weight: 400;
   letter-spacing: $tracking;
   line-height: 1.4;
@@ -90,9 +106,9 @@ $type: (
 
 /// Mono used as running text (spec tables, metrics) — sentence case, normal
 /// tracking, tabular figures so columns of numbers align.
-@mixin mono-data($size: 0.75rem) {
+@mixin mono-data($size: 0.8125rem) {
   font-family: $font-mono;
-  font-size: $size;
+  font-size: math.max($size, $mono-min);
   font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1.5;

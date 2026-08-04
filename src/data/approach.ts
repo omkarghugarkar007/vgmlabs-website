@@ -283,6 +283,65 @@ export const approachIntro = {
   body: 'The distance between a working prototype and a system an organisation can depend on is mostly engineering. We treat that distance as the substance of the work rather than an afterthought.',
 } as const;
 
+/* -------------------------------------------------------------------------- */
+/* How an engagement starts                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The path from a first email to the start of stage 01.
+ *
+ * The site explained in detail how work is run once it begins, and nothing about
+ * how a prospect gets there — while the budget bands in the contact form implied
+ * that pricing exists without ever explaining it. That leaves an interested reader
+ * with no concrete next step.
+ *
+ * ⚠️ WHAT IS DELIBERATELY ABSENT: durations and prices.
+ *
+ * This describes the *sequence*, which is a fact about how the process is
+ * structured, and not "a two-week discovery phase costs X", which would be an
+ * invention. If you want indicative durations or a discovery-phase price on the
+ * site, send the real figures and they can be added to `step.detail` below — but
+ * publishing a number nobody intends to honour would undo the credibility the
+ * rest of this page is built on. Step 03 states plainly that scope and cost are
+ * agreed in writing rather than published, which is both true and normal for
+ * engineering work.
+ */
+export const engagementStart = {
+  heading: 'How an engagement starts',
+  intro:
+    'Before any of the five stages above begins, there is a short sequence to establish whether there is a system worth building and what it would have to satisfy.',
+  steps: [
+    {
+      id: 'first-message',
+      index: '01',
+      title: 'You describe the problem',
+      detail:
+        'The workflow, decision or constraint — not a technology shortlist. Enough to tell whether this is a problem an intelligent system is actually suited to.',
+    },
+    {
+      id: 'constraints-call',
+      index: '02',
+      title: 'A call about constraints',
+      detail:
+        'Where it has to run, what it must not do, who has to be able to override it, what latency and privacy posture it has to hold. These are the inputs that decide the architecture, so they come first.',
+    },
+    {
+      id: 'written-scope',
+      index: '03',
+      title: 'A written scope',
+      detail:
+        'The architecture options considered, the one recommended and why, what is deliberately excluded, and the open questions that evidence would settle. Scope, timeline and cost are agreed here in writing rather than quoted from a price list — the work is shaped by the constraints in step 02, and a published figure would be a guess.',
+    },
+    {
+      id: 'or-not',
+      index: '04',
+      title: 'Or the answer is no',
+      detail:
+        '"Do not build this" is a legitimate outcome of the sequence above, and it is cheaper to reach here than after a prototype. If conventional software solves the problem, that is what we will say.',
+    },
+  ],
+} as const;
+
 export const failureSection = {
   heading: 'AI systems fail outside the demo',
   intro:

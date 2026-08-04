@@ -103,7 +103,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem;
-  @include mono(0.625rem, 0.1em);
+  @include mono(0.75rem, 0.08em);
   text-transform: none;
   color: var(--ink-faint);
 }

@@ -36,3 +36,9 @@ yarn-error.log*
 
 # testing
 /coverage
+
+# Working documents. The review spreadsheet is an internal document and this
+# repository is the source of a public site — it is not committed.
+*.xlsx
+*.xls
+*.docx

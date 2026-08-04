@@ -3,7 +3,7 @@ import { IBM_Plex_Mono, Instrument_Sans } from 'next/font/google';
 import { Footer } from '@/components/layout/Footer';
 import { TopNav } from '@/components/navigation/TopNav';
 import { IntelligenceField } from '@/components/three/IntelligenceField';
-import { organizationJsonLd, rootMetadata, websiteJsonLd } from '@/lib/seo';
+import { HTML_LANG, organizationJsonLd, rootMetadata, websiteJsonLd } from '@/lib/seo';
 import '@/styles/global.scss';
 
 /**
@@ -47,7 +47,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${mono.variable}`}>
+    <html lang={HTML_LANG} className={`${display.variable} ${mono.variable}`}>
       <head>
         {/*
           Content Security Policy as a meta tag.

@@ -35,6 +35,11 @@
   grid-column: 1 / span 9;
   // Pulls the headline up against the status label so they read as one block.
   margin-top: clamp(0.5rem, 2vh, 1.5rem);
+  // The node graph ran straight through the word "engineered" — worst at
+  // 1000–1100px, where the headline widens to 11 columns but the field's bright
+  // centre has not yet moved out of the way. A generous spread so the scrim
+  // covers the full three-line block without a visible edge near the text.
+  @include prose-scrim(0.72, 4rem);
 }
 
 .support {
@@ -43,6 +48,7 @@
   @include type('lead');
   color: var(--ink-muted);
   max-width: 46ch;
+  @include prose-scrim(0.78, 2.25rem);
 }
 
 .actions {
@@ -72,12 +78,12 @@
   align-items: baseline;
 
   dt {
-    @include mono(0.625rem, 0.14em);
+    @include mono(0.75rem, 0.11em);
     color: var(--ink-faint);
   }
 
   dd {
-    @include mono-data(0.6875rem);
+    @include mono-data(0.75rem);
     color: var(--ink-muted);
     // Long chains (the layer list) need to break cleanly rather than overflow.
     overflow-wrap: break-word;

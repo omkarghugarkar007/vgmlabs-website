@@ -1,4 +1,5 @@
 import { publishedWork, workSection } from '@/data/projects';
+import { homeEyebrow } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
 import { Reveal } from '@/components/motion/Reveal';
@@ -22,7 +23,7 @@ export function SelectedWork() {
     <div className={styles.wrap}>
       <div className={styles.header}>
         <MonoLabel marker className={styles.eyebrow}>
-          08 / Work
+          {homeEyebrow('work')}
         </MonoLabel>
         <DisplayHeading
           as="h2"

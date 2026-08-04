@@ -50,13 +50,13 @@
 }
 
 .indexNum {
-  @include mono(0.5625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--ink-faint);
   @include transition(color);
 }
 
 .indexLabel {
-  @include mono(0.6875rem, 0.1em);
+  @include mono(0.75rem, 0.08em);
   color: var(--ink-faint);
   @include transition(color);
 }
@@ -74,7 +74,7 @@
 }
 
 .indexNote {
-  @include mono-data(0.6875rem);
+  @include mono-data(0.75rem);
   color: var(--ink-faint);
   max-width: 26ch;
 }
@@ -90,9 +90,10 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  // Generous, uneven spacing: each chapter needs room to own the viewport while
-  // its field state is active.
-  padding-block: clamp(3rem, 9vw, 7.5rem);
+  // Each chapter needs enough room to own the viewport while its field state is
+  // active, but four of these at the old 7.5rem was 15rem between chapters and a
+  // large share of the homepage's total height.
+  padding-block: clamp(2.25rem, 5vw, 4.25rem);
 
   &:first-child {
     padding-top: 0;
@@ -110,7 +111,7 @@
 }
 
 .chapterNum {
-  @include mono(0.6875rem, 0.18em);
+  @include mono(0.75rem, 0.18em);
   color: var(--amber);
 }
 
@@ -124,6 +125,7 @@
   @include type('lead');
   color: var(--ink-muted);
   max-width: 58ch;
+  @include prose-scrim(0.8, 2rem);
 }
 
 .labels {
@@ -144,13 +146,19 @@
   }
 }
 
+.chapterLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.75rem;
+  align-self: flex-start;
+}
+
 .chapterLink {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  align-self: flex-start;
   min-height: 44px;
-  @include mono(0.625rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   color: var(--ink-muted);
   @include transition(color);
   @include focusable;

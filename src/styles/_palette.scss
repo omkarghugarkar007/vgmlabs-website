@@ -18,9 +18,17 @@ $metal: #24282d; // soft metallic grey — hairlines, borders, dividers
 $metal-dim: #1a1e21; // quieter hairline for dense grids
 
 // Type ----------------------------------------------------------------------
-$ink: #ece9e2; // warm off-white — primary text
-$ink-muted: #92979d; // secondary text, annotations
-$ink-faint: #5f656b; // tertiary metadata, disabled
+// Contrast ratios are against $void (#050607). All three clear WCAG AA for
+// normal text (4.5:1) — verified numerically, not estimated by eye.
+//
+// $ink-faint was #5f656b, which computes to 3.44:1 and failed AA. It carried
+// metadata, spec values and form hints — content a reader has to be able to
+// read — so that was a real accessibility defect, not a stylistic choice. The
+// replacement is the darkest grey that clears the bar, chosen deliberately so
+// the three-tier grey hierarchy still reads as three tiers.
+$ink: #ece9e2; // 16.7:1 — warm off-white, primary text
+$ink-muted: #92979d; //  6.9:1 — secondary text, annotations
+$ink-faint: #767c83; //  4.8:1 — tertiary metadata, disabled
 
 // Signals -------------------------------------------------------------------
 $cobalt: #4f72ff; // technical accent — primary interactive, links, focus

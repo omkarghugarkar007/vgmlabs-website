@@ -54,6 +54,9 @@
   display: flex;
   flex-direction: column;
   border-top: 1px solid var(--rule-faint);
+  // The environment descriptions (edge intelligence in particular) were reported
+  // as hard to read through the field.
+  @include prose-scrim(0.82, 2.5rem);
 }
 
 .option {
@@ -166,7 +169,7 @@
 .visualCaption {
   color: var(--ink-faint);
   align-self: center;
-  font-size: 0.5625rem;
+  font-size: 0.75rem;
 }
 
 /* Traits ------------------------------------------------------------------ */
@@ -191,7 +194,7 @@
 
 .traitsHint {
   color: var(--ink-faint);
-  font-size: 0.5625rem;
+  font-size: 0.75rem;
 }
 
 .traitGrid {
@@ -210,7 +213,7 @@
   border-bottom: 1px solid var(--rule-faint);
 
   dt {
-    @include mono(0.5625rem, 0.15em);
+    @include mono(0.75rem, 0.12em);
     color: var(--cobalt);
   }
 

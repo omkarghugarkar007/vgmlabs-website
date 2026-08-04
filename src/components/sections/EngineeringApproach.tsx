@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { gsap, prefersReducedMotion } from '@/lib/gsap';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
 import { approachIntro, processSteps } from '@/data/approach';
+import { homeEyebrow } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
 import { Reveal } from '@/components/motion/Reveal';
@@ -102,7 +103,7 @@ export function EngineeringApproach() {
     <div className={styles.wrap}>
       <div className={styles.header}>
         <MonoLabel marker className={styles.eyebrow}>
-          05 / Approach
+          {homeEyebrow('approach')}
         </MonoLabel>
         <DisplayHeading
           as="h2"
@@ -165,11 +166,12 @@ export function EngineeringApproach() {
 
               <p className={styles.stepBody}>{step.description}</p>
 
-              <ul className={styles.outputs}>
-                {step.outputs.map((output) => (
-                  <li key={output}>{output}</li>
-                ))}
-              </ul>
+              {/* No `outputs` list here.
+                  The homepage gave the five stages *more* detail than /approach
+                  did, which left the inner page reading as a thinner copy of what
+                  had just been read. The artefacts each stage produces are now on
+                  /approach only — this section is the shape of the process, that
+                  page is what you get from it. */}
             </li>
           ))}
         </ol>

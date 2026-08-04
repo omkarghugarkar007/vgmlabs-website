@@ -51,7 +51,7 @@
 
   dt {
     // 9px raised to 11px; still quiet, now actually readable.
-    @include mono(0.6875rem, 0.12em);
+    @include mono(0.75rem, 0.12em);
     color: var(--ink-faint);
   }
 

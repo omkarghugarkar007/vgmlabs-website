@@ -31,15 +31,89 @@
 }
 
 .contentsIndex {
-  @include mono(0.5625rem, 0.16em);
+  @include mono(0.75rem, 0.12em);
   color: var(--ink-faint);
   @include transition(color);
 }
 
 .contentsLabel {
-  @include mono(0.6875rem, 0.1em);
+  @include mono(0.75rem, 0.08em);
   color: var(--ink-muted);
   @include transition(color);
+}
+
+/* Sticky layer rail -------------------------------------------------------
+   Stays under the fixed header for the whole run of layers, so the reader always
+   knows which of the six they are in and can reach any other in one click rather
+   than by scrolling through everything between. */
+
+.layers {
+  position: relative;
+}
+
+.rail {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: z('raised');
+  // Full-bleed within the section stack, with the shell gutter applied inside, so
+  // the backdrop spans the viewport while the links stay on the grid.
+  padding: 0.5rem $shell-gutter;
+  background: #{rgba($void, 0.9)};
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule-faint);
+
+  ol {
+    display: flex;
+    // Scrolls rather than wraps: six labels on one line is the point, and a
+    // wrapped rail would change height as you scroll past it.
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 0;
+    max-width: $shell-max;
+    margin-inline: auto;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.railLink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  min-height: 44px;
+  padding: 0 1.15rem 0 0;
+  @include focusable(2px);
+
+  @include hover {
+    .railLabel {
+      color: var(--ink);
+    }
+    .railIndex {
+      color: var(--cobalt);
+    }
+  }
+}
+
+.railIndex {
+  @include mono(0.75rem, 0.1em);
+  color: var(--ink-faint);
+  @include transition(color);
+}
+
+.railLabel {
+  @include mono(0.75rem, 0.06em);
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .rail {
+    background: #{rgba($void, 0.985)};
+  }
 }
 
 /* Layer ------------------------------------------------------------------- */
@@ -47,7 +121,7 @@
 .layer {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.75rem, 4vw, 3rem);
+  gap: clamp(1.5rem, 3vw, 2.25rem);
 }
 
 .layerHead {
@@ -82,23 +156,117 @@
   padding-left: calc(0.75rem * 3.2);
 }
 
-.layerBody {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-  gap: clamp(2rem, 5vw, 4.5rem);
-  align-items: start;
-}
-
-.primary {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.75rem, 3vw, 2.5rem);
-}
-
 .purpose {
   @include type('body');
   color: var(--ink);
   max-width: 66ch;
+}
+
+/* Disclosures -------------------------------------------------------------
+   The five repeated subsections. Native <details>, so this needs no JavaScript
+   and no ARIA: the browser already announces expanded state and handles the
+   keyboard. */
+
+.disclosures {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule-faint);
+  // Once a layer is expanded this is a long, dense run of text sitting directly
+  // over the field. Same treatment as the other prose blocks — see the note on
+  // prose-scrim in _layout.scss.
+  @include prose-scrim(0.84, 2.5rem);
+}
+
+.disclosure {
+  border-bottom: 1px solid var(--rule-faint);
+
+  // Remove the default triangle in both engines; a drawn marker replaces it.
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::marker {
+    content: '';
+  }
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 48px;
+  padding: 0.6rem 0;
+  cursor: pointer;
+  list-style: none;
+  @include focusable(2px);
+
+  @include hover {
+    .summaryMark {
+      border-color: var(--rule-bright);
+    }
+  }
+}
+
+.summaryLabel {
+  color: var(--ink-muted);
+  @include transition(color);
+}
+
+.summaryLabelWarn {
+  color: var(--amber);
+}
+
+.summaryLabelOk {
+  color: var(--cyan);
+}
+
+.summaryCount {
+  @include mono-data(0.75rem);
+  color: var(--ink-faint);
+}
+
+/* A plus that becomes a minus. Two hairlines, one of which is rotated away when
+   the disclosure opens — the same measured, mechanical language as the rest of the
+   site rather than a bouncing chevron. */
+.summaryMark {
+  position: relative;
+  width: 11px;
+  height: 11px;
+  flex: 0 0 auto;
+  margin-left: auto;
+  @include transition(border-color);
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    background: var(--ink-muted);
+    @include transition(transform, opacity);
+  }
+
+  // Horizontal.
+  &::before {
+    left: 0;
+    top: 5px;
+    width: 11px;
+    height: 1px;
+  }
+
+  // Vertical, rotated out of sight when open.
+  &::after {
+    left: 5px;
+    top: 0;
+    width: 1px;
+    height: 11px;
+  }
+}
+
+.disclosure[open] .summaryMark::after {
+  transform: rotate(90deg);
+  opacity: 0;
+}
+
+.disclosureBody {
+  padding: 0.35rem 0 1.5rem;
 }
 
 .block {
@@ -109,7 +277,7 @@
 
 .blockLabel {
   color: var(--ink-faint);
-  font-size: 0.5625rem;
+  font-size: 0.75rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--rule-faint);
 }
@@ -143,7 +311,7 @@
 }
 
 .numberedIndex {
-  @include mono(0.5625rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   color: var(--cobalt);
   padding-top: 0.25em;
 }
@@ -175,29 +343,10 @@
 }
 
 /* Reliability */
-.reliability {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
-  padding: clamp(1.25rem, 2.5vw, 1.75rem);
-  border: 1px solid #{rgba($cyan, 0.18)};
-  background: #{rgba($cyan, 0.03)};
-
-  p {
-    @include type('small');
-    color: var(--ink-muted);
-    max-width: 72ch;
-  }
-}
-
-/* Aside ------------------------------------------------------------------- */
-
-.secondary {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.75rem, 3vw, 2.5rem);
-  position: sticky;
-  top: calc(var(--nav-h) + 3rem);
+.reliabilityText {
+  @include type('small');
+  color: var(--ink-muted);
+  max-width: 72ch;
 }
 
 .tags {
@@ -206,7 +355,7 @@
   gap: 0.45rem;
 
   li {
-    @include mono-data(0.6875rem);
+    @include mono-data(0.75rem);
     color: var(--ink-muted);
     padding: 0.4rem 0;
     border-bottom: 1px solid var(--rule-faint);
@@ -257,21 +406,6 @@
 
 /* iPad -------------------------------------------------------------------- */
 
-@include down('xl') {
-  .layerBody {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .secondary {
-    position: static;
-    // Two columns for the aside once it is full width, so it does not become a
-    // long thin list under the main column.
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(1.5rem, 3vw, 3rem);
-  }
-}
-
 @include down('lg') {
   .contents ol {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -292,14 +426,10 @@
     max-width: none;
   }
 
-  .secondary {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .purpose,
   .numbered li,
   .failures li,
-  .reliability p,
+  .reliabilityText,
   .outroText {
     max-width: none;
   }

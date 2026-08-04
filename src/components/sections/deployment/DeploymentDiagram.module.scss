@@ -1,7 +1,9 @@
 .diagram {
   width: 100%;
   height: auto;
-  aspect-ratio: 1;
+  // No `aspect-ratio: 1`. The viewBox is now fitted to the projected nodes (see
+  // the component), so the SVG's intrinsic ratio is the correct one — forcing a
+  // square was what padded it out into a full screen of mostly empty panel.
   overflow: visible;
 }
 
@@ -32,7 +34,7 @@
 }
 
 .nodeLabel {
-  @include mono(0.5rem, 0.14em);
+  @include mono(0.75rem, 0.11em);
   fill: var(--ink-muted);
   // The label must not inherit the node's fill.
   stroke: none;
@@ -44,6 +46,6 @@
 
 @include down('sm') {
   .nodeLabel {
-    font-size: 0.5625rem;
+    font-size: 0.75rem;
   }
 }

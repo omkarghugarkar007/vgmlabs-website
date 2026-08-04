@@ -72,96 +72,165 @@ export default function CapabilitiesPage() {
         </PageHeader>
       </Section>
 
-      {systemLayers.map((layer, i) => (
-        <Section
-          key={layer.id}
-          id={layer.id}
-          fieldState={layer.fieldState}
-          density={i === 0 ? 'default' : 'default'}
-          rule
-          aria-labelledby={`${layer.id}-heading`}
-        >
-          <article className={styles.layer}>
-            <div className={styles.layerHead}>
-              <div className={styles.layerTitleRow}>
-                <span className={styles.layerIndex} aria-hidden="true">
-                  {layer.index}
-                </span>
-                <h2 id={`${layer.id}-heading`} className={styles.layerTitle}>
-                  {layer.title}
-                </h2>
-              </div>
-              <p className={styles.layerSummary}>{layer.summary}</p>
-            </div>
+      {/* Sticky layer navigator.
 
-            <div className={styles.layerBody}>
-              <div className={styles.primary}>
-                <Reveal>
-                  <p className={styles.purpose}>{layer.purpose}</p>
-                </Reveal>
+          Six layers over what used to be about nineteen screens meant that once
+          you were inside layer four you had no idea where you were or how much
+          was left, and getting to a different layer meant scrolling through
+          everything between. This stays under the header for the whole run of
+          layers. */}
+      <div className={styles.layers}>
+        <nav className={styles.rail} aria-label="Layers">
+          <ol>
+            {systemLayers.map((layer) => (
+              <li key={layer.id}>
+                <a href={`#${layer.id}`} className={styles.railLink}>
+                  <span className={styles.railIndex}>{layer.index}</span>
+                  <span className={styles.railLabel}>{layer.title.replace(' Layer', '')}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
 
-                <div className={styles.block}>
-                  <MonoLabel as="h3" className={styles.blockLabel}>
-                    Architecture considerations
-                  </MonoLabel>
-                  <ol className={styles.numbered}>
-                    {layer.architecture.map((item, index) => (
-                      <li key={item}>
-                        <span className={styles.numberedIndex} aria-hidden="true">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ol>
+        {systemLayers.map((layer) => (
+          <Section
+            key={layer.id}
+            id={layer.id}
+            fieldState={layer.fieldState}
+            density="tight"
+            rule
+            aria-labelledby={`${layer.id}-heading`}
+          >
+            <article className={styles.layer}>
+              <div className={styles.layerHead}>
+                <div className={styles.layerTitleRow}>
+                  <span className={styles.layerIndex} aria-hidden="true">
+                    {layer.index}
+                  </span>
+                  <h2 id={`${layer.id}-heading`} className={styles.layerTitle}>
+                    {layer.title}
+                  </h2>
                 </div>
-
-                <div className={styles.block}>
-                  <MonoLabel as="h3" className={styles.blockLabelWarn}>
-                    Failure modes
-                  </MonoLabel>
-                  <ul className={styles.failures}>
-                    {layer.failureModes.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className={styles.reliability}>
-                  <MonoLabel as="h3" className={styles.blockLabelOk}>
-                    How we approach reliability
-                  </MonoLabel>
-                  <p>{layer.reliability}</p>
-                </div>
+                <p className={styles.layerSummary}>{layer.summary}</p>
               </div>
 
-              <aside className={styles.secondary}>
-                <div className={styles.block}>
-                  <MonoLabel as="h3" className={styles.blockLabel}>
-                    Representative technologies
-                  </MonoLabel>
-                  <ul className={styles.tags}>
-                    {layer.technologies.map((tech) => (
-                      <li key={tech}>{tech}</li>
-                    ))}
-                  </ul>
-                </div>
+              {/* Always visible: the two-line summary above and this paragraph.
+                  If a reader takes only one thing from a layer, it is this. */}
+              <Reveal>
+                <p className={styles.purpose}>{layer.purpose}</p>
+              </Reveal>
 
-                <div className={styles.block}>
-                  <MonoLabel as="h3" className={styles.blockLabel}>
-                    Typical problems solved
-                  </MonoLabel>
-                  <ul className={styles.problems}>
-                    {layer.problems.map((problem) => (
-                      <li key={problem}>{problem}</li>
-                    ))}
-                  </ul>
-                </div>
-              </aside>
-            </div>
-          </article>
-        </Section>
-      ))}
+              {/* The five repeated subsections, behind progressive disclosure.
+
+                  Every layer repeated the same five headings in full, which is
+                  rigorous and also punishing: most readers skimmed nineteen
+                  screens and retained nothing. Nothing has been cut — it is one
+                  click away, and the headings still say what is there, including
+                  the failure modes.
+
+                  Native <details> rather than a JS accordion: it works before
+                  hydration, is keyboard-operable and screen-reader-announced
+                  without any ARIA, and the collapsed content stays in the DOM so
+                  crawlers still index it. Architecture is open by default because
+                  it is the subsection that most often answers the question the
+                  reader arrived with. */}
+              <div className={styles.disclosures}>
+                <details className={styles.disclosure} open>
+                  <summary className={styles.summary}>
+                    <MonoLabel className={styles.summaryLabel}>
+                      Architecture considerations
+                    </MonoLabel>
+                    <span className={styles.summaryCount} aria-hidden="true">
+                      {layer.architecture.length}
+                    </span>
+                    <span className={styles.summaryMark} aria-hidden="true" />
+                  </summary>
+                  <div className={styles.disclosureBody}>
+                    <ol className={styles.numbered}>
+                      {layer.architecture.map((item, index) => (
+                        <li key={item}>
+                          <span className={styles.numberedIndex} aria-hidden="true">
+                            {String(index + 1).padStart(2, '0')}
+                          </span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                </details>
+
+                <details className={styles.disclosure}>
+                  <summary className={styles.summary}>
+                    <MonoLabel className={styles.summaryLabelWarn}>Failure modes</MonoLabel>
+                    <span className={styles.summaryCount} aria-hidden="true">
+                      {layer.failureModes.length}
+                    </span>
+                    <span className={styles.summaryMark} aria-hidden="true" />
+                  </summary>
+                  <div className={styles.disclosureBody}>
+                    <ul className={styles.failures}>
+                      {layer.failureModes.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+
+                <details className={styles.disclosure}>
+                  <summary className={styles.summary}>
+                    <MonoLabel className={styles.summaryLabelOk}>
+                      How we approach reliability
+                    </MonoLabel>
+                    <span className={styles.summaryMark} aria-hidden="true" />
+                  </summary>
+                  <div className={styles.disclosureBody}>
+                    <p className={styles.reliabilityText}>{layer.reliability}</p>
+                  </div>
+                </details>
+
+                <details className={styles.disclosure}>
+                  <summary className={styles.summary}>
+                    <MonoLabel className={styles.summaryLabel}>
+                      Representative technologies
+                    </MonoLabel>
+                    <span className={styles.summaryCount} aria-hidden="true">
+                      {layer.technologies.length}
+                    </span>
+                    <span className={styles.summaryMark} aria-hidden="true" />
+                  </summary>
+                  <div className={styles.disclosureBody}>
+                    <ul className={styles.tags}>
+                      {layer.technologies.map((tech) => (
+                        <li key={tech}>{tech}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+
+                <details className={styles.disclosure}>
+                  <summary className={styles.summary}>
+                    <MonoLabel className={styles.summaryLabel}>
+                      Typical problems solved
+                    </MonoLabel>
+                    <span className={styles.summaryCount} aria-hidden="true">
+                      {layer.problems.length}
+                    </span>
+                    <span className={styles.summaryMark} aria-hidden="true" />
+                  </summary>
+                  <div className={styles.disclosureBody}>
+                    <ul className={styles.problems}>
+                      {layer.problems.map((problem) => (
+                        <li key={problem}>{problem}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+              </div>
+            </article>
+          </Section>
+        ))}
+      </div>
 
       <Section density="default" rule>
         <div className={styles.outro}>

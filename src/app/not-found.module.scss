@@ -1,6 +1,8 @@
 .wrap {
   display: flex;
   flex-direction: column;
+  // flex-start, so the wordmark label, heading and action link all shrink-wrap.
+  // `.index` opts into the full width with `width: 100%`, which wins over this.
   align-items: flex-start;
   gap: 1.5rem;
   min-height: 68svh;
@@ -11,12 +13,18 @@
 .body {
   @include type('lead');
   color: var(--ink-muted);
+  // The measure belongs on the paragraph, not on the column — the site index
+  // below it should span the shell.
   max-width: 46ch;
 }
 
 .index {
+  // No max-width.
+  //
+  // A 44rem cap left the site index in a narrow column with a large empty right
+  // side, while every other page uses the full shell. The 404 is not a special
+  // composition — it should sit on the same grid as everything else.
   width: 100%;
-  max-width: 44rem;
   margin-block: 0.5rem 1rem;
 
   ol {
@@ -47,13 +55,13 @@
 }
 
 .linkIndex {
-  @include mono(0.5625rem, 0.15em);
+  @include mono(0.75rem, 0.12em);
   color: var(--ink-faint);
   @include transition(color);
 }
 
 .linkLabel {
-  @include mono(0.6875rem, 0.1em);
+  @include mono(0.75rem, 0.08em);
   color: var(--ink-muted);
   @include transition(color);
 }

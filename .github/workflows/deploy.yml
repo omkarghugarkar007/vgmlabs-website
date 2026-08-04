@@ -71,15 +71,25 @@ jobs:
 
       - name: Verify export
         # Fail loudly here rather than publishing a broken site. Catches an empty
-        # export, a missing Jekyll opt-out (which would silently drop _next/), and a
-        # missing social image.
+        # export, a missing Jekyll opt-out (which would silently drop _next/), and
+        # missing head assets — each of these has been a real failure at least once.
         run: |
-          test -f out/index.html      || { echo "::error::out/index.html missing"; exit 1; }
-          test -f out/404.html        || { echo "::error::out/404.html missing"; exit 1; }
-          test -f out/.nojekyll       || { echo "::error::out/.nojekyll missing — _next/ would be dropped by Jekyll"; exit 1; }
-          test -f out/sitemap.xml     || { echo "::error::out/sitemap.xml missing"; exit 1; }
-          test -f out/og.png          || { echo "::error::out/og.png missing"; exit 1; }
+          test -f out/index.html                || { echo "::error::out/index.html missing"; exit 1; }
+          test -f out/404.html                  || { echo "::error::out/404.html missing"; exit 1; }
+          test -f out/.nojekyll                 || { echo "::error::out/.nojekyll missing — _next/ would be dropped by Jekyll"; exit 1; }
+          test -f out/sitemap.xml               || { echo "::error::out/sitemap.xml missing"; exit 1; }
+          test -f out/og.png                    || { echo "::error::out/og.png missing"; exit 1; }
+          test -f out/llms.txt                  || { echo "::error::out/llms.txt missing"; exit 1; }
+          test -f out/manifest.webmanifest      || { echo "::error::out/manifest.webmanifest missing"; exit 1; }
+          test -f out/favicon.ico               || { echo "::error::out/favicon.ico missing — run npm run icons"; exit 1; }
+          test -f out/apple-touch-icon.png      || { echo "::error::out/apple-touch-icon.png missing — run npm run icons"; exit 1; }
           echo "Export verified: $(find out -type f | wc -l) files"
+
+      # `npm run build` already enforces this, so it passing here is expected. It
+      # is a separate step so a budget failure is legible in the Actions summary
+      # rather than buried in build output.
+      - name: Performance budget
+        run: npm run check:budget
 
       - uses: actions/configure-pages@v5
 

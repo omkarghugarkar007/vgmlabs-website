@@ -2,6 +2,7 @@
 
 import { useId, useState } from 'react';
 import { capabilityMatrix } from '@/data/capabilities';
+import { homeEyebrow } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
 import styles from './CapabilityMatrix.module.scss';
@@ -34,7 +35,7 @@ export function CapabilityMatrix() {
       <div className={styles.header}>
         <div className={styles.headerText}>
           <MonoLabel marker className={styles.eyebrow}>
-            04 / Index
+            {homeEyebrow('matrix')}
           </MonoLabel>
           <DisplayHeading
             as="h2"
