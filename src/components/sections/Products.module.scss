@@ -1,0 +1,233 @@
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: end;
+  margin-bottom: clamp(2.5rem, 6vw, 4rem);
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.eyebrow {
+  color: var(--ink-faint);
+}
+
+.headerAside {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.lead {
+  @include type('lead');
+  color: var(--ink);
+  max-width: 48ch;
+}
+
+.note {
+  @include mono-data(0.8125rem);
+  color: var(--ink-faint);
+  max-width: 52ch;
+}
+
+/* List -------------------------------------------------------------------- */
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.item {
+  display: flex;
+  min-width: 0;
+}
+
+/* Not a rounded glass card: a hairline panel with a 2px radius, consistent with
+   every other container on the site. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  border: 1px solid var(--rule-faint);
+  border-radius: $radius-subtle;
+  background: #{rgba($surface, 0.4)};
+  @include transition(border-color, background-color);
+}
+
+.cardLive {
+  @include focusable(3px);
+
+  @include hover {
+    border-color: #{rgba($cobalt, 0.55)};
+    background: #{rgba($surface-2, 0.55)};
+
+    .name {
+      color: var(--ink);
+    }
+    .arrow {
+      transform: translate(2px, -2px);
+    }
+    .host {
+      color: var(--cobalt);
+    }
+  }
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule-faint);
+}
+
+.index {
+  @include mono(0.6875rem, 0.16em);
+  color: var(--ink-faint);
+}
+
+.status {
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+/* Live reads as a system-state signal; anything pending reads as amber, the same
+   in-transit colour used for the process steps. */
+.statusLive {
+  color: var(--cyan);
+
+  &::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: currentColor;
+    // A filled square, matching the node motif rather than a generic dot.
+    flex: 0 0 auto;
+  }
+}
+
+.statusPending {
+  color: var(--amber);
+
+  &::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border: 1px solid currentColor;
+    flex: 0 0 auto;
+  }
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  flex: 1 1 auto;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  @include type('d3');
+  font-family: $font-display;
+  font-weight: 500;
+  color: var(--ink);
+  @include transition(color);
+}
+
+.arrow {
+  width: 0.5em;
+  height: 0.5em;
+  min-width: 14px;
+  min-height: 14px;
+  stroke-width: 1.2;
+  color: var(--ink-muted);
+  @include transition(transform);
+}
+
+.sector {
+  color: var(--cobalt);
+  font-size: 0.6875rem;
+}
+
+.summary {
+  @include type('body');
+  color: var(--ink-muted);
+  margin-top: 0.35rem;
+}
+
+/* Built on ---------------------------------------------------------------- */
+
+.builtOn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-faint);
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+  }
+
+  li {
+    @include mono-data(0.75rem);
+    color: var(--ink-muted);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--rule-faint);
+    border-radius: $radius-subtle;
+  }
+}
+
+.builtOnLabel {
+  color: var(--ink-faint);
+  font-size: 0.625rem;
+}
+
+.host {
+  @include mono-data(0.8125rem);
+  color: var(--ink-faint);
+  @include transition(color);
+}
+
+/* iPad -------------------------------------------------------------------- */
+
+@include down('xl') {
+  .header {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem;
+    align-items: start;
+  }
+
+  .lead,
+  .note {
+    max-width: none;
+  }
+}
+
+@include down('md') {
+  .list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@include down('sm') {
+  .card {
+    gap: 1rem;
+  }
+
+  .summary {
+    max-width: none;
+  }
+}

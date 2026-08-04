@@ -47,7 +47,7 @@ export function DeploymentEnvironments() {
       <div className={styles.header}>
         <div className={styles.headerText}>
           <MonoLabel marker className={styles.eyebrow}>
-            05 / Deployment
+            06 / Deployment
           </MonoLabel>
           <DisplayHeading
             as="h2"

@@ -102,7 +102,7 @@ export function EngineeringApproach() {
     <div className={styles.wrap}>
       <div className={styles.header}>
         <MonoLabel marker className={styles.eyebrow}>
-          04 / Approach
+          05 / Approach
         </MonoLabel>
         <DisplayHeading
           as="h2"

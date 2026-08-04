@@ -23,7 +23,7 @@ export function CompanyStatement() {
     <div className={styles.wrap}>
       <div className={styles.head}>
         <MonoLabel marker className={styles.eyebrow}>
-          08 / Company
+          09 / Company
         </MonoLabel>
         <DisplayHeading
           as="h2"

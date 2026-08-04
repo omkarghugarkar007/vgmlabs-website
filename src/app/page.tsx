@@ -8,6 +8,7 @@ import { EngineeringApproach } from '@/components/sections/EngineeringApproach';
 import { FinalCta } from '@/components/sections/FinalCta';
 import { Hero } from '@/components/sections/Hero';
 import { Positioning } from '@/components/sections/Positioning';
+import { Products } from '@/components/sections/Products';
 import { ResearchIndex } from '@/components/sections/ResearchIndex';
 import { SelectedWork } from '@/components/sections/SelectedWork';
 import { FieldScrollDriver } from '@/components/three/FieldScrollDriver';
@@ -52,6 +53,16 @@ export default function HomePage() {
         aria-labelledby="positioning-heading"
       >
         <Positioning />
+      </Section>
+
+      <Section
+        id="products"
+        fieldState="production"
+        density="default"
+        rule
+        aria-labelledby="products-heading"
+      >
+        <Products />
       </Section>
 
       <Section id="capabilities" density="default" aria-labelledby="capabilities-heading">

@@ -34,7 +34,7 @@ export function CapabilityMatrix() {
       <div className={styles.header}>
         <div className={styles.headerText}>
           <MonoLabel marker className={styles.eyebrow}>
-            03 / Index
+            04 / Index
           </MonoLabel>
           <DisplayHeading
             as="h2"

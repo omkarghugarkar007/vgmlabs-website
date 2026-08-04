@@ -19,8 +19,14 @@
   display: flex;
   align-items: baseline;
   gap: 0.5rem;
-  @include mono(0.625rem, 0.14em);
-  color: var(--ink-muted);
+  // 13px with reduced tracking, not 10px at 0.14em.
+  //
+  // Uppercase letterspaced mono is the least legible combination in the type
+  // system, and a form label is the one place a reader cannot afford to squint —
+  // they have to know what to type. The mono voice is kept for consistency with the
+  // rest of the site; only the size and tracking change.
+  @include mono(0.8125rem, 0.08em);
+  color: var(--ink);
   // legend needs this to sit in the flex flow like a label does.
   padding: 0;
   float: none;
@@ -31,15 +37,17 @@
 }
 
 .optional {
-  @include mono(0.5rem, 0.1em);
+  // Was 8px, which is not a readable size for anything.
+  @include mono(0.6875rem, 0.06em);
   color: var(--ink-faint);
   text-transform: uppercase;
 }
 
 .hint {
   @include type('small');
-  font-size: 0.8125rem;
-  color: var(--ink-faint);
+  font-size: 0.9375rem;
+  // Raised from --ink-faint: a hint that cannot be read is not a hint.
+  color: var(--ink-muted);
   max-width: 62ch;
 }
 
@@ -87,7 +95,7 @@
   position: absolute;
   right: 0.6rem;
   bottom: 0.5rem;
-  @include mono-data(0.5625rem);
+  @include mono-data(0.6875rem);
   color: var(--ink-faint);
   background: #{rgba($void, 0.8)};
   padding: 0.1rem 0.3rem;
@@ -113,11 +121,13 @@
   align-items: center;
   gap: 0.6rem;
   min-height: 48px;
-  padding: 0 0.9rem;
+  padding: 0 1rem;
   border: 1px solid var(--rule);
   border-radius: $radius-control;
   background: #{rgba($surface, 0.4)};
-  @include mono(0.625rem, 0.1em);
+  // These are answers a visitor has to read and choose between, so they get the
+  // same treatment as the labels.
+  @include mono(0.8125rem, 0.05em);
   color: var(--ink-muted);
   cursor: pointer;
   @include transition(border-color, background-color, color);
@@ -178,7 +188,7 @@
 
 .notice {
   @include type('small');
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   color: var(--amber);
   padding-left: 0.75rem;
   border-left: 1px solid #{rgba($amber, 0.45)};
@@ -186,7 +196,7 @@
 
 .error {
   @include type('small');
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   color: var(--danger);
   display: flex;
   align-items: flex-start;

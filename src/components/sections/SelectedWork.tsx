@@ -22,7 +22,7 @@ export function SelectedWork() {
     <div className={styles.wrap}>
       <div className={styles.header}>
         <MonoLabel marker className={styles.eyebrow}>
-          07 / Work
+          08 / Work
         </MonoLabel>
         <DisplayHeading
           as="h2"

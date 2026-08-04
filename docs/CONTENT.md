@@ -21,6 +21,7 @@ npm run dev           # see the change
 | --- | --- |
 | `src/data/company.ts` | Brand, legal entity, address, CIN, email, hero, positioning, company statement, final CTA |
 | `src/data/navigation.ts` | Nav items, footer columns, homepage anchors |
+| `src/data/products.ts` | Our own products — LawSpeak and anything after it |
 | `src/data/capabilities.ts` | The seven-stage architecture rail, four homepage capability chapters, eighteen-entry capability index |
 | `src/data/layers.ts` | The six system layers on the Capabilities page |
 | `src/data/approach.ts` | Five process steps, thirteen approach topics, the nine production requirements |
@@ -102,6 +103,43 @@ engagements.
 
 `position` is in scene units and feeds the projected network diagram; `links`
 defines the edges. Declare each link from both sides (the diagram de-duplicates).
+
+### Add or edit a product
+
+`src/data/products.ts`. Products are VGM Labs' own software, distinct from client
+engineering, and they appear both in a homepage section and on `/products`.
+
+```ts
+{
+  id: 'kebab-case-id',
+  publish: true,                    // gates rendering, like research and work
+  name: 'Product Name',
+  status: 'live',                   // 'live' | 'in-development' | 'planned'
+  sector: 'Healthcare',             // short mono label
+  summary: 'One sentence on what it does.',
+  detail: 'A paragraph for the products page. Optional.',
+  href: 'https://…',                // ONLY for live products that actually resolve
+  builtOn: ['Document intelligence', 'Workflow automation'],
+}
+```
+
+**`status` is what keeps this section honest.** It renders as a visible badge, and
+only `live` products get a clickable link — so a roadmap item cannot read as though
+it had shipped, and there is nothing to click that would disappoint.
+
+Rules:
+
+- `status: 'live'` requires a working public URL. If the URL is not live, the status
+  is not live.
+- Never describe a planned product in the present tense. Write "the intent is" or
+  "in development", not "does" or "provides".
+- No user counts, revenue, customer names, uptime figures or performance claims —
+  the same rule as everywhere else on the site.
+- `summary` and `detail` are both optional. Omitting one is better than guessing:
+  the card and the page row render correctly without either.
+
+⚠️ **The LawSpeak description currently in the file is a placeholder** written
+without knowledge of the product. Replace it.
 
 ### Show the team
 

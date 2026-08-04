@@ -29,7 +29,7 @@ export function CapabilityChapters() {
     <div className={styles.wrap}>
       <div className={styles.header}>
         <MonoLabel marker className={styles.eyebrow}>
-          02 / Capabilities
+          03 / Capabilities
         </MonoLabel>
         <DisplayHeading as="h2" step="d2" lines={['What we build']} id="capabilities-heading" />
       </div>

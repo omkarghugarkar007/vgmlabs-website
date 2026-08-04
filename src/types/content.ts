@@ -248,6 +248,38 @@ export interface WorkItem {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Products                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * `live`           shipped and available to use today
+ * `in-development` actively being built; not yet available
+ * `planned`        committed to, not yet started
+ *
+ * The status is rendered as a visible badge, so it is the mechanism that keeps the
+ * section honest: a product that is not shipped cannot be presented as if it were.
+ */
+export type ProductStatus = 'live' | 'in-development' | 'planned';
+
+export interface Product {
+  readonly id: string;
+  /** Gates rendering, exactly as for research and work items. */
+  readonly publish: boolean;
+  readonly name: string;
+  readonly status: ProductStatus;
+  /** Short mono label naming the domain it serves, e.g. "Legal". */
+  readonly sector: string;
+  /** One sentence on what it does. Omit rather than guess. */
+  readonly summary?: string;
+  /** Longer description for the products page. Optional. */
+  readonly detail?: string;
+  /** Public URL. Only for `live` products that are actually reachable. */
+  readonly href?: string;
+  /** The capability areas it draws on. Ties products back to the layer model. */
+  readonly builtOn?: readonly string[];
+}
+
+/* -------------------------------------------------------------------------- */
 /* Team                                                                       */
 /* -------------------------------------------------------------------------- */
 

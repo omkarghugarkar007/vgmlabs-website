@@ -24,7 +24,7 @@
 
 .summaryText {
   @include type('small');
-  font-size: 0.8125rem;
+  font-size: 0.9375rem;
   color: var(--ink);
 }
 
@@ -67,7 +67,7 @@
   border: 1px solid #{rgba($cobalt, 0.6)};
   border-radius: $radius-control;
   background: #{rgba($cobalt, 0.14)};
-  @include mono(0.6875rem, 0.14em);
+  @include mono(0.8125rem, 0.1em);
   color: var(--ink);
   @include transition(border-color, background-color, opacity);
   @include focusable;
@@ -114,8 +114,8 @@
 }
 
 .transportNote {
-  @include mono-data(0.625rem);
-  color: var(--ink-faint);
+  @include mono-data(0.8125rem);
+  color: var(--ink-muted);
   max-width: 46ch;
   line-height: 1.6;
 }
@@ -166,7 +166,7 @@
   padding: 0 1.1rem;
   border: 1px solid var(--rule);
   border-radius: $radius-control;
-  @include mono(0.625rem, 0.13em);
+  @include mono(0.8125rem, 0.1em);
   color: var(--ink);
   @include transition(border-color, background-color);
   @include focusable;
@@ -181,7 +181,7 @@
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  @include mono-data(0.75rem);
+  @include mono-data(0.9375rem);
   color: var(--ink-muted);
   border-bottom: 1px solid var(--rule);
   @include transition(color, border-color);
@@ -201,7 +201,7 @@
   padding: 1rem 1.1rem;
   border: 1px solid var(--rule-faint);
   background: #{rgba($void, 0.6)};
-  @include mono-data(0.6875rem);
+  @include mono-data(0.8125rem);
   color: var(--ink-muted);
   line-height: 1.65;
   // Preserve the formatting but wrap long lines rather than scroll sideways.
@@ -212,8 +212,8 @@
 .resetButton {
   margin-top: 0.5rem;
   min-height: 44px;
-  @include mono(0.625rem, 0.14em);
-  color: var(--ink-faint);
+  @include mono(0.75rem, 0.1em);
+  color: var(--ink-muted);
   border-bottom: 1px solid var(--rule);
   @include transition(color, border-color);
   @include focusable;
@@ -246,6 +246,6 @@
   }
 
   .preview {
-    font-size: 0.625rem;
+    font-size: 0.75rem;
   }
 }

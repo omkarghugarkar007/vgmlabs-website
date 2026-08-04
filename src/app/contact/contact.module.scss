@@ -26,8 +26,10 @@
 }
 
 .asideLabel {
-  color: var(--ink-faint);
-  font-size: 0.5625rem;
+  color: var(--ink-muted);
+  // Was 9px. These are section headings in the guidance column, not footnotes.
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
   padding-bottom: 0.7rem;
   border-bottom: 1px solid var(--rule-faint);
 }
@@ -41,7 +43,7 @@
     position: relative;
     padding-left: 0.95rem;
     @include type('small');
-    font-size: 0.8125rem;
+    font-size: 0.9375rem;
     color: var(--ink-muted);
 
     &::before {
@@ -61,7 +63,8 @@
   align-items: center;
   align-self: flex-start;
   min-height: 44px;
-  @include mono-data(0.8125rem);
+  // The fallback address is the single most important string on this page.
+  @include mono-data(1rem);
   color: var(--ink);
   border-bottom: 1px solid var(--rule);
   @include transition(color, border-color);
@@ -75,8 +78,8 @@
 
 .asideNote {
   @include type('small');
-  font-size: 0.8125rem;
-  color: var(--ink-faint);
+  font-size: 0.9375rem;
+  color: var(--ink-muted);
 }
 
 /* iPad -------------------------------------------------------------------- */

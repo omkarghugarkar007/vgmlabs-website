@@ -7,6 +7,7 @@ import type { NavItem } from '@/types/content';
  */
 
 export const primaryNav: readonly NavItem[] = [
+  { label: 'Products', href: '/products', hint: 'What we build and run' },
   { label: 'Capabilities', href: '/capabilities', hint: 'Six system layers' },
   { label: 'Approach', href: '/approach', hint: 'How work is run' },
   { label: 'Research', href: '/research', hint: 'Open questions' },
@@ -22,6 +23,7 @@ export const utilityNav: readonly NavItem[] = [
 /** In-page anchors surfaced in the homepage section rail. */
 export const homeSections: readonly { readonly id: string; readonly label: string }[] = [
   { id: 'positioning', label: 'Systems' },
+  { id: 'products', label: 'Products' },
   { id: 'capabilities', label: 'Build' },
   { id: 'matrix', label: 'Index' },
   { id: 'approach', label: 'Process' },

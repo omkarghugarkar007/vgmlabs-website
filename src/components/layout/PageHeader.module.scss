@@ -50,12 +50,13 @@
   }
 
   dt {
-    @include mono(0.5625rem, 0.15em);
+    // 9px raised to 11px; still quiet, now actually readable.
+    @include mono(0.6875rem, 0.12em);
     color: var(--ink-faint);
   }
 
   dd {
-    @include mono-data(0.6875rem);
+    @include mono-data(0.8125rem);
     color: var(--ink-muted);
   }
 }

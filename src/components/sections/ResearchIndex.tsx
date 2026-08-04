@@ -25,7 +25,7 @@ export function ResearchIndex() {
       <div className={styles.header}>
         <div className={styles.headerText}>
           <MonoLabel marker className={styles.eyebrow}>
-            06 / Research
+            07 / Research
           </MonoLabel>
           <DisplayHeading
             as="h2"
