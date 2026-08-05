@@ -51,14 +51,12 @@ export default function ProductsPage() {
           lines={productsPage.headlineLines}
           lead={productsPage.lead}
           meta={[
-            { label: 'Total', value: String(publishedProducts.length).padStart(2, '0') },
-            {
-              label: 'Live',
-              value:
-                liveProducts.length > 0
-                  ? String(liveProducts.length).padStart(2, '0')
-                  : 'None yet',
-            },
+            { label: 'Products', value: String(publishedProducts.length).padStart(2, '0') },
+            // Conditional, like the research count — a row that can only say
+            // "None yet" is an announcement of absence, not a statistic.
+            ...(liveProducts.length > 0
+              ? [{ label: 'Live', value: String(liveProducts.length).padStart(2, '0') }]
+              : []),
             { label: 'Enquiries', value: 'Via the contact page' },
           ]}
         />

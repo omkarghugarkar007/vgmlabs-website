@@ -2,22 +2,24 @@ import { publishedWork, workSection } from '@/data/projects';
 import { homeEyebrow } from '@/data/navigation';
 import { DisplayHeading } from '@/components/typography/DisplayHeading';
 import { MonoLabel } from '@/components/typography/MonoLabel';
-import { Reveal } from '@/components/motion/Reveal';
 import styles from './SelectedWork.module.scss';
 
 /**
  * Selected work.
  *
- * Renders whatever is publishable and, when nothing is, renders a composed empty
- * state instead of inventing projects. The empty state is not an apology: it says
- * what is being written up and why nothing is shown yet, which is a more credible
- * signal to a technical buyer than four fabricated case studies.
+ * Renders only real, publishable work. Nothing is invented to fill the section,
+ * and there is no empty state — when there is nothing to show, the chapter is not
+ * part of the page at all (see `showWorkChapter` in src/data/navigation.ts).
  *
  * To publish an item, set `publish: true` on it in `src/data/projects.ts` — the
- * layout below is already built for it. See `docs/CASE-STUDIES.md`.
+ * layout below is already built for it, and the chapter returns to the homepage in
+ * its numbered position automatically. See `docs/CASE-STUDIES.md`.
  */
 export function SelectedWork() {
-  const hasWork = publishedWork.length > 0;
+  // Defensive: the homepage already gates this on `showWorkChapter`, so this
+  // should never be reached with nothing to show. If it is, render nothing rather
+  // than a section explaining that there is nothing.
+  if (publishedWork.length === 0) return null;
 
   return (
     <div className={styles.wrap}>
@@ -33,8 +35,7 @@ export function SelectedWork() {
         />
       </div>
 
-      {hasWork ? (
-        <ul className={styles.items}>
+      <ul className={styles.items}>
           {publishedWork.map((item) => (
             <li key={item.id} className={styles.item}>
               <div className={styles.itemHead}>
@@ -79,25 +80,6 @@ export function SelectedWork() {
             </li>
           ))}
         </ul>
-      ) : (
-        <Reveal className={styles.empty}>
-          <p className={styles.emptyStatement}>{workSection.emptyState.statement}</p>
-          <p className={styles.emptyBody}>{workSection.emptyState.body}</p>
-
-          <ul className={styles.pending}>
-            {workSection.emptyState.pending.map((item, i) => (
-              <li key={item.id} className={styles.pendingItem}>
-                <span className={styles.pendingIndex}>{String(i + 1).padStart(2, '0')}</span>
-                <span className={styles.pendingTitle}>{item.title}</span>
-                <span className={styles.pendingDiscipline}>{item.discipline}</span>
-                <MonoLabel className={styles.pendingStatus}>In documentation</MonoLabel>
-              </li>
-            ))}
-          </ul>
-
-          <p className={styles.emptyNote}>{workSection.emptyState.note}</p>
-        </Reveal>
-      )}
     </div>
   );
 }

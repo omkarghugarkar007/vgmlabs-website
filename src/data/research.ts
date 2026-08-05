@@ -142,7 +142,7 @@ export const researchThemes: readonly ResearchTheme[] = [
 export const researchSection = {
   headlineLines: ['Building beyond', 'the current default.'] as const,
   body: 'We explore architectures that make intelligent systems more capable, efficient, verifiable and deployable.',
-  note: 'Open questions, not published results. Write-ups appear here once they exist and their claims have been checked.',
+  note: 'These are the questions we are working on. Anything we publish about them will carry the method and the evidence behind it.',
 } as const;
 
 /**

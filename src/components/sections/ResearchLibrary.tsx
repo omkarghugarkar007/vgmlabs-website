@@ -65,6 +65,10 @@ export function ResearchLibrary() {
 
         {researchCategories.map((category) => {
           const count = researchThemes.filter((t) => t.category === category.id).length;
+          // A chip reading "0" is a filter that leads nowhere, and a number
+          // advertising that we have nothing in an area. Every category has themes
+          // today; this makes sure a future data edit cannot change that.
+          if (count === 0) return null;
           const active = filter === category.id;
           return (
             <button
@@ -87,19 +91,33 @@ export function ResearchLibrary() {
         <p className={styles.categoryNote}>{activeCategory.description}</p>
       ) : null}
 
-      {/* Published write-ups. */}
-      <section className={styles.block} aria-labelledby="entries-heading">
-        <div className={styles.blockHead}>
-          <MonoLabel as="h2" id="entries-heading">
-            Notes and write-ups
-          </MonoLabel>
-          <span className={styles.rule} aria-hidden="true" />
-          <MonoLabel className={styles.blockCount}>
-            {visibleEntries.length} published
-          </MonoLabel>
-        </div>
+      {/* Write-ups.
 
-        {visibleEntries.length > 0 ? (
+          The whole section is conditional on there being something in it.
+
+          It used to render unconditionally: a heading, a counter reading
+          "0 published", and a paragraph beginning "Nothing published in this area
+          yet." That is three separate ways of saying the same absence, given a
+          heading and a rule so it reads as a section of the page. An empty
+          section is not honesty — it is an announcement, and it is the first thing
+          a reader's eye lands on.
+
+          Nothing has been fabricated to fill it. The page now leads with the open
+          questions, which is real content and the actual point of the page. The
+          moment an entry sets `publish: true` in src/data/research.ts, this
+          section appears above them with its count. */}
+      {visibleEntries.length > 0 ? (
+        <section className={styles.block} aria-labelledby="entries-heading">
+          <div className={styles.blockHead}>
+            <MonoLabel as="h2" id="entries-heading">
+              Notes and write-ups
+            </MonoLabel>
+            <span className={styles.rule} aria-hidden="true" />
+            <MonoLabel className={styles.blockCount}>
+              {visibleEntries.length}
+            </MonoLabel>
+          </div>
+
           <ol className={styles.entries}>
             {visibleEntries.map((entry) => (
               <li key={entry.id} className={styles.entry}>
@@ -130,17 +148,8 @@ export function ResearchLibrary() {
               </li>
             ))}
           </ol>
-        ) : (
-          <div className={styles.empty}>
-            <p className={styles.emptyStatement}>Nothing published in this area yet.</p>
-            <p className={styles.emptyBody}>
-              Write-ups appear here once they exist and their claims have been checked.
-              Nothing is listed as research until it has been done — no placeholder
-              papers, no benchmark figures we have not reproduced ourselves.
-            </p>
-          </div>
-        )}
-      </section>
+        </section>
+      ) : null}
 
       {/* Open questions. */}
       <section className={styles.block} aria-labelledby="themes-heading">

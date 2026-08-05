@@ -43,7 +43,7 @@ export const products: readonly Product[] = [
     summary:
       'An intelligent hospital management system, currently in development — clinical and administrative workflow in one system, with AI applied where judgement is actually required.',
     detail:
-      'In development. The intent is to treat a hospital as a set of connected operational workflows — admissions, records, scheduling, discharge, billing — and apply intelligence at the points where staff currently absorb the cost of manual coordination and document handling. Nothing here is available yet; this entry exists so the roadmap is stated rather than implied.',
+      'A hospital runs on connected operational workflows — admissions, records, scheduling, discharge, billing — and the cost of moving information between them is absorbed by staff. The system under development treats those workflows as one surface and applies intelligence at the points where coordination and document handling consume clinical time.',
     builtOn: ['Document intelligence', 'Workflow automation', 'Knowledge systems'],
   },
 ];
@@ -65,10 +65,10 @@ export const productStatusLabels: Readonly<Record<Product['status'], string>> = 
 export const productsSection = {
   headlineLines: ['Products we', 'build and run.'] as const,
   body: 'Alongside client engineering, VGM Labs builds and operates its own products — the same layers described on this page, applied end to end and maintained in production.',
-  note: 'Status is stated on every entry. Anything not marked live is not yet available.',
+  note: 'Every entry states its status, and only what is live is linked.',
 } as const;
 
 export const productsPage = {
   headlineLines: ['Our own', 'products.'] as const,
-  lead: 'Building and running our own software is how we stay honest about the difference between a prototype and a system someone depends on. Each product below states its status plainly.',
+  lead: 'Running our own software is how the engineering standards on this site get tested against real operational load — the same layers, applied end to end, maintained by the people who designed them.',
 } as const;

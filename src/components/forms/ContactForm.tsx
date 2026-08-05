@@ -227,15 +227,21 @@ export function ContactForm() {
         aria-live="assertive"
         hidden={!showSummary}
       >
+        {/* Nothing renders until there is something to report.
+            The count used to be interpolated unconditionally, so the exported
+            HTML contained the sentence "0 fields need attention before this can
+            be sent." It was inside a `hidden` container and never visible, but it
+            was in the markup, and a string like that has no business existing on
+            a page that has not been interacted with. */}
         {errors.form ? (
           <p className={styles.summaryText}>{errors.form}</p>
-        ) : (
+        ) : errorCount > 0 ? (
           <p className={styles.summaryText}>
             {errorCount === 1
               ? 'One field needs attention before this can be sent.'
               : `${errorCount} fields need attention before this can be sent.`}
           </p>
-        )}
+        ) : null}
       </div>
 
       <div className={styles.grid}>

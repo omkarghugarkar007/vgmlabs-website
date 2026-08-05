@@ -108,14 +108,17 @@ export function CompanyStatement() {
       ) : null}
 
       {/* What is left of the Work chapter while nothing is published.
-          One line stating the publishing rule, rather than a numbered section
-          whose only content was the absence of content. See homeSections in
-          src/data/navigation.ts. */}
+
+          One line about how client work is handled, phrased as a commitment
+          rather than as an apology. The first version ended "Nothing appears here
+          before it can be described accurately" — technically true, and still a
+          sentence whose subject is an absence. A prospective client reading this
+          should take away that their engagement will be treated confidentially,
+          which is a reason to trust us, not a gap in the portfolio. */}
       {showWorkChapter ? null : (
         <p className={styles.publishingNote}>
-          Client engagements are published only as verified case studies, with the
-          client’s approval. Nothing appears here before it can be described
-          accurately.
+          Client engagements stay confidential. Work appears here as a case study
+          only when the client has approved it and the results have been verified.
         </p>
       )}
 

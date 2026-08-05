@@ -90,20 +90,23 @@ export const workItems: readonly WorkItem[] = [
 /** Only publishable items. The single accessor components should use. */
 export const publishedWork: readonly WorkItem[] = workItems.filter((item) => item.publish);
 
+/**
+ * There is no empty state here, deliberately.
+ *
+ * There used to be: a headline "Selected work.", the line "Selected work
+ * currently being documented", a paragraph explaining why the section was empty,
+ * and a list of four titles each badged IN DOCUMENTATION. All of it rendered as a
+ * numbered chapter of the homepage — several hundred words whose entire subject
+ * was the absence of content, in the middle of the narrative.
+ *
+ * The section is now mounted only when `publishedWork` has entries (see
+ * `showWorkChapter` in src/data/navigation.ts), so no empty state is reachable
+ * and none is defined. Nothing was fabricated to replace it; the Company section
+ * carries one line about how client work is published, phrased as the
+ * confidentiality commitment it actually is.
+ */
 export const workSection = {
   headlineLines: ['Selected work.'] as const,
-  /** Shown when `publishedWork` is empty. Honest, and deliberately composed. */
-  emptyState: {
-    statement: 'Selected work currently being documented.',
-    body: 'Rather than publish approximations, this section stays empty until each build can be described accurately — what it does, what it establishes technically, and where it runs. Areas currently being written up:',
-    /** Derived from `workItems` so the two never drift apart. */
-    pending: workItems.map((item) => ({
-      id: item.id,
-      title: item.title,
-      discipline: item.discipline,
-    })),
-    note: 'Client engagements appear only as verified case studies, with the client’s approval.',
-  },
 } as const;
 
 /* -------------------------------------------------------------------------- */

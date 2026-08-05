@@ -15,9 +15,12 @@ import { absoluteUrl } from '@/lib/seo';
  * conspicuous omission for a company whose whole positioning is applied AI.
  *
  * Generated from the same data files the pages render, so it cannot drift from
- * what the site actually says — including the honesty constraints. If nothing is
- * published under research or work, this file states that plainly rather than
- * implying a body of output that does not exist.
+ * what the site actually says — including the honesty constraints.
+ *
+ * Sections and counts are emitted only when they have content. An empty section
+ * with a zero in it is not honesty, it is an announcement of absence, and this
+ * file is read by systems that summarise the company from it. Nothing is
+ * fabricated to fill a gap; the gap simply is not narrated.
  */
 export const dynamic = 'force-static';
 
@@ -58,7 +61,7 @@ export async function GET(): Promise<Response> {
     ['Products', '/products', "The company's own software."],
     ['Capabilities', '/capabilities', 'Six system layers, in engineering detail.'],
     ['Approach', '/approach', 'How work is run: five stages, artefacts, production requirements.'],
-    ['Research', '/research', 'Open questions and any published notes.'],
+    ['Research', '/research', 'The open questions we are working on.'],
     ['Company', '/company', 'Operating principles and registered details.'],
     ['Contact', '/contact', 'Enquiry form.'],
     ['Privacy', '/privacy', 'What this site collects (no analytics, no cookies of our own).'],
@@ -67,10 +70,8 @@ export async function GET(): Promise<Response> {
   for (const [name, path, note] of pages) push(`- [${name}](${absoluteUrl(path)}): ${note}`);
   push('');
 
-  push('## Products', '');
-  if (publishedProducts.length === 0) {
-    push('None published.', '');
-  } else {
+  if (publishedProducts.length > 0) {
+    push('## Products', '');
     for (const p of publishedProducts) {
       const bits = [`- ${p.name} — ${productStatusLabels[p.status]}, ${p.sector}`];
       if (p.summary) bits.push(`  ${p.summary}`);
@@ -96,20 +97,16 @@ export async function GET(): Promise<Response> {
   push('Open questions currently being worked on:', '');
   for (const t of researchThemes) push(`- ${t.title}`);
   push('');
-  push(
-    publishedResearch.length === 0
-      ? 'Published notes: none yet. Nothing is listed as research here until it has been done.'
-      : `Published notes: ${publishedResearch.length}.`,
-    '',
-  );
+  // Counts are stated only when there is something to count. A line reading
+  // "Published notes: none yet" tells a model nothing except that a number is
+  // zero, and this file is read by systems that summarise it.
+  if (publishedResearch.length > 0) {
+    push(`Published write-ups: ${publishedResearch.length}.`, '');
+  }
 
-  push('## Case studies', '');
-  push(
-    publishedWork.length === 0
-      ? 'None published. Client engagements appear only as verified case studies, with the client’s approval.'
-      : `${publishedWork.length} published — see the homepage.`,
-    '',
-  );
+  if (publishedWork.length > 0) {
+    push('## Case studies', '', `${publishedWork.length} published — see the homepage.`, '');
+  }
 
   push(
     '## Notes for agents',

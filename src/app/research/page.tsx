@@ -45,16 +45,25 @@ export default function ResearchPage() {
         <PageHeader
           kicker="Research"
           lines={['Questions we', 'are working on.']}
-          lead="This is a record of what we are investigating, not a publication list. Themes describe open questions and the reasoning behind our interest in them. Write-ups appear only once they exist and their claims have been checked."
+          lead="This is a record of what we are investigating. Each theme states an open question and the reasoning behind our interest in it — the problems we think are worth solving, and how we are approaching them."
           meta={[
-            { label: 'Themes', value: String(researchThemes.length).padStart(2, '0') },
-            {
-              label: 'Published',
-              value:
-                publishedResearch.length > 0
-                  ? String(publishedResearch.length).padStart(2, '0')
-                  : 'None yet',
-            },
+            // The "Published" row is conditional, and deliberately so.
+            //
+            // It used to render "None yet" whenever nothing was published, which
+            // put the word "None" in a metadata row at the top of the page — a
+            // stat whose only content was an absence. A row that can only ever
+            // say "nothing" is not information; it is an announcement. When there
+            // is something to count, the count is worth showing, so the row
+            // appears then and not before.
+            { label: 'Open questions', value: String(researchThemes.length).padStart(2, '0') },
+            ...(publishedResearch.length > 0
+              ? [
+                  {
+                    label: 'Write-ups',
+                    value: String(publishedResearch.length).padStart(2, '0'),
+                  },
+                ]
+              : []),
             { label: 'Areas', value: 'Agentic, neuro-symbolic, edge, inference, evaluation, multimodal' },
           ]}
         />

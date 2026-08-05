@@ -28,6 +28,57 @@ export const metadata: Metadata = pageMetadata({
  * Failure modes are given equal weight to capabilities. A vendor who can name how
  * their own systems break is easier to trust than one who cannot.
  */
+/**
+ * One collapsible subsection of a layer.
+ *
+ * Native `<details>`: it works before hydration, is keyboard-operable and
+ * screen-reader-announced without any ARIA, and the collapsed content stays in the
+ * DOM so crawlers still index it.
+ *
+ * `count` is optional and, when given, must be non-zero for anything to render. A
+ * subsection with nothing in it would otherwise print its own heading next to a
+ * "0" — a label advertising that we have nothing to say under it. Every layer has
+ * entries in all five today; this makes it impossible for a data edit to change
+ * that quietly.
+ */
+function Disclosure({
+  label,
+  count,
+  tone,
+  open = false,
+  children,
+}: {
+  label: string;
+  count?: number;
+  tone?: 'warn' | 'ok';
+  open?: boolean;
+  children: React.ReactNode;
+}) {
+  if (count === 0) return null;
+
+  const labelClass =
+    tone === 'warn'
+      ? styles.summaryLabelWarn
+      : tone === 'ok'
+        ? styles.summaryLabelOk
+        : styles.summaryLabel;
+
+  return (
+    <details className={styles.disclosure} open={open}>
+      <summary className={styles.summary}>
+        <MonoLabel className={labelClass}>{label}</MonoLabel>
+        {count !== undefined ? (
+          <span className={styles.summaryCount} aria-hidden="true">
+            {count}
+          </span>
+        ) : null}
+        <span className={styles.summaryMark} aria-hidden="true" />
+      </summary>
+      <div className={styles.disclosureBody}>{children}</div>
+    </details>
+  );
+}
+
 export default function CapabilitiesPage() {
   return (
     <>
@@ -136,96 +187,57 @@ export default function CapabilitiesPage() {
                   it is the subsection that most often answers the question the
                   reader arrived with. */}
               <div className={styles.disclosures}>
-                <details className={styles.disclosure} open>
-                  <summary className={styles.summary}>
-                    <MonoLabel className={styles.summaryLabel}>
-                      Architecture considerations
-                    </MonoLabel>
-                    <span className={styles.summaryCount} aria-hidden="true">
-                      {layer.architecture.length}
-                    </span>
-                    <span className={styles.summaryMark} aria-hidden="true" />
-                  </summary>
-                  <div className={styles.disclosureBody}>
-                    <ol className={styles.numbered}>
-                      {layer.architecture.map((item, index) => (
-                        <li key={item}>
-                          <span className={styles.numberedIndex} aria-hidden="true">
-                            {String(index + 1).padStart(2, '0')}
-                          </span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                </details>
+                <Disclosure
+                  label="Architecture considerations"
+                  count={layer.architecture.length}
+                  open
+                >
+                  <ol className={styles.numbered}>
+                    {layer.architecture.map((item, index) => (
+                      <li key={item}>
+                        <span className={styles.numberedIndex} aria-hidden="true">
+                          {String(index + 1).padStart(2, '0')}
+                        </span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ol>
+                </Disclosure>
 
-                <details className={styles.disclosure}>
-                  <summary className={styles.summary}>
-                    <MonoLabel className={styles.summaryLabelWarn}>Failure modes</MonoLabel>
-                    <span className={styles.summaryCount} aria-hidden="true">
-                      {layer.failureModes.length}
-                    </span>
-                    <span className={styles.summaryMark} aria-hidden="true" />
-                  </summary>
-                  <div className={styles.disclosureBody}>
-                    <ul className={styles.failures}>
-                      {layer.failureModes.map((item) => (
-                        <li key={item}>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </details>
+                <Disclosure
+                  label="Failure modes"
+                  count={layer.failureModes.length}
+                  tone="warn"
+                >
+                  <ul className={styles.failures}>
+                    {layer.failureModes.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </Disclosure>
 
-                <details className={styles.disclosure}>
-                  <summary className={styles.summary}>
-                    <MonoLabel className={styles.summaryLabelOk}>
-                      How we approach reliability
-                    </MonoLabel>
-                    <span className={styles.summaryMark} aria-hidden="true" />
-                  </summary>
-                  <div className={styles.disclosureBody}>
-                    <p className={styles.reliabilityText}>{layer.reliability}</p>
-                  </div>
-                </details>
+                <Disclosure label="How we approach reliability" tone="ok">
+                  <p className={styles.reliabilityText}>{layer.reliability}</p>
+                </Disclosure>
 
-                <details className={styles.disclosure}>
-                  <summary className={styles.summary}>
-                    <MonoLabel className={styles.summaryLabel}>
-                      Representative technologies
-                    </MonoLabel>
-                    <span className={styles.summaryCount} aria-hidden="true">
-                      {layer.technologies.length}
-                    </span>
-                    <span className={styles.summaryMark} aria-hidden="true" />
-                  </summary>
-                  <div className={styles.disclosureBody}>
-                    <ul className={styles.tags}>
-                      {layer.technologies.map((tech) => (
-                        <li key={tech}>{tech}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </details>
+                <Disclosure
+                  label="Representative technologies"
+                  count={layer.technologies.length}
+                >
+                  <ul className={styles.tags}>
+                    {layer.technologies.map((tech) => (
+                      <li key={tech}>{tech}</li>
+                    ))}
+                  </ul>
+                </Disclosure>
 
-                <details className={styles.disclosure}>
-                  <summary className={styles.summary}>
-                    <MonoLabel className={styles.summaryLabel}>
-                      Typical problems solved
-                    </MonoLabel>
-                    <span className={styles.summaryCount} aria-hidden="true">
-                      {layer.problems.length}
-                    </span>
-                    <span className={styles.summaryMark} aria-hidden="true" />
-                  </summary>
-                  <div className={styles.disclosureBody}>
-                    <ul className={styles.problems}>
-                      {layer.problems.map((problem) => (
-                        <li key={problem}>{problem}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </details>
+                <Disclosure label="Typical problems solved" count={layer.problems.length}>
+                  <ul className={styles.problems}>
+                    {layer.problems.map((problem) => (
+                      <li key={problem}>{problem}</li>
+                    ))}
+                  </ul>
+                </Disclosure>
               </div>
             </article>
           </Section>
