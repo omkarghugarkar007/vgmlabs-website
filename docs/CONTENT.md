@@ -129,17 +129,19 @@ it had shipped, and there is nothing to click that would disappoint.
 
 Rules:
 
-- `status: 'live'` requires a working public URL. If the URL is not live, the status
-  is not live.
+- `status: 'live'` requires a working public URL — and **check that it resolves**,
+  not just that it looks right. `lawspeak.ai` has no A record; only
+  `www.lawspeak.ai` does, so the apex link failed at DNS before any request was
+  made. A dead link on a product you own is worse than no link.
 - Never describe a planned product in the present tense. Write "the intent is" or
   "in development", not "does" or "provides".
 - No user counts, revenue, customer names, uptime figures or performance claims —
-  the same rule as everywhere else on the site.
+  the same rule as everywhere else on the site. This applies to claims made by the
+  product's *own* marketing too: LawSpeak's site says its translation works "with
+  high accuracy", and that is deliberately not repeated here, because an accuracy
+  claim on this site would need a stated evaluation set and method behind it.
 - `summary` and `detail` are both optional. Omitting one is better than guessing:
   the card and the page row render correctly without either.
-
-⚠️ **The LawSpeak description currently in the file is a placeholder** written
-without knowledge of the product. Replace it.
 
 ### Show the team
 
