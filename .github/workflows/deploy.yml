@@ -104,20 +104,26 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # No `timeout:` input here. 600000ms (10 minutes) is a hard maximum — a
+      # larger value is silently clamped and the action logs
+      #   "timeout value is greater than the allowed maximum".
+      # Setting 20 minutes looked like it worked and changed nothing.
+      #
+      # This matters because when the action hits that ceiling it *cancels* the
+      # deployment, so a Pages publish that takes longer than ten minutes becomes a
+      # hard failure and the site keeps serving the previous commit. There is no
+      # workflow-level fix for that. If it happens:
+      #
+      #   1. Confirm the build job passed — if it did, the artefact is fine and the
+      #      problem is GitHub's publish step, not this repository.
+      #   2. Check https://www.githubstatus.com (Pages). It does not always show
+      #      partial degradation, so an "operational" reading is not proof.
+      #   3. Re-run the failed job. This has cleared on its own before.
+      #   4. If it keeps failing with the deployment stuck in `in_progress`, it is a
+      #      GitHub-side issue worth raising with support, quoting the deployment id
+      #      from the log.
+      #
+      # Diagnosed on 2026-08-06: three consecutive failures on a clean 140-file,
+      # 5 MB artefact, correct DNS, correct Pages config, no reported incident.
       - id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          # 20 minutes, not the 10-minute default.
-          #
-          # The default timed out twice in a row on an artefact that had not
-          # meaningfully changed — 139 files, 5 MB, no symlinks, a 12-line text
-          # diff from a deploy that had succeeded in 9 seconds the day before. The
-          # deployment reached `in_progress` and stayed there, so the failure was
-          # GitHub's publish step being slow, not the payload. No incident was
-          # posted on githubstatus.com at the time.
-          #
-          # When the action times out it *cancels* the deployment, so a slow
-          # publish becomes a hard failure and the site silently keeps serving the
-          # previous commit. Waiting longer is strictly better than that: a deploy
-          # that takes fifteen minutes is not a problem, and a cancelled one is.
-          timeout: 1200000
