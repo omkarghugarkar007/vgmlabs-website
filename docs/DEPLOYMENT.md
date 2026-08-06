@@ -91,7 +91,7 @@ adapter in `src/lib/contact/transport.ts`, chosen at runtime.
 
 The validated submission is formatted and handed to the visitor's own mail client as a
 prefilled message addressed to `NEXT_PUBLIC_CONTACT_EMAIL` (default
-`info.vgmlabs@gmail.com`).
+`info@vgmlabsai.com`).
 
 - Nothing is transmitted by us, no third party is involved, nothing can leak
 - No cost, no account, no API key

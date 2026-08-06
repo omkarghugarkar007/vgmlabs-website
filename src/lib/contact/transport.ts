@@ -47,7 +47,7 @@ export type DeliveryResult =
 
 /** Recipient. Falls back to the published address if the env var is unset. */
 export const CONTACT_EMAIL =
-  process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || 'info.vgmlabs@gmail.com';
+  process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || company.email;
 
 const ENDPOINT = process.env.NEXT_PUBLIC_CONTACT_ENDPOINT?.trim() || '';
 

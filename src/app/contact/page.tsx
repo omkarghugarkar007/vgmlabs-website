@@ -11,7 +11,7 @@ import styles from './contact.module.scss';
 export const metadata: Metadata = pageMetadata({
   title: 'Contact',
   description:
-    'Describe the workflow, decision or technical constraint you are working on. VGM Labs replies from info.vgmlabs@gmail.com.',
+    `Describe the workflow, decision or technical constraint you are working on. VGM Labs replies from ${company.email}.`,
   path: '/contact',
 });
 

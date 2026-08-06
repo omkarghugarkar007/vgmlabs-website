@@ -146,7 +146,7 @@ interface DeliveryAdapter {
  */
 function createResendAdapter(apiKey: string): DeliveryAdapter {
   const from = process.env.CONTACT_FROM_EMAIL ?? 'website@vgmlabsai.com';
-  const to = process.env.CONTACT_TO_EMAIL ?? 'info.vgmlabs@gmail.com';
+  const to = process.env.CONTACT_TO_EMAIL ?? 'info@vgmlabsai.com';
 
   return {
     name: 'resend',
@@ -244,7 +244,7 @@ export async function POST(request: Request) {
       {
         ok: false,
         error:
-          'Email delivery is not configured on this deployment. Please email info.vgmlabs@gmail.com directly.',
+          'Email delivery is not configured on this deployment. Please email info@vgmlabsai.com directly.',
       },
       { status: 503 },
     );
@@ -263,7 +263,7 @@ export async function POST(request: Request) {
       {
         ok: false,
         error:
-          'We could not send your enquiry. Please email info.vgmlabs@gmail.com directly.',
+          'We could not send your enquiry. Please email info@vgmlabsai.com directly.',
       },
       { status: 502 },
     );

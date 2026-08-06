@@ -24,12 +24,16 @@ export const company: CompanyIdentity = {
   brand: 'VGM Labs',
   legalName: 'VGM Labs AI Private Limited',
   descriptor: 'Applied Intelligence',
-  city: 'Secunderabad',
+  city: 'Hyderabad',
   region: 'Telangana',
   country: 'India',
   countryCode: 'IN',
   cin: 'U62099TS2024PTC192252',
-  email: 'info.vgmlabs@gmail.com',
+  // Propagates to the footer, contact page, Company page, both legal documents
+  // and the Organization JSON-LD contact point. `city` additionally feeds the
+  // governing-law clause in the terms ("the courts at ..."), so changing it moves
+  // the stated jurisdiction — see src/data/legal.ts.
+  email: 'info@vgmlabsai.com',
   siteUrl: resolveSiteUrl(),
   foundedYear: 2024,
 };
