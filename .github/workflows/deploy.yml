@@ -106,3 +106,18 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # 20 minutes, not the 10-minute default.
+          #
+          # The default timed out twice in a row on an artefact that had not
+          # meaningfully changed — 139 files, 5 MB, no symlinks, a 12-line text
+          # diff from a deploy that had succeeded in 9 seconds the day before. The
+          # deployment reached `in_progress` and stayed there, so the failure was
+          # GitHub's publish step being slow, not the payload. No incident was
+          # posted on githubstatus.com at the time.
+          #
+          # When the action times out it *cancels* the deployment, so a slow
+          # publish becomes a hard failure and the site silently keeps serving the
+          # previous commit. Waiting longer is strictly better than that: a deploy
+          # that takes fifteen minutes is not a problem, and a cancelled one is.
+          timeout: 1200000
